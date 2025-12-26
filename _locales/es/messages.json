@@ -72,8 +72,8 @@
     "description": "Etiqueta para color de texto de la insignia"
   },
   "labelBadgeBgColor": {
-    "message": "Color de fondo de la insignia:",
-    "description": "Etiqueta para color de fondo de la insignia"
+    "message": "Color de la insignia:",
+    "description": "Etiqueta para color de la insignia"
   },
   "badgePreview": {
     "message": "Vista previa de la insignia:",

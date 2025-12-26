@@ -72,8 +72,8 @@
     "description": "Label for badge text color"
   },
   "labelBadgeBgColor": {
-    "message": "Badge background color:",
-    "description": "Label for badge background color"
+    "message": "Badge color:",
+    "description": "Label for badge color"
   },
   "badgePreview": {
     "message": "Badge preview:",

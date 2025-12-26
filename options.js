@@ -1,8 +1,8 @@
-// Default user-agents with badge colors
-const DEFAULT_USER_AGENTS = [
+// Default user-agents with badge colors - function to get them after i18n is loaded
+const getDefaultUserAgents = () => [
   {
     id: 'default',
-    name: chrome.i18n.getMessage('defaultUserAgent'),
+    name: i18n.getMessage('defaultUserAgent'),
     alias: 'DEF',
     userAgent: '',
     mode: 'replace',
@@ -29,8 +29,9 @@ const DEFAULT_USER_AGENTS = [
   }
 ];
 
-// Initialize
+// Initialize - wait for i18n to be ready
 document.addEventListener('DOMContentLoaded', async () => {
+  await i18n.ready;
   await initializeUserAgents();
   await loadUserAgents();
   await setupLanguageSelector();
@@ -43,7 +44,7 @@ async function initializeUserAgents() {
   
   if (!result.userAgents) {
     await chrome.storage.local.set({
-      userAgents: DEFAULT_USER_AGENTS,
+      userAgents: getDefaultUserAgents(),
       activeId: 'default'
     });
   }
@@ -52,7 +53,7 @@ async function initializeUserAgents() {
 // Setup language selector
 async function setupLanguageSelector() {
   const select = document.getElementById('languageSelect');
-  const currentLang = chrome.i18n.getUILanguage().split('-')[0];
+  const currentLang = await i18n.getLanguage();
   
   // Set current language
   select.value = currentLang;
@@ -61,13 +62,14 @@ async function setupLanguageSelector() {
   select.addEventListener('change', async (e) => {
     const newLang = e.target.value;
     
+    // Save the language preference
+    await i18n.setLanguage(newLang);
+    
     // Show notification
-    showNotification(chrome.i18n.getMessage('languageChanged'), 'info');
+    showNotification(i18n.getMessage('languageChanged'), 'info');
     
     // Wait a bit and reload
     setTimeout(() => {
-      // Change the extension's locale requires reloading
-      // We'll just reload the page as Chrome extensions use system locale
       window.location.reload();
     }, 1500);
   });
@@ -126,7 +128,7 @@ function updateBadgePreview() {
 // Load and display user-agents
 async function loadUserAgents() {
   const result = await chrome.storage.local.get('userAgents');
-  const userAgents = result.userAgents || DEFAULT_USER_AGENTS;
+  const userAgents = result.userAgents || getDefaultUserAgents();
   
   const listContainer = document.getElementById('userAgentsList');
   listContainer.innerHTML = '';
@@ -134,7 +136,7 @@ async function loadUserAgents() {
   if (userAgents.length === 0) {
     listContainer.innerHTML = `
       <div class="empty-state">
-        <p>${chrome.i18n.getMessage('noUserAgents')}</p>
+        <p>${i18n.getMessage('noUserAgents')}</p>
       </div>
     `;
     return;
@@ -151,17 +153,17 @@ function createUserAgentCard(ua) {
   const card = document.createElement('div');
   card.className = `user-agent-card${ua.id === 'default' ? ' default' : ''}`;
   
-  const modeText = ua.mode === 'append' ? chrome.i18n.getMessage('modeAppend') : chrome.i18n.getMessage('modeReplace');
+  const modeText = ua.mode === 'append' ? i18n.getMessage('modeAppend') : i18n.getMessage('modeReplace');
   
   // For default user-agent, show the actual browser user-agent
   let preview;
   if (ua.id === 'default') {
     preview = navigator.userAgent;
   } else {
-    preview = ua.userAgent ? ua.userAgent : chrome.i18n.getMessage('defaultUserAgentPreview');
+    preview = ua.userAgent ? ua.userAgent : i18n.getMessage('defaultUserAgentPreview');
   }
   
-  const defaultTag = ua.id === 'default' ? `<span class="default-tag">${chrome.i18n.getMessage('defaultTag')}</span>` : '';
+  const defaultTag = ua.id === 'default' ? `<span class="default-tag">${i18n.getMessage('defaultTag')}</span>` : '';
   
   // Badge colors
   const badgeTextColor = ua.badgeTextColor || '#ffffff';
@@ -185,21 +187,11 @@ function createUserAgentCard(ua) {
     </div>
   ` : '';
   
-  const badgeInfoRow = ua.id === 'default' ? '' : `
-    <div class="info-row">
-      <span class="info-label">${chrome.i18n.getMessage('badgeLabel')}</span>
-      <span class="info-value">
-        ${chrome.i18n.getMessage('backgroundLabel')} <code>${badgeBgColor}</code>
-        <small style="color: #666; font-size: 11px;">(${chrome.i18n.getMessage('badgeTextColorNote')})</small>
-      </span>
-    </div>
-  `;
-  
   // For default user-agent, don't show mode info
   const modeInfoRow = ua.id === 'default' ? '' : `
     <div class="info-row">
-      <span class="info-label">${chrome.i18n.getMessage('modeLabel')}</span>
-      <span class="info-value"><span class="mode-badge ${modeClass}">${modeText}</span></span>
+      <span class="info-label">${i18n.getMessage('modeLabel')}</span>
+      <span class="info-value">${modeText}</span>
     </div>
   `;
   
@@ -207,12 +199,11 @@ function createUserAgentCard(ua) {
     <div class="card-header">
       ${ua.id === 'default' ? defaultBadgeSection : badgeSection}
       <div class="card-actions">
-        ${ua.id !== 'default' ? `<button class="btn btn-danger" data-id="${ua.id}">🗑️ <span data-i18n="deleteButton">${chrome.i18n.getMessage('deleteButton')}</span></button>` : ''}
+        ${ua.id !== 'default' ? `<button class="btn btn-danger" data-id="${ua.id}">🗑️ <span data-i18n="deleteButton">${i18n.getMessage('deleteButton')}</span></button>` : ''}
       </div>
     </div>
     <div class="card-info">
       ${modeInfoRow}
-      ${badgeInfoRow}
     </div>
     <div class="user-agent-preview">${preview}</div>
   `;
@@ -242,7 +233,7 @@ async function addUserAgent() {
   const badgeTextColor = brightness > 128 ? '#000000' : '#ffffff';
   
   if (!alias || !name || !userAgent) {
-    alert(chrome.i18n.getMessage('fillAllFields'));
+    alert(i18n.getMessage('fillAllFields'));
     return;
   }
   
@@ -272,12 +263,12 @@ async function addUserAgent() {
   await loadUserAgents();
   
   // Show success message
-  showNotification(chrome.i18n.getMessage('userAgentAdded'), 'success');
+  showNotification(i18n.getMessage('userAgentAdded'), 'success');
 }
 
 // Delete user-agent
 async function deleteUserAgent(id) {
-  if (!confirm(chrome.i18n.getMessage('confirmDelete'))) {
+  if (!confirm(i18n.getMessage('confirmDelete'))) {
     return;
   }
   
@@ -305,7 +296,7 @@ async function deleteUserAgent(id) {
   // Reload list
   await loadUserAgents();
   
-  showNotification(chrome.i18n.getMessage('userAgentDeleted'), 'success');
+  showNotification(i18n.getMessage('userAgentDeleted'), 'success');
 }
 
 // Show notification

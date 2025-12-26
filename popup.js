@@ -1,8 +1,8 @@
-// Default user-agents with badge colors
-const DEFAULT_USER_AGENTS = [
+// Default user-agents with badge colors - function to get them after i18n is loaded
+const getDefaultUserAgents = () => [
   {
     id: 'default',
-    name: chrome.i18n.getMessage('defaultUserAgent'),
+    name: i18n.getMessage('defaultUserAgent'),
     alias: 'DEF',
     userAgent: '',
     mode: 'replace',
@@ -29,8 +29,9 @@ const DEFAULT_USER_AGENTS = [
   }
 ];
 
-// Initialize
+// Initialize - wait for i18n to be ready
 document.addEventListener('DOMContentLoaded', async () => {
+  await i18n.ready;
   await initializeUserAgents();
   await loadUserAgents();
   setupEventListeners();
@@ -42,7 +43,7 @@ async function initializeUserAgents() {
   
   if (!result.userAgents) {
     await chrome.storage.local.set({
-      userAgents: DEFAULT_USER_AGENTS,
+      userAgents: getDefaultUserAgents(),
       activeId: 'default'
     });
   }
@@ -51,14 +52,14 @@ async function initializeUserAgents() {
 // Load and display user-agents
 async function loadUserAgents() {
   const result = await chrome.storage.local.get(['userAgents', 'activeId']);
-  const userAgents = result.userAgents || DEFAULT_USER_AGENTS;
+  const userAgents = result.userAgents || getDefaultUserAgents();
   const activeId = result.activeId || 'default';
   
   const listContainer = document.getElementById('userAgentsList');
   listContainer.innerHTML = '';
   
   if (userAgents.length === 0) {
-    listContainer.innerHTML = `<div class="empty-state"><p>${chrome.i18n.getMessage('noUserAgents')}</p></div>`;
+    listContainer.innerHTML = `<div class="empty-state"><p>${i18n.getMessage('noUserAgents')}</p></div>`;
     return;
   }
   
@@ -73,8 +74,6 @@ function createUserAgentItem(ua, activeId) {
   const div = document.createElement('div');
   div.className = `user-agent-item${ua.id === activeId ? ' active' : ''}`;
   div.dataset.id = ua.id;
-  
-  const modeText = ua.mode === 'append' ? ` ${chrome.i18n.getMessage('appendMode')}` : '';
   
   // Badge colors
   const badgeTextColor = ua.badgeTextColor || '#ffffff';
@@ -91,15 +90,15 @@ function createUserAgentItem(ua, activeId) {
   if (ua.id === 'default') {
     div.innerHTML = `
       <div class="user-agent-info">
-        <div class="user-agent-name">${ua.name}${modeText}</div>
-        <div class="user-agent-preview">${chrome.i18n.getMessage('defaultUserAgentPreview')}</div>
+        <div class="user-agent-name">${ua.name}</div>
+        <div class="user-agent-preview">${i18n.getMessage('defaultUserAgentPreview')}</div>
       </div>
       ${badgeHtml}
     `;
   } else {
     div.innerHTML = `
       <div class="user-agent-info">
-        <div class="user-agent-name">${ua.name}${modeText}</div>
+        <div class="user-agent-name">${ua.name}</div>
       </div>
       ${badgeHtml}
     `;

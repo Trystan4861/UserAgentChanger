@@ -1,14 +1,50 @@
 // i18n utility functions
 const i18n = {
-  // Get message from chrome.i18n
+  messages: {},
+  currentLang: 'en',
+
+  // Load messages from JSON file
+  loadMessages: async (lang) => {
+    try {
+      const response = await fetch(chrome.runtime.getURL(`_locales/${lang}/messages.json`));
+      if (response.ok) {
+        i18n.messages = await response.json();
+        i18n.currentLang = lang;
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.error('Error loading messages:', error);
+      return false;
+    }
+  },
+
+  // Get message from loaded messages
   getMessage: (key, substitutions) => {
-    return chrome.i18n.getMessage(key, substitutions) || key;
+    const messageObj = i18n.messages[key];
+    if (!messageObj) return key;
+    
+    let message = messageObj.message || key;
+    
+    // Handle substitutions
+    if (substitutions) {
+      if (typeof substitutions === 'string') {
+        message = message.replace('$1', substitutions);
+      } else if (Array.isArray(substitutions)) {
+        substitutions.forEach((sub, index) => {
+          message = message.replace(`$${index + 1}`, sub);
+        });
+      }
+    }
+    
+    return message;
   },
 
   // Get current language
   getLanguage: async () => {
     const result = await chrome.storage.local.get('language');
-    return result.language || chrome.i18n.getUILanguage().split('-')[0];
+    // Priority: stored language > manifest default > browser language
+    return result.language || 'en';
   },
 
   // Set language
@@ -48,19 +84,30 @@ const i18n = {
   },
 
   // Initialize i18n on page load
-  init: () => {
-    // Translate immediately
+  init: async () => {
+    // Get the stored language preference
+    const lang = await i18n.getLanguage();
+    
+    // Load messages for the selected language
+    let loaded = await i18n.loadMessages(lang);
+    
+    // If the preferred language fails, fallback to default
+    if (!loaded && lang !== 'en') {
+      loaded = await i18n.loadMessages('en');
+    }
+    
+    // Translate page
     i18n.translatePage();
     
     // Set document language
-    const lang = chrome.i18n.getUILanguage().split('-')[0];
-    document.documentElement.lang = lang;
+    document.documentElement.lang = i18n.currentLang;
   }
 };
 
-// Auto-initialize when DOM is ready
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', i18n.init);
-} else {
-  i18n.init();
-}
+// Auto-initialize when DOM is ready - returns a promise
+i18n.ready = (async () => {
+  if (document.readyState === 'loading') {
+    await new Promise(resolve => document.addEventListener('DOMContentLoaded', resolve));
+  }
+  await i18n.init();
+})();
