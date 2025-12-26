@@ -148,7 +148,11 @@
     "description": "Label for language selector"
   },
   "languageChanged": {
-    "message": "Language changed successfully. The page will reload.",
+    "message": "Language changed successfully. Page will reload.",
     "description": "Message when language is changed"
+  },
+  "badgeTextColorNote": {
+    "message": "Text color is automatically determined by Chrome",
+    "description": "Note about badge text color"
   }
 }

@@ -81,24 +81,9 @@ function setupEventListeners() {
     await addUserAgent();
   });
   
-  // Color picker sync
-  const badgeTextColor = document.getElementById('badgeTextColor');
-  const badgeTextColorHex = document.getElementById('badgeTextColorHex');
+  // Color picker sync for background color only
   const badgeBgColor = document.getElementById('badgeBgColor');
   const badgeBgColorHex = document.getElementById('badgeBgColorHex');
-  
-  badgeTextColor.addEventListener('input', (e) => {
-    badgeTextColorHex.value = e.target.value.toUpperCase();
-    updateBadgePreview();
-  });
-  
-  badgeTextColorHex.addEventListener('input', (e) => {
-    const value = e.target.value;
-    if (/^#[0-9A-F]{6}$/i.test(value)) {
-      badgeTextColor.value = value;
-      updateBadgePreview();
-    }
-  });
   
   badgeBgColor.addEventListener('input', (e) => {
     badgeBgColorHex.value = e.target.value.toUpperCase();
@@ -124,8 +109,14 @@ function setupEventListeners() {
 function updateBadgePreview() {
   const preview = document.getElementById('badgePreview');
   const alias = document.getElementById('alias').value.toUpperCase() || 'TEST';
-  const textColor = document.getElementById('badgeTextColor').value;
   const bgColor = document.getElementById('badgeBgColor').value;
+  
+  // Determine text color based on background brightness (Chrome does this automatically)
+  const r = parseInt(bgColor.slice(1, 3), 16);
+  const g = parseInt(bgColor.slice(3, 5), 16);
+  const b = parseInt(bgColor.slice(5, 7), 16);
+  const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+  const textColor = brightness > 128 ? '#000000' : '#ffffff';
   
   preview.textContent = alias;
   preview.style.color = textColor;
@@ -162,7 +153,13 @@ function createUserAgentCard(ua) {
   
   const modeText = ua.mode === 'append' ? chrome.i18n.getMessage('modeAppend') : chrome.i18n.getMessage('modeReplace');
   
-  const preview = ua.userAgent ? ua.userAgent : chrome.i18n.getMessage('defaultUserAgentPreview');
+  // For default user-agent, show the actual browser user-agent
+  let preview;
+  if (ua.id === 'default') {
+    preview = navigator.userAgent;
+  } else {
+    preview = ua.userAgent ? ua.userAgent : chrome.i18n.getMessage('defaultUserAgentPreview');
+  }
   
   const defaultTag = ua.id === 'default' ? `<span class="default-tag">${chrome.i18n.getMessage('defaultTag')}</span>` : '';
   
@@ -172,29 +169,50 @@ function createUserAgentCard(ua) {
   
   const modeClass = ua.mode === 'append' ? 'mode-append' : 'mode-replace';
   
+  // For default user-agent, don't show badge or badge colors info
+  const badgeSection = ua.id === 'default' ? '' : `
+    <div class="card-title">
+      <h3>${ua.name}${defaultTag}</h3>
+      <div class="card-badge" style="color: ${badgeTextColor}; background-color: ${badgeBgColor};">
+        ${ua.alias}
+      </div>
+    </div>
+  `;
+  
+  const defaultBadgeSection = ua.id === 'default' ? `
+    <div class="card-title">
+      <h3>${ua.name}${defaultTag}</h3>
+    </div>
+  ` : '';
+  
+  const badgeInfoRow = ua.id === 'default' ? '' : `
+    <div class="info-row">
+      <span class="info-label">${chrome.i18n.getMessage('badgeLabel')}</span>
+      <span class="info-value">
+        ${chrome.i18n.getMessage('backgroundLabel')} <code>${badgeBgColor}</code>
+        <small style="color: #666; font-size: 11px;">(${chrome.i18n.getMessage('badgeTextColorNote')})</small>
+      </span>
+    </div>
+  `;
+  
+  // For default user-agent, don't show mode info
+  const modeInfoRow = ua.id === 'default' ? '' : `
+    <div class="info-row">
+      <span class="info-label">${chrome.i18n.getMessage('modeLabel')}</span>
+      <span class="info-value"><span class="mode-badge ${modeClass}">${modeText}</span></span>
+    </div>
+  `;
+  
   card.innerHTML = `
     <div class="card-header">
-      <div class="card-title">
-        <h3>${ua.name}${defaultTag}</h3>
-        <div class="card-badge" style="color: ${badgeTextColor}; background-color: ${badgeBgColor};">
-          ${ua.alias}
-        </div>
-      </div>
+      ${ua.id === 'default' ? defaultBadgeSection : badgeSection}
       <div class="card-actions">
         ${ua.id !== 'default' ? `<button class="btn btn-danger" data-id="${ua.id}">🗑️ <span data-i18n="deleteButton">${chrome.i18n.getMessage('deleteButton')}</span></button>` : ''}
       </div>
     </div>
     <div class="card-info">
-      <div class="info-row">
-        <span class="info-label">${chrome.i18n.getMessage('modeLabel')}</span>
-        <span class="info-value"><span class="mode-badge ${modeClass}">${modeText}</span></span>
-      </div>
-      <div class="info-row">
-        <span class="info-label">${chrome.i18n.getMessage('badgeLabel')}</span>
-        <span class="info-value">
-          ${chrome.i18n.getMessage('textLabel')} <code>${badgeTextColor}</code> | ${chrome.i18n.getMessage('backgroundLabel')} <code>${badgeBgColor}</code>
-        </span>
-      </div>
+      ${modeInfoRow}
+      ${badgeInfoRow}
     </div>
     <div class="user-agent-preview">${preview}</div>
   `;
@@ -214,8 +232,14 @@ async function addUserAgent() {
   const name = document.getElementById('name').value.trim();
   const mode = document.getElementById('mode').value;
   const userAgent = document.getElementById('userAgent').value.trim();
-  const badgeTextColor = document.getElementById('badgeTextColor').value;
   const badgeBgColor = document.getElementById('badgeBgColor').value;
+  
+  // Calculate text color based on background brightness
+  const r = parseInt(badgeBgColor.slice(1, 3), 16);
+  const g = parseInt(badgeBgColor.slice(3, 5), 16);
+  const b = parseInt(badgeBgColor.slice(5, 7), 16);
+  const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+  const badgeTextColor = brightness > 128 ? '#000000' : '#ffffff';
   
   if (!alias || !name || !userAgent) {
     alert(chrome.i18n.getMessage('fillAllFields'));
@@ -240,8 +264,6 @@ async function addUserAgent() {
   
   // Clear form
   document.getElementById('addUserAgentForm').reset();
-  document.getElementById('badgeTextColor').value = '#ffffff';
-  document.getElementById('badgeTextColorHex').value = '#FFFFFF';
   document.getElementById('badgeBgColor').value = '#1a73e8';
   document.getElementById('badgeBgColorHex').value = '#1A73E8';
   updateBadgePreview();

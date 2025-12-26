@@ -75,20 +75,32 @@ function createUserAgentItem(ua, activeId) {
   div.dataset.id = ua.id;
   
   const modeText = ua.mode === 'append' ? ` ${chrome.i18n.getMessage('appendMode')}` : '';
-  const preview = ua.userAgent ? ua.userAgent.substring(0, 50) + '...' : chrome.i18n.getMessage('defaultUserAgentPreview');
+  
+  // For default user-agent, show the actual browser user-agent
+  let preview;
+  if (ua.id === 'default') {
+    preview = navigator.userAgent;
+  } else {
+    preview = ua.userAgent ? ua.userAgent.substring(0, 50) + '...' : chrome.i18n.getMessage('defaultUserAgentPreview');
+  }
   
   // Badge colors
   const badgeTextColor = ua.badgeTextColor || '#ffffff';
   const badgeBgColor = ua.badgeBgColor || '#1a73e8';
+  
+  // Don't show badge for default user-agent
+  const badgeHtml = ua.id === 'default' ? '' : `
+    <div class="user-agent-badge" style="color: ${badgeTextColor}; background-color: ${badgeBgColor};">
+      ${ua.alias}
+    </div>
+  `;
   
   div.innerHTML = `
     <div class="user-agent-info">
       <div class="user-agent-name">${ua.name}${modeText}</div>
       <div class="user-agent-preview">${preview}</div>
     </div>
-    <div class="user-agent-badge" style="color: ${badgeTextColor}; background-color: ${badgeBgColor};">
-      ${ua.alias}
-    </div>
+    ${badgeHtml}
   `;
   
   div.addEventListener('click', () => activateUserAgent(ua.id));

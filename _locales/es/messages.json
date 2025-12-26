@@ -36,7 +36,7 @@
     "description": "Placeholder para el campo nombre"
   },
   "labelAlias": {
-    "message": "Alias (para badge):",
+    "message": "Alias (para insignia):",
     "description": "Etiqueta para el campo alias"
   },
   "placeholderAlias": {
@@ -68,16 +68,16 @@
     "description": "Placeholder para el campo user-agent"
   },
   "labelBadgeTextColor": {
-    "message": "Color de texto del badge:",
-    "description": "Etiqueta para color de texto del badge"
+    "message": "Color de texto de la insignia:",
+    "description": "Etiqueta para color de texto de la insignia"
   },
   "labelBadgeBgColor": {
-    "message": "Color de fondo del badge:",
-    "description": "Etiqueta para color de fondo del badge"
+    "message": "Color de fondo de la insignia:",
+    "description": "Etiqueta para color de fondo de la insignia"
   },
   "badgePreview": {
-    "message": "Vista previa del badge:",
-    "description": "Texto para vista previa del badge"
+    "message": "Vista previa de la insignia:",
+    "description": "Texto para vista previa de la insignia"
   },
   "addButton": {
     "message": "Agregar User-Agent",
@@ -100,8 +100,8 @@
     "description": "Etiqueta para mostrar modo"
   },
   "badgeLabel": {
-    "message": "Badge:",
-    "description": "Etiqueta para mostrar badge"
+    "message": "Insignia:",
+    "description": "Etiqueta para mostrar insignia"
   },
   "textLabel": {
     "message": "Texto:",
@@ -150,5 +150,9 @@
   "languageChanged": {
     "message": "Idioma cambiado correctamente. La página se recargará.",
     "description": "Mensaje cuando se cambia el idioma"
+  },
+  "badgeTextColorNote": {
+    "message": "El color del texto es determinado automáticamente por Chrome",
+    "description": "Nota sobre el color del texto de la insignia"
   }
 }
