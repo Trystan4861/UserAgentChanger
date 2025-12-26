@@ -43,8 +43,25 @@ const i18n = {
   // Get current language
   getLanguage: async () => {
     const result = await chrome.storage.local.get('language');
-    // Priority: stored language > manifest default > browser language
-    return result.language || 'en';
+    
+    // If no language is stored, use browser's language as default
+    if (!result.language) {
+      // Get browser language (e.g., 'es-ES' or 'en-US')
+      const browserLang = navigator.language || navigator.userLanguage || 'en';
+      // Extract just the language code (e.g., 'es' from 'es-ES')
+      const langCode = browserLang.split('-')[0];
+      
+      // Check if we have translations for this language, otherwise default to 'en'
+      const supportedLanguages = ['en', 'es']; // Add more as you support them
+      const defaultLang = supportedLanguages.includes(langCode) ? langCode : 'en';
+      
+      // Store this as the user's preference for future use
+      await chrome.storage.local.set({ language: defaultLang });
+      
+      return defaultLang;
+    }
+    
+    return result.language;
   },
 
   // Set language

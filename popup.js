@@ -33,6 +33,7 @@ const getDefaultUserAgents = () => [
 document.addEventListener('DOMContentLoaded', async () => {
   await i18n.ready;
   await initializeUserAgents();
+  await updateDefaultUserAgentTranslation();
   await loadUserAgents();
   setupEventListeners();
 });
@@ -46,6 +47,21 @@ async function initializeUserAgents() {
       userAgents: getDefaultUserAgents(),
       activeId: 'default'
     });
+  }
+}
+
+// Update the default user agent translation when language changes
+async function updateDefaultUserAgentTranslation() {
+  const result = await chrome.storage.local.get('userAgents');
+  if (!result.userAgents) return;
+  
+  const userAgents = result.userAgents;
+  const defaultUA = userAgents.find(ua => ua.id === 'default');
+  
+  if (defaultUA) {
+    // Update the name with the current language translation
+    defaultUA.name = i18n.getMessage('defaultUserAgent');
+    await chrome.storage.local.set({ userAgents });
   }
 }
 
