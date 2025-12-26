@@ -179,7 +179,7 @@
     "message": "Acerca de"
   },
   "permanentSpoofTitle": {
-    "message": "Permanent Spoof List"
+    "message": "Crear Spoof Permanente"
   },
   "permanentSpoofDescription": {
     "message": "Configura User-Agents permanentes para dominios específicos."
