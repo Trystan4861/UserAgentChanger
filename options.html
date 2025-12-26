@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,45 +9,54 @@
 <body>
   <div class="container">
     <header>
-      <h1>⚙️ User-Agent Changer - Configuración</h1>
-      <p class="subtitle">Gestiona tus User-Agents personalizados</p>
+      <h1 data-i18n="optionsTitle">⚙️ User-Agent Changer - Configuración</h1>
+      <p class="subtitle" data-i18n="optionsSubtitle">Gestiona tus User-Agents personalizados</p>
+      
+      <!-- Language Selector -->
+      <div class="language-selector">
+        <label for="languageSelect" data-i18n="languageLabel">Idioma:</label>
+        <select id="languageSelect">
+          <option value="es">Español</option>
+          <option value="en">English</option>
+        </select>
+      </div>
     </header>
 
     <div class="content">
       <section class="form-section">
-        <h2>Agregar nuevo User-Agent</h2>
+        <h2 data-i18n="addNewUserAgent">Agregar nuevo User-Agent</h2>
         <form id="addUserAgentForm">
           <div class="form-row">
             <div class="form-group">
-              <label for="name">Nombre:</label>
-              <input type="text" id="name" placeholder="e.g., iPhone 14 Pro" required>
+              <label for="name" data-i18n="labelName">Nombre:</label>
+              <input type="text" id="name" data-i18n-placeholder="placeholderName" placeholder="e.g., iPhone 14 Pro" required>
             </div>
             
             <div class="form-group">
-              <label for="alias">Alias (para badge):</label>
-              <input type="text" id="alias" maxlength="4" placeholder="e.g., iOS" required>
-              <small>Máximo 4 caracteres</small>
+              <label for="alias" data-i18n="labelAlias">Alias (para badge):</label>
+              <input type="text" id="alias" maxlength="4" data-i18n-placeholder="placeholderAlias" placeholder="e.g., iOS" required>
+              <small data-i18n="maxCharacters">Máximo 4 caracteres</small>
             </div>
           </div>
 
           <div class="form-row">
             <div class="form-group">
-              <label for="mode">Modo:</label>
+              <label for="mode" data-i18n="labelMode">Modo:</label>
               <select id="mode">
-                <option value="replace">Reemplazar completo</option>
-                <option value="append">Agregar al final</option>
+                <option value="replace" data-i18n="modeReplace">Reemplazar completo</option>
+                <option value="append" data-i18n="modeAppend">Agregar al final</option>
               </select>
             </div>
           </div>
 
           <div class="form-group">
-            <label for="userAgent">User-Agent String:</label>
-            <textarea id="userAgent" rows="3" placeholder="Mozilla/5.0..." required></textarea>
+            <label for="userAgent" data-i18n="labelUserAgentString">User-Agent String:</label>
+            <textarea id="userAgent" rows="3" data-i18n-placeholder="placeholderUserAgent" placeholder="Mozilla/5.0..." required></textarea>
           </div>
 
           <div class="form-row">
             <div class="form-group">
-              <label for="badgeTextColor">Color de texto del badge:</label>
+              <label for="badgeTextColor" data-i18n="labelBadgeTextColor">Color de texto del badge:</label>
               <div class="color-input-group">
                 <input type="color" id="badgeTextColor" value="#ffffff">
                 <input type="text" id="badgeTextColorHex" value="#ffffff" maxlength="7" placeholder="#ffffff">
@@ -55,7 +64,7 @@
             </div>
             
             <div class="form-group">
-              <label for="badgeBgColor">Color de fondo del badge:</label>
+              <label for="badgeBgColor" data-i18n="labelBadgeBgColor">Color de fondo del badge:</label>
               <div class="color-input-group">
                 <input type="color" id="badgeBgColor" value="#1a73e8">
                 <input type="text" id="badgeBgColorHex" value="#1a73e8" maxlength="7" placeholder="#1a73e8">
@@ -64,23 +73,24 @@
           </div>
 
           <div class="badge-preview">
-            <span>Vista previa del badge:</span>
+            <span data-i18n="badgePreview">Vista previa del badge:</span>
             <div id="badgePreview" class="preview-badge">TEST</div>
           </div>
           
           <button type="submit" class="btn btn-primary">
-            <span>➕</span> Agregar User-Agent
+            <span>➕</span> <span data-i18n="addButton">Agregar User-Agent</span>
           </button>
         </form>
       </section>
 
       <section class="list-section">
-        <h2>User-Agents configurados</h2>
+        <h2 data-i18n="configuredUserAgents">User-Agents configurados</h2>
         <div id="userAgentsList" class="user-agents-list"></div>
       </section>
     </div>
   </div>
 
+  <script src="i18n.js"></script>
   <script src="options.js"></script>
 </body>
 </html>

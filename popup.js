@@ -2,7 +2,7 @@
 const DEFAULT_USER_AGENTS = [
   {
     id: 'default',
-    name: 'Por defecto (Chrome)',
+    name: chrome.i18n.getMessage('defaultUserAgent'),
     alias: 'DEF',
     userAgent: '',
     mode: 'replace',
@@ -58,7 +58,7 @@ async function loadUserAgents() {
   listContainer.innerHTML = '';
   
   if (userAgents.length === 0) {
-    listContainer.innerHTML = '<div class="empty-state"><p>No hay user-agents configurados</p></div>';
+    listContainer.innerHTML = `<div class="empty-state"><p>${chrome.i18n.getMessage('noUserAgents')}</p></div>`;
     return;
   }
   
@@ -74,8 +74,8 @@ function createUserAgentItem(ua, activeId) {
   div.className = `user-agent-item${ua.id === activeId ? ' active' : ''}`;
   div.dataset.id = ua.id;
   
-  const modeText = ua.mode === 'append' ? ' (agregar)' : '';
-  const preview = ua.userAgent ? ua.userAgent.substring(0, 50) + '...' : 'User-agent por defecto del navegador';
+  const modeText = ua.mode === 'append' ? ` ${chrome.i18n.getMessage('appendMode')}` : '';
+  const preview = ua.userAgent ? ua.userAgent.substring(0, 50) + '...' : chrome.i18n.getMessage('defaultUserAgentPreview');
   
   // Badge colors
   const badgeTextColor = ua.badgeTextColor || '#ffffff';

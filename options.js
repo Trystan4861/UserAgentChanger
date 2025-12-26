@@ -2,7 +2,7 @@
 const DEFAULT_USER_AGENTS = [
   {
     id: 'default',
-    name: 'Por defecto (Chrome)',
+    name: chrome.i18n.getMessage('defaultUserAgent'),
     alias: 'DEF',
     userAgent: '',
     mode: 'replace',
@@ -33,6 +33,7 @@ const DEFAULT_USER_AGENTS = [
 document.addEventListener('DOMContentLoaded', async () => {
   await initializeUserAgents();
   await loadUserAgents();
+  await setupLanguageSelector();
   setupEventListeners();
 });
 
@@ -46,6 +47,30 @@ async function initializeUserAgents() {
       activeId: 'default'
     });
   }
+}
+
+// Setup language selector
+async function setupLanguageSelector() {
+  const select = document.getElementById('languageSelect');
+  const currentLang = chrome.i18n.getUILanguage().split('-')[0];
+  
+  // Set current language
+  select.value = currentLang;
+  
+  // Add change event listener
+  select.addEventListener('change', async (e) => {
+    const newLang = e.target.value;
+    
+    // Show notification
+    showNotification(chrome.i18n.getMessage('languageChanged'), 'info');
+    
+    // Wait a bit and reload
+    setTimeout(() => {
+      // Change the extension's locale requires reloading
+      // We'll just reload the page as Chrome extensions use system locale
+      window.location.reload();
+    }, 1500);
+  });
 }
 
 // Setup event listeners
@@ -118,7 +143,7 @@ async function loadUserAgents() {
   if (userAgents.length === 0) {
     listContainer.innerHTML = `
       <div class="empty-state">
-        <p>No hay user-agents configurados</p>
+        <p>${chrome.i18n.getMessage('noUserAgents')}</p>
       </div>
     `;
     return;
@@ -135,16 +160,17 @@ function createUserAgentCard(ua) {
   const card = document.createElement('div');
   card.className = `user-agent-card${ua.id === 'default' ? ' default' : ''}`;
   
-  const modeClass = ua.mode === 'append' ? 'mode-append' : 'mode-replace';
-  const modeText = ua.mode === 'append' ? 'Agregar' : 'Reemplazar';
+  const modeText = ua.mode === 'append' ? chrome.i18n.getMessage('modeAppend') : chrome.i18n.getMessage('modeReplace');
   
-  const preview = ua.userAgent ? ua.userAgent : 'User-agent por defecto del navegador';
+  const preview = ua.userAgent ? ua.userAgent : chrome.i18n.getMessage('defaultUserAgentPreview');
   
-  const defaultTag = ua.id === 'default' ? '<span class="default-tag">POR DEFECTO</span>' : '';
+  const defaultTag = ua.id === 'default' ? `<span class="default-tag">${chrome.i18n.getMessage('defaultTag')}</span>` : '';
   
   // Badge colors
   const badgeTextColor = ua.badgeTextColor || '#ffffff';
   const badgeBgColor = ua.badgeBgColor || '#1a73e8';
+  
+  const modeClass = ua.mode === 'append' ? 'mode-append' : 'mode-replace';
   
   card.innerHTML = `
     <div class="card-header">
@@ -155,18 +181,18 @@ function createUserAgentCard(ua) {
         </div>
       </div>
       <div class="card-actions">
-        ${ua.id !== 'default' ? `<button class="btn btn-danger" data-id="${ua.id}">🗑️ Eliminar</button>` : ''}
+        ${ua.id !== 'default' ? `<button class="btn btn-danger" data-id="${ua.id}">🗑️ <span data-i18n="deleteButton">${chrome.i18n.getMessage('deleteButton')}</span></button>` : ''}
       </div>
     </div>
     <div class="card-info">
       <div class="info-row">
-        <span class="info-label">Modo:</span>
+        <span class="info-label">${chrome.i18n.getMessage('modeLabel')}</span>
         <span class="info-value"><span class="mode-badge ${modeClass}">${modeText}</span></span>
       </div>
       <div class="info-row">
-        <span class="info-label">Badge:</span>
+        <span class="info-label">${chrome.i18n.getMessage('badgeLabel')}</span>
         <span class="info-value">
-          Texto: <code>${badgeTextColor}</code> | Fondo: <code>${badgeBgColor}</code>
+          ${chrome.i18n.getMessage('textLabel')} <code>${badgeTextColor}</code> | ${chrome.i18n.getMessage('backgroundLabel')} <code>${badgeBgColor}</code>
         </span>
       </div>
     </div>
@@ -192,7 +218,7 @@ async function addUserAgent() {
   const badgeBgColor = document.getElementById('badgeBgColor').value;
   
   if (!alias || !name || !userAgent) {
-    alert('Por favor completa todos los campos obligatorios');
+    alert(chrome.i18n.getMessage('fillAllFields'));
     return;
   }
   
@@ -215,21 +241,21 @@ async function addUserAgent() {
   // Clear form
   document.getElementById('addUserAgentForm').reset();
   document.getElementById('badgeTextColor').value = '#ffffff';
-  document.getElementById('badgeTextColorHex').value = '#ffffff';
+  document.getElementById('badgeTextColorHex').value = '#FFFFFF';
   document.getElementById('badgeBgColor').value = '#1a73e8';
-  document.getElementById('badgeBgColorHex').value = '#1a73e8';
+  document.getElementById('badgeBgColorHex').value = '#1A73E8';
   updateBadgePreview();
   
   // Reload list
   await loadUserAgents();
   
   // Show success message
-  showNotification('User-Agent agregado correctamente', 'success');
+  showNotification(chrome.i18n.getMessage('userAgentAdded'), 'success');
 }
 
 // Delete user-agent
 async function deleteUserAgent(id) {
-  if (!confirm('¿Estás seguro de que quieres eliminar este user-agent?')) {
+  if (!confirm(chrome.i18n.getMessage('confirmDelete'))) {
     return;
   }
   
@@ -257,7 +283,7 @@ async function deleteUserAgent(id) {
   // Reload list
   await loadUserAgents();
   
-  showNotification('User-Agent eliminado correctamente', 'success');
+  showNotification(chrome.i18n.getMessage('userAgentDeleted'), 'success');
 }
 
 // Show notification

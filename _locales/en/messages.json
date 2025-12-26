@@ -1,0 +1,154 @@
+{
+  "extName": {
+    "message": "User-Agent Changer",
+    "description": "Extension name"
+  },
+  "extDescription": {
+    "message": "Change your browser's User-Agent easily",
+    "description": "Extension description"
+  },
+  "popupTitle": {
+    "message": "User-Agent Changer",
+    "description": "Popup title"
+  },
+  "manageButton": {
+    "message": "Manage User-Agents",
+    "description": "Button to manage user-agents"
+  },
+  "optionsTitle": {
+    "message": "User-Agent Changer - Settings",
+    "description": "Options page title"
+  },
+  "optionsSubtitle": {
+    "message": "Manage your custom User-Agents",
+    "description": "Options page subtitle"
+  },
+  "addNewUserAgent": {
+    "message": "Add new User-Agent",
+    "description": "Section title for adding user-agent"
+  },
+  "labelName": {
+    "message": "Name:",
+    "description": "Label for name field"
+  },
+  "placeholderName": {
+    "message": "e.g., iPhone 14 Pro",
+    "description": "Placeholder for name field"
+  },
+  "labelAlias": {
+    "message": "Alias (for badge):",
+    "description": "Label for alias field"
+  },
+  "placeholderAlias": {
+    "message": "e.g., iOS",
+    "description": "Placeholder for alias field"
+  },
+  "maxCharacters": {
+    "message": "Maximum 4 characters",
+    "description": "Info text about character limit"
+  },
+  "labelMode": {
+    "message": "Mode:",
+    "description": "Label for mode field"
+  },
+  "modeReplace": {
+    "message": "Replace complete",
+    "description": "Replace mode option"
+  },
+  "modeAppend": {
+    "message": "Append to end",
+    "description": "Append mode option"
+  },
+  "labelUserAgentString": {
+    "message": "User-Agent String:",
+    "description": "Label for user-agent string field"
+  },
+  "placeholderUserAgent": {
+    "message": "Mozilla/5.0...",
+    "description": "Placeholder for user-agent field"
+  },
+  "labelBadgeTextColor": {
+    "message": "Badge text color:",
+    "description": "Label for badge text color"
+  },
+  "labelBadgeBgColor": {
+    "message": "Badge background color:",
+    "description": "Label for badge background color"
+  },
+  "badgePreview": {
+    "message": "Badge preview:",
+    "description": "Text for badge preview"
+  },
+  "addButton": {
+    "message": "Add User-Agent",
+    "description": "Button to add user-agent"
+  },
+  "configuredUserAgents": {
+    "message": "Configured User-Agents",
+    "description": "Title for configured user-agents section"
+  },
+  "deleteButton": {
+    "message": "Delete",
+    "description": "Delete button"
+  },
+  "defaultTag": {
+    "message": "DEFAULT",
+    "description": "Tag for default user-agent"
+  },
+  "modeLabel": {
+    "message": "Mode:",
+    "description": "Label for displaying mode"
+  },
+  "badgeLabel": {
+    "message": "Badge:",
+    "description": "Label for displaying badge"
+  },
+  "textLabel": {
+    "message": "Text:",
+    "description": "Label for text"
+  },
+  "backgroundLabel": {
+    "message": "Background:",
+    "description": "Label for background"
+  },
+  "defaultUserAgent": {
+    "message": "Default (Chrome)",
+    "description": "Default user-agent name"
+  },
+  "defaultUserAgentPreview": {
+    "message": "Browser's default user-agent",
+    "description": "Default user-agent preview"
+  },
+  "noUserAgents": {
+    "message": "No user-agents configured",
+    "description": "Message when no user-agents exist"
+  },
+  "confirmDelete": {
+    "message": "Are you sure you want to delete this user-agent?",
+    "description": "Confirmation message for deletion"
+  },
+  "fillAllFields": {
+    "message": "Please fill all required fields",
+    "description": "Error message when fields are missing"
+  },
+  "userAgentAdded": {
+    "message": "User-Agent added successfully",
+    "description": "Success message when adding user-agent"
+  },
+  "userAgentDeleted": {
+    "message": "User-Agent deleted successfully",
+    "description": "Success message when deleting user-agent"
+  },
+  "appendMode": {
+    "message": "(append)",
+    "description": "Text for append mode in popup"
+  },
+  "languageLabel": {
+    "message": "Language:",
+    "description": "Label for language selector"
+  },
+  "languageChanged": {
+    "message": "Language changed successfully. The page will reload.",
+    "description": "Message when language is changed"
+  }
+}

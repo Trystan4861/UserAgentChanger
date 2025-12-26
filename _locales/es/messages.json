@@ -1,0 +1,154 @@
+{
+  "extName": {
+    "message": "User-Agent Changer",
+    "description": "Nombre de la extensión"
+  },
+  "extDescription": {
+    "message": "Cambia el User-Agent del navegador fácilmente",
+    "description": "Descripción de la extensión"
+  },
+  "popupTitle": {
+    "message": "User-Agent Changer",
+    "description": "Título del popup"
+  },
+  "manageButton": {
+    "message": "Gestionar User-Agents",
+    "description": "Botón para gestionar user-agents"
+  },
+  "optionsTitle": {
+    "message": "User-Agent Changer - Configuración",
+    "description": "Título de la página de opciones"
+  },
+  "optionsSubtitle": {
+    "message": "Gestiona tus User-Agents personalizados",
+    "description": "Subtítulo de la página de opciones"
+  },
+  "addNewUserAgent": {
+    "message": "Agregar nuevo User-Agent",
+    "description": "Título de la sección para agregar user-agent"
+  },
+  "labelName": {
+    "message": "Nombre:",
+    "description": "Etiqueta para el campo nombre"
+  },
+  "placeholderName": {
+    "message": "e.g., iPhone 14 Pro",
+    "description": "Placeholder para el campo nombre"
+  },
+  "labelAlias": {
+    "message": "Alias (para badge):",
+    "description": "Etiqueta para el campo alias"
+  },
+  "placeholderAlias": {
+    "message": "e.g., iOS",
+    "description": "Placeholder para el campo alias"
+  },
+  "maxCharacters": {
+    "message": "Máximo 4 caracteres",
+    "description": "Texto informativo sobre límite de caracteres"
+  },
+  "labelMode": {
+    "message": "Modo:",
+    "description": "Etiqueta para el campo modo"
+  },
+  "modeReplace": {
+    "message": "Reemplazar completo",
+    "description": "Opción de modo reemplazar"
+  },
+  "modeAppend": {
+    "message": "Agregar al final",
+    "description": "Opción de modo agregar"
+  },
+  "labelUserAgentString": {
+    "message": "User-Agent String:",
+    "description": "Etiqueta para el campo user-agent string"
+  },
+  "placeholderUserAgent": {
+    "message": "Mozilla/5.0...",
+    "description": "Placeholder para el campo user-agent"
+  },
+  "labelBadgeTextColor": {
+    "message": "Color de texto del badge:",
+    "description": "Etiqueta para color de texto del badge"
+  },
+  "labelBadgeBgColor": {
+    "message": "Color de fondo del badge:",
+    "description": "Etiqueta para color de fondo del badge"
+  },
+  "badgePreview": {
+    "message": "Vista previa del badge:",
+    "description": "Texto para vista previa del badge"
+  },
+  "addButton": {
+    "message": "Agregar User-Agent",
+    "description": "Botón para agregar user-agent"
+  },
+  "configuredUserAgents": {
+    "message": "User-Agents configurados",
+    "description": "Título de la sección de user-agents configurados"
+  },
+  "deleteButton": {
+    "message": "Eliminar",
+    "description": "Botón para eliminar"
+  },
+  "defaultTag": {
+    "message": "POR DEFECTO",
+    "description": "Etiqueta para user-agent por defecto"
+  },
+  "modeLabel": {
+    "message": "Modo:",
+    "description": "Etiqueta para mostrar modo"
+  },
+  "badgeLabel": {
+    "message": "Badge:",
+    "description": "Etiqueta para mostrar badge"
+  },
+  "textLabel": {
+    "message": "Texto:",
+    "description": "Etiqueta para texto"
+  },
+  "backgroundLabel": {
+    "message": "Fondo:",
+    "description": "Etiqueta para fondo"
+  },
+  "defaultUserAgent": {
+    "message": "Por defecto (Chrome)",
+    "description": "Nombre del user-agent por defecto"
+  },
+  "defaultUserAgentPreview": {
+    "message": "User-agent por defecto del navegador",
+    "description": "Vista previa del user-agent por defecto"
+  },
+  "noUserAgents": {
+    "message": "No hay user-agents configurados",
+    "description": "Mensaje cuando no hay user-agents"
+  },
+  "confirmDelete": {
+    "message": "¿Estás seguro de que quieres eliminar este user-agent?",
+    "description": "Mensaje de confirmación para eliminar"
+  },
+  "fillAllFields": {
+    "message": "Por favor completa todos los campos obligatorios",
+    "description": "Mensaje de error cuando faltan campos"
+  },
+  "userAgentAdded": {
+    "message": "User-Agent agregado correctamente",
+    "description": "Mensaje de éxito al agregar user-agent"
+  },
+  "userAgentDeleted": {
+    "message": "User-Agent eliminado correctamente",
+    "description": "Mensaje de éxito al eliminar user-agent"
+  },
+  "appendMode": {
+    "message": "(agregar)",
+    "description": "Texto para modo agregar en popup"
+  },
+  "languageLabel": {
+    "message": "Idioma:",
+    "description": "Etiqueta para selector de idioma"
+  },
+  "languageChanged": {
+    "message": "Idioma cambiado correctamente. La página se recargará.",
+    "description": "Mensaje cuando se cambia el idioma"
+  }
+}

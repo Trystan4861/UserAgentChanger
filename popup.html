@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,7 +9,7 @@
 <body>
   <div class="container">
     <header>
-      <h1>🌐 User-Agent Changer</h1>
+      <h1 data-i18n="popupTitle">🌐 User-Agent Changer</h1>
     </header>
     
     <div class="user-agents-list" id="userAgentsList">
@@ -18,11 +18,12 @@
     
     <footer>
       <button id="manageBtn" class="btn btn-secondary">
-        <span>⚙️</span> Gestionar User-Agents
+        <span>⚙️</span> <span data-i18n="manageButton">Gestionar User-Agents</span>
       </button>
     </footer>
   </div>
   
+  <script src="i18n.js"></script>
   <script src="popup.js"></script>
 </body>
 </html>
