@@ -60,7 +60,8 @@ tasks:
     priority: high
     estimated_hours: 2
     dependencies: [1]
-    status: pending
+    status: completed
+    completed_date: 2025-12-26
 
   # ============================================================================
   # FASE 2: PERMANENT SPOOF LIST
@@ -93,7 +94,8 @@ tasks:
     priority: high
     estimated_hours: 4
     dependencies: [2]
-    status: pending
+    status: completed
+    completed_date: 2025-12-26
     
   - id: 4
     name: Implementar almacenamiento de Permanent Spoofs
@@ -126,7 +128,8 @@ tasks:
     priority: high
     estimated_hours: 2
     dependencies: [3]
-    status: pending
+    status: completed
+    completed_date: 2025-12-26
     
   - id: 5
     name: Implementar lógica en background.js para Permanent Spoofs
