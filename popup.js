@@ -76,11 +76,6 @@ function createUserAgentItem(ua, activeId) {
   
   const modeText = ua.mode === 'append' ? ` ${chrome.i18n.getMessage('appendMode')}` : '';
   
-  // For default user-agent, show translated message instead of actual UA
-  const preview = ua.id === 'default' 
-    ? chrome.i18n.getMessage('defaultUserAgentPreview')
-    : (ua.userAgent ? ua.userAgent.substring(0, 50) + '...' : chrome.i18n.getMessage('defaultUserAgentPreview'));
-  
   // Badge colors
   const badgeTextColor = ua.badgeTextColor || '#ffffff';
   const badgeBgColor = ua.badgeBgColor || '#1a73e8';
@@ -92,13 +87,23 @@ function createUserAgentItem(ua, activeId) {
     </div>
   `;
   
-  div.innerHTML = `
-    <div class="user-agent-info">
-      <div class="user-agent-name">${ua.name}${modeText}</div>
-      <div class="user-agent-preview">${preview}</div>
-    </div>
-    ${badgeHtml}
-  `;
+  // For default user-agent, show with preview text. For others, only title
+  if (ua.id === 'default') {
+    div.innerHTML = `
+      <div class="user-agent-info">
+        <div class="user-agent-name">${ua.name}${modeText}</div>
+        <div class="user-agent-preview">${chrome.i18n.getMessage('defaultUserAgentPreview')}</div>
+      </div>
+      ${badgeHtml}
+    `;
+  } else {
+    div.innerHTML = `
+      <div class="user-agent-info">
+        <div class="user-agent-name">${ua.name}${modeText}</div>
+      </div>
+      ${badgeHtml}
+    `;
+  }
   
   div.addEventListener('click', () => activateUserAgent(ua.id));
   
