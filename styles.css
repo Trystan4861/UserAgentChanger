@@ -292,3 +292,9 @@ body {
   background: #e6f4ea;
   color: #137333;
 }
+.footer-credit {
+  margin-top: 12px;
+  font-size: 12px;
+  color: #888;
+  text-align: right;
+}
