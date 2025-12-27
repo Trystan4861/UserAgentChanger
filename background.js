@@ -1,7 +1,7 @@
 // Listen for messages from popup
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === 'setUserAgent') {
-    setUserAgent(request.userAgent);
+    setUserAgent(request.userAgent, request.tabId || null);
   }
 });
 
@@ -15,8 +15,8 @@ chrome.storage.onChanged.addListener((changes, namespace) => {
     if (changes.permanentSpoofs) {
       applyPermanentSpoofs();
     }
-    // Update rules when settings change (to adjust priorities)
-    if (changes.settings) {
+    // Update rules when settings change (permanentOverride or perTabSpoof)
+    if (changes.permanentOverride || changes.perTabSpoof) {
       applyPermanentSpoofs();
       // Also reapply current manual selection to update its priority
       chrome.storage.local.get(['userAgents', 'activeId'], (result) => {
@@ -50,16 +50,32 @@ chrome.runtime.onInstalled.addListener(async () => {
 });
 
 // Set user-agent using declarativeNetRequest
-async function setUserAgent(userAgent) {
+async function setUserAgent(userAgent, tabId = null) {
   try {
+    // Get settings to check perTabSpoof
+    const settingsResult = await chrome.storage.local.get(['permanentOverride', 'perTabSpoof']);
+    const permanentOverride = settingsResult.permanentOverride || false;
+    const perTabSpoof = settingsResult.perTabSpoof || false;
+    
     // Get existing rules
     const existingRules = await chrome.declarativeNetRequest.getDynamicRules();
     
-    // Remove only manual selection rules (ID < 1000)
-    // Keep permanent spoof rules (ID >= 1000)
-    const manualRuleIds = existingRules
-      .filter(rule => rule.id < 1000)
-      .map(rule => rule.id);
+    // If per-tab is disabled, remove all manual selection rules (ID < 1000)
+    // If per-tab is enabled and we have a tabId, remove only the rule for that specific tab
+    let manualRuleIds;
+    
+    if (!perTabSpoof || !tabId) {
+      // Global mode: remove all manual rules
+      manualRuleIds = existingRules
+        .filter(rule => rule.id < 1000)
+        .map(rule => rule.id);
+    } else {
+      // Per-tab mode: remove only the rule for this specific tab
+      // We'll use tab-specific IDs: tabId (for tabs 1-999)
+      manualRuleIds = existingRules
+        .filter(rule => rule.id === tabId && rule.id < 1000)
+        .map(rule => rule.id);
+    }
     
     if (manualRuleIds.length > 0) {
       await chrome.declarativeNetRequest.updateDynamicRules({
@@ -88,17 +104,23 @@ async function setUserAgent(userAgent) {
       finalUserAgent = userAgent.userAgent;
     }
     
-    // Get settings to determine priority
-    const result = await chrome.storage.local.get(['settings']);
-    const settings = result.settings || {};
-    
     // If permanentOverride is true, manual selection has priority 2 (lower than permanent spoofs at 3)
     // If false, manual selection has priority 2 (higher than permanent spoofs at 1)
-    const priority = settings.permanentOverride ? 2 : 2;
+    const priority = permanentOverride ? 2 : 2;
+    
+    // Determine rule ID based on per-tab setting
+    let ruleId;
+    if (perTabSpoof && tabId) {
+      // Use tabId as ruleId for per-tab mode (1-999)
+      ruleId = tabId;
+    } else {
+      // Use ID 1 for global mode
+      ruleId = 1;
+    }
     
     // Add new rule to modify User-Agent header
     const newRule = {
-      id: 1,
+      id: ruleId,
       priority: priority,
       action: {
         type: 'modifyHeaders',
@@ -131,6 +153,11 @@ async function setUserAgent(userAgent) {
         ]
       }
     };
+    
+    // Add tabIds condition if per-tab mode is enabled
+    if (perTabSpoof && tabId) {
+      newRule.condition.tabIds = [tabId];
+    }
     
     await chrome.declarativeNetRequest.updateDynamicRules({
       addRules: [newRule]
@@ -272,9 +299,9 @@ async function getUserAgentString(userAgentId) {
  */
 async function updatePermanentSpoofRules() {
   try {
-    const result = await chrome.storage.local.get(['permanentSpoofs', 'settings']);
+    const result = await chrome.storage.local.get(['permanentSpoofs', 'permanentOverride']);
     const permanentSpoofs = result.permanentSpoofs || [];
-    const settings = result.settings || {};
+    const permanentOverride = result.permanentOverride || false;
     
     // Get existing rules
     const existingRules = await chrome.declarativeNetRequest.getDynamicRules();
@@ -310,8 +337,10 @@ async function updatePermanentSpoofRules() {
       // Create URL pattern from domain
       const urlPattern = getDomainPattern(spoof.domain);
       
-      // Determine priority based on settings
-      const priority = settings.permanentOverride ? 3 : 1;
+      // Determine priority based on permanentOverride setting
+      // If permanentOverride is true: permanent spoofs have priority 3 (higher than manual selection at 2)
+      // If permanentOverride is false: permanent spoofs have priority 1 (lower than manual selection at 2)
+      const priority = permanentOverride ? 3 : 1;
       
       const rule = {
         id: ruleId++,
@@ -348,7 +377,7 @@ async function updatePermanentSpoofRules() {
         }
       };
 
-      console.log(`Generated rule ID: ${rule.id}`);
+      console.log(`Generated rule ID: ${rule.id} with priority: ${priority}`);
       newRules.push(rule);
     }
     
@@ -382,11 +411,11 @@ async function initializePermanentSpoofs() {
     await applyPermanentSpoofs();
     
     // Also reapply any active user-agent from toolbar if it exists
-    const result = await chrome.storage.local.get(['userAgents', 'activeId', 'settings']);
-    const settings = result.settings || {};
+    const result = await chrome.storage.local.get(['userAgents', 'activeId', 'permanentOverride']);
+    const permanentOverride = result.permanentOverride || false;
     
     // Only reapply manual selection if permanentOverride is false
-    if (!settings.permanentOverride && result.userAgents && result.activeId) {
+    if (!permanentOverride && result.userAgents && result.activeId) {
       const activeUA = result.userAgents.find(ua => ua.id === result.activeId);
       if (activeUA && activeUA.id !== 'default') {
         await setUserAgent(activeUA);
@@ -399,3 +428,29 @@ async function initializePermanentSpoofs() {
 
 // Initialize permanent spoofs on startup
 initializePermanentSpoofs();
+
+// Clean up per-tab rules when tabs are closed
+chrome.tabs.onRemoved.addListener(async (tabId, removeInfo) => {
+  try {
+    // Check if per-tab mode is enabled
+    const result = await chrome.storage.local.get('perTabSpoof');
+    const perTabSpoof = result.perTabSpoof || false;
+    
+    if (!perTabSpoof) {
+      return; // Don't clean up if per-tab mode is disabled
+    }
+    
+    // Remove the rule for this specific tab if it exists
+    const existingRules = await chrome.declarativeNetRequest.getDynamicRules();
+    const tabRule = existingRules.find(rule => rule.id === tabId && rule.id < 1000);
+    
+    if (tabRule) {
+      await chrome.declarativeNetRequest.updateDynamicRules({
+        removeRuleIds: [tabId]
+      });
+      console.log(`Removed per-tab rule for closed tab: ${tabId}`);
+    }
+  } catch (error) {
+    console.error('Error cleaning up tab rule:', error);
+  }
+});
