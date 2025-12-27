@@ -22,7 +22,7 @@ chrome.storage.onChanged.addListener((changes, namespace) => {
       chrome.storage.local.get(['userAgents', 'activeId'], (result) => {
         if (result.userAgents && result.activeId) {
           const activeUA = result.userAgents.find(ua => ua.id === result.activeId);
-          if (activeUA && activeUA.id !== 'default') {
+          if (activeUA && activeUA.id !== 'default' && activeUA.id !== 'auto') {
             setUserAgent(activeUA);
           }
         }
@@ -85,6 +85,12 @@ async function setUserAgent(userAgent, tabId = null) {
     
     // If userAgent is empty or default, just remove manual rules (use browser default)
     // Permanent spoofs will still be active
+    // If userAgent is 'auto', just remove manual rules to let permanent spoofs take effect
+    if (userAgent && userAgent.id === 'auto') {
+      await updateBadge();
+      return;
+    }
+    
     if (!userAgent || !userAgent.userAgent || userAgent.id === 'default') {
       await updateBadge();
       return;
@@ -417,7 +423,7 @@ async function initializePermanentSpoofs() {
     // Only reapply manual selection if permanentOverride is false
     if (!permanentOverride && result.userAgents && result.activeId) {
       const activeUA = result.userAgents.find(ua => ua.id === result.activeId);
-      if (activeUA && activeUA.id !== 'default') {
+      if (activeUA && activeUA.id !== 'default' && activeUA.id !== 'auto') {
         await setUserAgent(activeUA);
       }
     }

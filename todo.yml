@@ -1,819 +1,372 @@
-# TODO: UserAgentChanger Extension - New Features Implementation
-# Project: Add menu navigation and new sections to the extension
+# TODO: UserAgentChanger Extension - Refactoring to AUTO Mode
+# Project: Simplify extension with AUTO mode and smart per-tab system
 
 project_info:
-  name: UserAgentChanger Extension - Menu & Features
+  name: UserAgentChanger Extension - AUTO Mode Implementation
   version: 2.0.0
-  description: Add navigation menu with Permanent Spoof List, Import/Export Settings, Other Settings, and About sections
+  description: Refactor to use AUTO mode with smart per-tab system, removing Other Settings
   created: 2025-12-26
   status: in-progress
   author: trystan4861
-  next_task_to_start: 11
+  next_task_to_start: 23
   last_updated: 2025-12-27
 
-
 notes: |
-  - Todas las tareas deben mantener el estilo visual actual de la extensión
-  - Las tareas se deben completar en el orden indicado, respetando dependencias
-  - Tras realizar una tarea se debe indicar "tarea realizada" al usuario y esperar validación de la misma
-  - Una vez recibida validación de la tarea, marcarla como realizada en este archivoproceder a crear el commit de la misma siguiendo las consideraciones descritas a continuación
-  - Los commits deben seguir la convención de mensajes de commit (tipo: descripción breve)
-    - Ejemplo: {ICONO} {ACTION}: {DESCRIPTION}
-      - ICONO: 🎨 (estilo), 🐛 (bug), ✨ (nueva funcionalidad), 🔥 (eliminación), 📝 (documentación), etc.
-      - ACTION: add, fix, update, remove, refactor, docs, test, chore, enhancement, etc.
-      - DESCRIPTION: Descripción clara y concisa del cambio realizado.
-      - Ejemplo de commit: "✨ add: Permanent Spoof List section with UI and storage"
-  - Estamos creando una extensión para chrome, no se puede ni probar usando llamadas "start" ni "chrome" ni usar puppeteer ni similares, sólo el usuario tiene la posiblidad de realizar las pruebas pertinentes y hay que esperar su feedback
-  - La funcionalidad existente no debe verse afectada
-  - Se debe priorizar la experiencia de usuario (UX)
-  - El código debe ser mantenible y bien documentado
-  - Las pruebas son críticas antes de considerar cualquier tarea completa
-  - La internacionalización debe ser completa (español e inglés)
-  - Solo formato JSON para import/export (NO XML)
-  - Tras cada tarea completada generar un commit detallado en git, usando mensajes claros y descriptivos.
-  - Tras finalizar todas las tareas crear un ChangeLog detallado con todos los cambios realizados en la versión 1.0.1, actualizando los manifest y demás archivos necesarios.
-
+  CAMBIO IMPORTANTE: Refactorización del sistema de User-Agents
+  
+  NUEVO SISTEMA:
+  - Eliminar sección "Other Settings" (permanentOverride y perTabSpoof)
+  - Crear User-Agent especial "AUTO" (badge: "AUTO", palabra reservada)
+  - Sistema per-tab automático e inteligente:
+    * Si hay 1 pestaña: La selección se aplica a esa pestaña y a todas las nuevas
+    * Si hay >1 pestaña: La selección se aplica SOLO a la pestaña activa
+  
+  LÓGICA DE USER-AGENTS:
+  1. AUTO:
+     - Aplica spoofs permanentes por URL
+     - Si no hay spoof para la URL, usa el default del navegador (fallback)
+     - Badge: "AUTO"
+     - NO sobreescribe pestañas que ya tienen AUTO
+  
+  2. DEFAULT:
+     - Usa el User-Agent real del navegador
+     - NO sobreescribe pestañas que ya tienen AUTO
+     - Sin badge
+  
+  3. Otros UAs (iPhone, Android, etc):
+     - Se aplican SOLO a la pestaña activa
+     - Usan el User-Agent específico configurado
+     - Badge: su alias correspondiente
+  
+  PRIORIDADES:
+  - AUTO tiene prioridad máxima cuando hay spoof para la URL
+  - Las selecciones manuales (iPhone, Android) solo afectan a su pestaña
+  - DEFAULT no interfiere con AUTO
+  
+  PALABRAS RESERVADAS:
+  - "AUTO" no puede ser usado como alias al crear nuevos user-agents
+  
+  MANTENER:
+  - Sistema de navegación con menú lateral ✓
+  - Permanent Spoof List ✓
+  - Import/Export Settings ✓
+  - About section ✓
+  - Internacionalización ✓
 
 tasks:
   # ============================================================================
-  # FASE 1: ESTRUCTURA Y NAVEGACIÓN
+  # TAREAS COMPLETADAS ANTERIORMENTE
   # ============================================================================
   
   - id: 1
     name: Crear sistema de navegación con menú lateral
-    description: |
-      Implementar un menú de navegación lateral en options.html que incluya las siguientes opciones:
-      - Custom User-Agents (sección actual)
-      - Permanent Spoof List
-      - Import/Export Settings
-      - Other Settings
-      - About
-      
-      El menú debe:
-      - Mostrar las opciones de forma clara y accesible
-      - Resaltar la sección activa
-      - Ser responsivo y adaptarse a diferentes tamaños de pantalla
-      - Usar iconos para mejorar la UX (🌐, 📌, 💾, ⚙️, ℹ️)
-      - Mantener el estilo visual actual de la extensión
-      
-      Archivos a modificar:
-      - options.html: Agregar estructura del menú lateral
-      - options.css: Estilos para el menú y layout de secciones
-      - options.js: Lógica de navegación entre secciones
-    priority: high
-    estimated_hours: 3
-    dependencies: []
     status: completed
     completed_date: 2025-12-26
     
   - id: 2
     name: Implementar sistema de gestión de secciones/vistas
-    description: |
-      Crear un sistema en options.js para:
-      - Mostrar/ocultar secciones según la opción del menú seleccionada
-      - Mantener el estado de la sección activa en el storage
-      - Restaurar la última sección visitada al abrir las opciones
-      - Actualizar el estado visual del menú (resaltar opción activa)
-      
-      Implementar funciones:
-      - showSection(sectionId): Muestra una sección específica
-      - hideAllSections(): Oculta todas las secciones
-      - setActiveMenuItem(menuItemId): Actualiza el estado visual del menú
-      - loadLastActiveSection(): Restaura la última sección visitada
-      
-      Archivos a modificar:
-      - options.js: Agregar sistema de gestión de vistas
-    priority: high
-    estimated_hours: 2
-    dependencies: [1]
     status: completed
     completed_date: 2025-12-26
-
-  # ============================================================================
-  # FASE 2: PERMANENT SPOOF LIST
-  # ============================================================================
-  
+    
   - id: 3
     name: Crear interfaz de Permanent Spoof List
-    description: |
-      Diseñar e implementar la sección "Permanent Spoof List" que permite:
-      - Agregar spoofs permanentes por dominio
-      - Cada spoof tiene:
-        * Campo de dominio (ej: "google.com", "*.amazon.com")
-        * Selector de User-Agent (dropdown con los UAs configurados)
-        * Botón "Add" para agregar
-      - Mostrar tabla/lista de spoofs permanentes configurados
-      - Cada entrada en la lista debe mostrar:
-        * Dominio
-        * User-Agent String asociado
-        * Botón para eliminar
-      
-      Características:
-      - Soporte para wildcards en dominios (*.ejemplo.com)
-      - Validación de formato de dominio
-      - Vista previa del User-Agent seleccionado
-      
-      Archivos a modificar:
-      - options.html: Agregar sección HTML de Permanent Spoof List
-      - options.css: Estilos para la tabla/lista de spoofs
-      - options.js: Lógica de UI para esta sección
-    priority: high
-    estimated_hours: 4
-    dependencies: [2]
     status: completed
     completed_date: 2025-12-26
     
   - id: 4
     name: Implementar almacenamiento de Permanent Spoofs
-    description: |
-      Crear estructura de datos y funciones para gestionar permanent spoofs:
-      
-      Estructura de datos en chrome.storage.local:
-      {
-        permanentSpoofs: [
-          {
-            id: "unique-id",
-            domain: "example.com",
-            userAgentId: "iphone",
-            pattern: "*.example.com",
-            enabled: true,
-            createdAt: timestamp
-          }
-        ]
-      }
-      
-      Funciones a implementar en options.js:
-      - addPermanentSpoof(domain, userAgentId)
-      - deletePermanentSpoof(id)
-      - getPermanentSpoofs()
-      - updatePermanentSpoof(id, data)
-      - validateDomain(domain)
-      
-      Archivos a modificar:
-      - options.js: Funciones de gestión de permanent spoofs
-    priority: high
-    estimated_hours: 2
-    dependencies: [3]
     status: completed
     completed_date: 2025-12-26
     
   - id: 5
     name: Implementar lógica en background.js para Permanent Spoofs
-    description: |
-      Modificar background.js para aplicar permanent spoofs automáticamente:
-      
-      Funcionalidades:
-      - Al cargar una página, verificar si el dominio coincide con algún permanent spoof
-      - Aplicar el User-Agent correspondiente al dominio
-      - Prioridad: permanent spoof > selección manual del toolbar
-      - Usar chrome.declarativeNetRequest con reglas dinámicas por dominio
-      
-      Lógica:
-      - Crear reglas de declarativeNetRequest específicas por dominio
-      - Asignar IDs de regla secuenciales (1000+ para permanent spoofs)
-      - Actualizar reglas cuando cambien los permanent spoofs
-      - Escuchar cambios en storage para actualizar reglas
-      
-      Funciones a implementar:
-      - applyPermanentSpoofs(): Aplica todos los spoofs permanentes
-      - updatePermanentSpoofRules(): Actualiza las reglas de declarativeNetRequest
-      - getDomainPattern(domain): Convierte dominio a patrón de URL
-      
-      Archivos a modificar:
-      - background.js: Lógica de aplicación de permanent spoofs
-    priority: high
-    estimated_hours: 4
-    dependencies: [4]
     status: completed
     completed_date: 2025-12-26
-
-  # ============================================================================
-  # FASE 3: IMPORT/EXPORT SETTINGS
-  # ============================================================================
-  
+    
   - id: 6
     name: Crear interfaz de Import/Export Settings
-    description: |
-      Diseñar e implementar la sección "Import/Export Settings" con:
-      
-      Import Settings:
-      - Título: "Import from file:"
-      - Descripción: "Import user-agent strings from a local JSON file."
-      - Botón "Seleccionar archivo" (file input)
-      - Mostrar nombre del archivo seleccionado
-      - Validación del formato JSON
-      
-      Export Settings:
-      - Título: "Export settings to a JSON file:"
-      - Link/botón: "Click Here To Download"
-      - Genera un archivo JSON con todas las configuraciones
-      
-      Características:
-      - Solo soportar formato JSON (NO XML)
-      - Mostrar mensajes de éxito/error
-      - Validar estructura del archivo importado
-      - Previsualización opcional de datos antes de importar
-      
-      Archivos a modificar:
-      - options.html: Agregar sección HTML de Import/Export
-      - options.css: Estilos para la sección
-      - options.js: Lógica de UI
-    priority: medium
-    estimated_hours: 3
-    dependencies: [2]
     status: completed
     completed_date: 2025-12-27
     
   - id: 7
     name: Implementar funcionalidad de Export
-    description: |
-      Crear funcionalidad para exportar todas las configuraciones a JSON:
-      
-      Datos a exportar:
-      - userAgents: Array de user agents personalizados
-      - permanentSpoofs: Array de spoofs permanentes
-      - settings: Configuraciones de "Other Settings"
-      - metadata: Información de la exportación (versión, fecha)
-      
-      Estructura JSON:
-      {
-        "version": "2.0.0",
-        "exportDate": "2025-12-26T14:30:00Z",
-        "userAgents": [...],
-        "permanentSpoofs": [...],
-        "settings": {
-          "permanentOverride": false,
-          "perTabSpoof": true
-        }
-      }
-      
-      Funciones a implementar:
-      - exportSettings(): Genera el objeto JSON con todas las configuraciones
-      - downloadJSON(data, filename): Descarga el JSON como archivo
-      - generateExportFilename(): Genera nombre con timestamp
-      
-      Archivos a modificar:
-      - options.js: Funciones de exportación
-    priority: medium
-    estimated_hours: 2
-    dependencies: [6]
     status: completed
     completed_date: 2025-12-27
     
   - id: 8
     name: Implementar funcionalidad de Import
-    description: |
-      Crear funcionalidad para importar configuraciones desde JSON:
-      
-      Proceso:
-      1. Usuario selecciona archivo JSON
-      2. Validar estructura del JSON
-      3. Verificar compatibilidad de versión
-      4. Mostrar resumen de lo que se importará
-      5. Confirmar importación
-      6. Fusionar o reemplazar configuraciones existentes
-      7. Mostrar resultado (éxito/errores)
-      
-      Validaciones:
-      - Verificar que sea JSON válido
-      - Validar estructura de datos
-      - Validar campos requeridos
-      - Verificar IDs únicos
-      
-      Funciones a implementar:
-      - importSettings(file): Procesa el archivo importado
-      - validateImportData(data): Valida la estructura
-      - mergeSettings(importedData, existingData): Fusiona configuraciones
-      - showImportPreview(data): Muestra resumen antes de importar
-      
-      Opciones de importación:
-      - Reemplazar todo
-      - Fusionar (mantener existentes + agregar nuevos)
-      - Solo importar User-Agents
-      - Solo importar Permanent Spoofs
-      
-      Archivos a modificar:
-      - options.js: Funciones de importación
-      
-      Implementación completada:
-      - ✅ Validación completa de estructura JSON
-      - ✅ Función handleFileImport() para procesar archivos
-      - ✅ Función validateImportData() con validaciones exhaustivas
-      - ✅ Función showImportPreview() con resumen detallado
-      - ✅ Función confirmImport() con 4 modos de importación
-      - ✅ Soporte para drag & drop de archivos
-      - ✅ Mensajes de error personalizados
-      - ✅ Todas las traducciones agregadas (ES/EN)
-      - ✅ Interfaz responsive y accesible
-    priority: medium
-    estimated_hours: 4
-    dependencies: [7]
     status: completed
     completed_date: 2025-12-27
-
-  # ============================================================================
-  # FASE 4: OTHER SETTINGS
-  # ============================================================================
-  
+    
   - id: 9
     name: Crear interfaz de Other Settings
-    description: |
-      Diseñar e implementar la sección "Other Settings" con:
-      
-      Configuraciones:
-      
-      1. Permanent spoofs override (checkbox):
-         - Label: "Permanent spoofs always override any user-agent selection in the toolbar."
-         - Descripción: "By default, any user-agent you select in Chrome's toolbar takes 
-           precedence over any permanent spoofs you have set up. By selecting this option, 
-           your permanent spoofs always take precedence over any selection in the toolbar."
-         - Por defecto: NO marcado
-      
-      2. Per-tab spoof (checkbox):
-         - Label: "Set user-agent spoof per tab"
-         - Descripción: "When setting your user-agent spoof on the fly in the toolbar, the 
-           user-agent you choose will only apply to the current tab. This allows you to 
-           have multiple tabs spoofing different user-agents at once."
-         - Por defecto: SÍ marcado
-      
-      3. Reset Extension (botón):
-         - Label: "Reset extension."
-         - Botón: "Reset"
-         - Descripción: "Clears out all settings, removing all user-agents and all permanent 
-           spoofs, as if you had just installed."
-         - Requiere confirmación antes de ejecutar
-      
-      Archivos a modificar:
-      - options.html: Agregar sección HTML de Other Settings
-      - options.css: Estilos para checkboxes y botón reset
-      - options.js: Lógica de UI
-    priority: medium
-    estimated_hours: 2
-    dependencies: [2]
     status: completed
     completed_date: 2025-12-27
-    implementation:
-      - "✅ HTML: Sección completa con checkboxes y danger zone"
-      - "✅ CSS: Estilos diferenciados para danger zone (rojo)"
-      - "✅ JavaScript: Funciones setupOtherSettings() y resetExtension()"
-      - "✅ Integración con chrome.storage para persistir configuraciones"
-      - "✅ Confirmación de reset con advertencia clara"
-      - "✅ Notificaciones de éxito/info para cada acción"
-      - "✅ Traducciones completas (ES/EN)"
-      - "✅ Export incluye las nuevas configuraciones"
+    note: "SERÁ ELIMINADA en la refactorización"
     
   - id: 10
     name: Implementar lógica de Other Settings
-    description: |
-      Implementar la funcionalidad de las configuraciones:
-      
-      1. Permanent Override:
-         - Guardar estado en chrome.storage.local
-         - Modificar background.js para respetar esta configuración
-         - Si está activado: permanent spoofs tienen prioridad máxima
-         - Si está desactivado: selección manual del popup tiene prioridad
-      
-      2. Per-Tab Spoof:
-         - Guardar estado en chrome.storage.local
-         - Modificar background.js para aplicar spoofs por tab
-         - Si está activado: usar chrome.declarativeNetRequest por tabId
-         - Si está desactivado: aplicar spoof global a todas las tabs
-         - Requiere modificar sistema de reglas en background.js
-      
-      3. Reset Extension:
-         - Mostrar confirmación con advertencia clara
-         - Eliminar todo el chrome.storage.local
-         - Reinicializar con valores por defecto
-         - Eliminar todas las reglas de declarativeNetRequest
-         - Resetear badge del icono
-         - Mostrar notificación de éxito
-      
-      Funciones a implementar en options.js:
-      - savePermanentOverrideSetting(value)
-      - savePerTabSpoofSetting(value)
-      - resetExtension()
-      - confirmReset()
-      
-      Funciones a modificar en background.js:
-      - Verificar permanentOverride antes de aplicar reglas
-      - Implementar lógica per-tab si perTabSpoof está activado
-      
-      Archivos a modificar:
-      - options.js: Funciones de configuración
-      - background.js: Lógica de aplicación de configuraciones
-    priority: high
-    estimated_hours: 4
-    dependencies: [9, 5]
     status: completed
     completed_date: 2025-12-27
-    implementation:
-      - "✅ Permanent Override: Sistema de prioridades implementado (priority 1 vs 3)"
-      - "✅ Per-Tab Spoof: Reglas específicas por tabId implementadas"
-      - "✅ Listener chrome.tabs.onRemoved para limpiar reglas de tabs cerradas"
-      - "✅ Modificación de setUserAgent() para respetar ambas configuraciones"
-      - "✅ storage.onChanged listener actualiza reglas al cambiar settings"
-      - "✅ Reset Extension: Funcionalidad completa con confirmación"
-      - "✅ Todas las funciones en options.js implementadas"
-      - "✅ Lógica completa en background.js"
-
-  # ============================================================================
-  # FASE 5: ABOUT SECTION
-  # ============================================================================
-  
-  - id: 11
-    name: Crear sección About
-    description: |
-      Diseñar e implementar la sección "About" con información de la extensión:
-      
-      Contenido:
-      - Logo/Icono de la extensión
-      - Nombre: "User-Agent Changer"
-      - Versión actual (desde manifest.json)
-      - Descripción breve de la extensión
-      - Autor: @trystan4861
-      - Enlaces:
-        * GitHub repository
-        * Reportar un bug
-        * Solicitar una característica
-        * Documentación/Wiki
-      - Licencia
-      - Changelog/Historial de versiones
-      - Créditos y agradecimientos
-      
-      Estilo:
-      - Diseño limpio y profesional
-      - Usar el estilo visual de la extensión
-      - Iconos para los enlaces
-      - Responsive
-      
-      Archivos a modificar:
-      - options.html: Agregar sección HTML de About
-      - options.css: Estilos para la sección
-      - options.js: Lógica para cargar versión desde manifest
-    priority: low
-    estimated_hours: 2
-    dependencies: [2]
-    status: pending
-  
+    note: "SERÁ ELIMINADA en la refactorización"
+    
   - id: 11.1
     name: Agregar badge de versión en sección About
-    description: |
-      Implementar un badge visual que muestre la versión de la extensión en la sección About:
-      
-      Implementación:
-      - Agregar badge de versión junto al crédito del autor en options.html
-      - El badge debe mostrar la versión desde manifest.json
-      - Diseño consistente con el estilo de la extensión
-      - Badge con estilo visual atractivo (fondo azul claro, borde, padding)
-      
-      Archivos modificados:
-      - options.html: Agregar elemento span con clase "version-badge"
-      - options.css: Estilos para .version-badge
-      - options.js: Función para cargar y mostrar la versión desde manifest.json
-    priority: low
-    estimated_hours: 0.5
-    dependencies: [2]
     status: completed
     completed_date: 2025-12-27
 
   # ============================================================================
-  # FASE 6: INTERNACIONALIZACIÓN
+  # FASE REFACTORIZACIÓN: SISTEMA AUTO
   # ============================================================================
   
-  - id: 12
-    name: Agregar traducciones para nuevas secciones
+  - id: 23
+    name: Eliminar sección Other Settings de la UI
     description: |
-      Agregar todas las traducciones necesarias para las nuevas funcionalidades:
+      Eliminar completamente la sección "Other Settings" de la interfaz:
       
-      Secciones a traducir:
-      - Menú de navegación
-      - Permanent Spoof List (títulos, labels, botones, mensajes)
-      - Import/Export Settings (títulos, descripciones, mensajes)
-      - Other Settings (labels, descripciones, confirmaciones)
-      - About (contenido)
-      - Mensajes de error/éxito
-      - Confirmaciones y diálogos
+      Cambios en options.html:
+      - Eliminar item del menú "Other Settings"
+      - Eliminar sección completa #otherSettingsSection
+      
+      Cambios en options.css:
+      - Eliminar estilos específicos de Other Settings si los hay
+      
+      Cambios en options.js:
+      - Eliminar función setupOtherSettings()
+      - Eliminar event listeners relacionados
+      - Eliminar referencias a permanentOverride y perTabSpoof en la UI
+      
+      IMPORTANTE:
+      - NO eliminar la lógica de permanent spoofs de background.js
+      - Mantener el storage de permanentSpoofs
+      - Solo eliminar la UI y configuraciones de override/per-tab
       
       Archivos a modificar:
-      - _locales/en/messages.json: Agregar traducciones en inglés
-      - _locales/es/messages.json: Agregar traducciones en español
-      
-      Nuevas claves a agregar (aproximadamente 50+):
-      - menuCustomUserAgents, menuPermanentSpoofs, menuImportExport, etc.
-      - permanentSpoofTitle, addSpoofDomain, selectUserAgent, etc.
-      - importTitle, exportTitle, importSuccess, exportSuccess, etc.
-      - otherSettingsTitle, permanentOverride, perTabSpoof, resetExtension, etc.
-      - aboutTitle, aboutDescription, version, author, etc.
-    priority: medium
-    estimated_hours: 3
-    dependencies: [3, 6, 9, 11]
-    status: pending
-
-  # ============================================================================
-  # FASE 7: TESTING Y REFINAMIENTO
-  # ============================================================================
-  
-  - id: 13
-    name: Testing de navegación y UI
+      - options.html
+      - options.css (si aplica)
+      - options.js
+    priority: high
+    estimated_hours: 1
+    dependencies: []
+    status: completed
+    completed_date: 2025-12-27
+    
+  - id: 24
+    name: Crear User-Agent especial "AUTO"
     description: |
-      Realizar pruebas exhaustivas de la interfaz de usuario:
+      Agregar el User-Agent especial "AUTO" a los defaults:
       
-      Tests a realizar:
-      - Navegación entre secciones funciona correctamente
-      - Estado del menú se mantiene al recargar la página
-      - Responsive design en diferentes tamaños de ventana
-      - Transiciones suaves entre secciones
-      - Todos los botones y controles funcionan
-      - Validaciones de formularios funcionan correctamente
-      - Mensajes de error/éxito se muestran apropiadamente
+      Características de AUTO:
+      - id: 'auto'
+      - name: i18n.getMessage('autoUserAgent') // "Definido en Spoof List"
+      - alias: 'AUTO'
+      - userAgent: '' (vacío, se determina dinámicamente)
+      - mode: 'auto' (nuevo modo especial)
+      - badgeTextColor: '#ffffff'
+      - badgeBgColor: '#10b981' (verde para diferenciarlo)
       
-      Verificar:
-      - Accesibilidad (teclado, lectores de pantalla)
-      - Consistencia visual con el diseño existente
-      - Sin errores en consola
-      - Performance (carga rápida, sin lag)
+      Agregar al array getDefaultUserAgents() en popup.js:
+      - Colocar AUTO como segunda opción (después de default)
+      
+      Validación en options.js:
+      - Al crear/editar user-agents, validar que alias !== 'AUTO'
+      - Mostrar error si intenta usar 'AUTO' como alias
+      - Agregar mensaje de error en traducciones
+      
+      Traducciones a agregar:
+      - autoUserAgent: "Defined in Spoof List" (EN) / "Definido en Spoof List" (ES)
+      - autoUserAgentDesc: "Uses permanent spoofs based on URL" (EN) / "Usa spoofs permanentes según URL" (ES)
+      - aliasReservedError: "'AUTO' is a reserved word" (EN) / "'AUTO' es una palabra reservada" (ES)
+      
+      Archivos a modificar:
+      - popup.js: Agregar AUTO a getDefaultUserAgents()
+      - options.js: Agregar validación de alias
+      - _locales/en/messages.json
+      - _locales/es/messages.json
     priority: high
     estimated_hours: 2
-    dependencies: [1, 2, 3, 6, 9, 11]
+    dependencies: [23]
     status: pending
     
-  - id: 14
-    name: Testing de Permanent Spoofs
+  - id: 25
+    name: Implementar sistema per-tab automático inteligente
     description: |
-      Probar la funcionalidad de Permanent Spoofs:
+      Crear sistema que detecta número de pestañas y aplica lógica correspondiente:
       
-      Tests:
-      - Agregar permanent spoof funciona correctamente
-      - Eliminar permanent spoof funciona correctamente
-      - Spoofs se aplican automáticamente al visitar dominios
-      - Wildcards funcionan correctamente (*.example.com)
-      - Validación de dominios funciona
-      - Prioridad de spoofs se respeta según configuración
-      - User-Agent se aplica correctamente por dominio
-      - Cambios en spoofs se reflejan inmediatamente
+      Lógica en background.js:
       
-      Casos de prueba:
-      - Dominio exacto: "google.com"
-      - Subdominios: "mail.google.com"
-      - Wildcard: "*.google.com"
-      - Múltiples spoofs activos simultáneamente
-      - Conflictos de prioridad entre spoofs
+      1. Crear función getTabCount():
+         - Retorna el número de pestañas abiertas
+         - Filtra pestañas de chrome:// y extensiones
+      
+      2. Modificar setUserAgent() para soportar modo AUTO:
+         - Si userAgent.mode === 'auto':
+           * Obtener URL de la pestaña
+           * Buscar spoof permanente para esa URL
+           * Si existe spoof: aplicar ese User-Agent
+           * Si no existe spoof: no crear regla (usar default del navegador)
+         - Aplicar regla solo a la pestaña específica (siempre per-tab)
+      
+      3. Sistema de almacenamiento per-tab:
+         - Crear en storage: tabUserAgents = { [tabId]: userAgentId }
+         - Al seleccionar UA: guardar en tabUserAgents[tabId]
+         - Al cambiar de pestaña: actualizar badge según tabUserAgents[tabId]
+         - Al cerrar pestaña: limpiar tabUserAgents[tabId]
+      
+      4. Lógica de aplicación según número de pestañas:
+         - Si 1 pestaña: guardar activeId globalmente + en tabUserAgents
+         - Si >1 pestaña: solo guardar en tabUserAgents (no cambiar activeId)
+      
+      5. Inicialización de nuevas pestañas:
+         - chrome.tabs.onCreated: si hay activeId global, aplicarlo a nueva pestaña
+         - Si activeId es 'auto': aplicar regla AUTO
+         - Si activeId es otro: aplicar ese UA
+      
+      Funciones a crear:
+      - getTabCount(): Cuenta pestañas válidas
+      - setUserAgentForTab(tabId, userAgentId): Aplica UA a pestaña específica
+      - getActiveUserAgentForTab(tabId): Obtiene UA activo de una pestaña
+      - cleanupClosedTabs(): Limpia storage de pestañas cerradas
+      - applyAutoRuleForTab(tabId, url): Aplica regla AUTO a una pestaña
+      
+      Archivos a modificar:
+      - background.js: Nueva lógica completa per-tab
     priority: high
-    estimated_hours: 3
-    dependencies: [5, 10]
+    estimated_hours: 6
+    dependencies: [24]
     status: pending
     
-  - id: 15
-    name: Testing de Import/Export
+  - id: 26
+    name: Actualizar badge para mostrar estado AUTO
     description: |
-      Probar la funcionalidad de Import/Export:
+      Modificar updateBadgeForTab() para soportar modo AUTO:
       
-      Tests de Export:
-      - Exportar configuraciones genera JSON válido
-      - Todas las configuraciones se incluyen en el export
-      - Nombre del archivo incluye timestamp
-      - Descarga funciona correctamente
+      Lógica del badge:
+      - Si tabUserAgents[tabId] === 'auto':
+        * Obtener URL de la pestaña
+        * Buscar spoof permanente para esa URL
+        * Si hay spoof: mostrar badge 'AUTO' (color verde #10b981)
+        * Si no hay spoof: no mostrar badge (es default)
       
-      Tests de Import:
-      - Importar JSON válido funciona correctamente
-      - Validación rechaza JSON inválido
-      - Validación rechaza estructura incorrecta
-      - Opción de fusionar/reemplazar funciona
-      - Importación parcial funciona (solo UAs o solo spoofs)
-      - Mensajes de éxito/error se muestran
-      - Configuraciones se aplican correctamente después de importar
+      - Si tabUserAgents[tabId] === 'default':
+        * No mostrar badge
       
-      Casos de prueba:
-      - Archivo JSON válido y completo
-      - Archivo JSON con campos faltantes
-      - Archivo JSON con estructura incorrecta
-      - Archivo no-JSON
-      - Archivo muy grande
-      - Importar y luego exportar (debe ser idéntico)
-    priority: high
-    estimated_hours: 3
-    dependencies: [8]
-    status: pending
-    
-  - id: 16
-    name: Testing de Other Settings
-    description: |
-      Probar las configuraciones de Other Settings:
+      - Si tabUserAgents[tabId] === otro UA:
+        * Mostrar badge del UA correspondiente
       
-      Tests:
-      1. Permanent Override:
-         - Con opción activada: permanent spoofs tienen prioridad
-         - Con opción desactivada: selección manual tiene prioridad
-         - Cambiar configuración se aplica inmediatamente
+      Título del badge (tooltip):
+      - AUTO con spoof: "User-Agent Changer\nAUTO: [Nombre del UA del spoof]"
+      - AUTO sin spoof: "User-Agent Changer\nAUTO: Default"
+      - DEFAULT: "User-Agent Changer\nDefault"
+      - Otro UA: "User-Agent Changer\n[Nombre del UA]"
       
-      2. Per-Tab Spoof:
-         - Con opción activada: cada tab puede tener diferente UA
-         - Con opción desactivada: todas las tabs usan mismo UA
-         - Abrir múltiples tabs y verificar comportamiento
-      
-      3. Reset Extension:
-         - Confirmación se muestra antes de resetear
-         - Reset elimina todas las configuraciones
-         - Reset restaura valores por defecto
-         - Extensión funciona correctamente después de reset
-      
-      Verificar:
-      - Configuraciones se guardan correctamente
-      - Cambios se aplican sin necesidad de recargar
-      - background.js respeta las configuraciones
+      Archivos a modificar:
+      - background.js: updateBadgeForTab()
     priority: high
     estimated_hours: 2
-    dependencies: [10]
+    dependencies: [25]
     status: pending
     
-  - id: 17
-    name: Testing de Internacionalización
+  - id: 27
+    name: Actualizar popup.js para sistema per-tab
     description: |
-      Probar que todas las traducciones funcionan correctamente:
+      Modificar popup.js para trabajar con el nuevo sistema:
       
-      Tests:
-      - Cambiar idioma en el selector actualiza toda la UI
-      - Todas las nuevas secciones están traducidas
-      - No hay claves faltantes (no aparece clave en lugar de texto)
-      - Traducciones son coherentes y tienen sentido
-      - Plurales y variables funcionan correctamente
+      Cambios en loadUserAgents():
+      - Obtener pestaña activa actual
+      - Leer tabUserAgents[currentTabId] en lugar de activeId global
+      - Si no existe entrada para esta pestaña, mostrar activeId global
+      - Marcar como activo el UA correspondiente
       
-      Verificar en ambos idiomas:
-      - Español (es)
-      - Inglés (en)
+      Cambios en activateUserAgent():
+      - Obtener pestaña activa actual
+      - Obtener número total de pestañas (getTabCount)
+      - Si 1 pestaña:
+        * Guardar en activeId global
+        * Guardar en tabUserAgents[tabId]
+        * Aplicar a todas las pestañas futuras
+      - Si >1 pestaña:
+        * Solo guardar en tabUserAgents[tabId]
+        * NO cambiar activeId global
+      - Enviar mensaje a background con tabId
       
-      Áreas a verificar:
-      - Menú de navegación
-      - Todas las secciones nuevas
-      - Mensajes de error/éxito
-      - Confirmaciones
-      - Tooltips
-    priority: medium
-    estimated_hours: 1
-    dependencies: [12]
+      Mostrar indicador visual:
+      - Si modo AUTO está activo: mostrar texto explicativo
+      - Si hay 1 pestaña: indicar "aplicado globalmente"
+      - Si hay >1 pestaña: indicar "solo esta pestaña"
+      
+      Archivos a modificar:
+      - popup.js
+    priority: high
+    estimated_hours: 3
+    dependencies: [25]
     status: pending
-
-  # ============================================================================
-  # FASE 8: DOCUMENTACIÓN Y FINALIZACIÓN
-  # ============================================================================
-  
-  - id: 18
-    name: Actualizar README.md
+    
+  - id: 28
+    name: Limpiar código de permanentOverride y perTabSpoof
     description: |
-      Actualizar la documentación del proyecto:
+      Eliminar toda referencia a las configuraciones obsoletas:
       
-      Secciones a agregar/actualizar:
-      - Descripción de nuevas funcionalidades
-      - Screenshots de las nuevas secciones
-      - Instrucciones de uso para:
-        * Permanent Spoof List
-        * Import/Export Settings
-        * Other Settings
-      - Ejemplos de uso
-      - FAQ con preguntas comunes
-      - Troubleshooting
+      En background.js:
+      - Eliminar referencias a permanentOverride
+      - Eliminar referencias a perTabSpoof
+      - Eliminar listeners de storage para estos settings
+      - Simplificar lógica de prioridades (AUTO siempre usa spoofs cuando aplica)
+      - Eliminar código de session rules vs dynamic rules (ahora todo es session)
       
-      Incluir:
-      - Capturas de pantalla actualizadas
-      - Ejemplos de archivos JSON para importar
-      - Casos de uso comunes
-      - Configuraciones recomendadas
+      En options.js:
+      - Eliminar funciones savePermanentOverrideSetting()
+      - Eliminar funciones savePerTabSpoofSetting()
+      - Eliminar referencias en export/import
+      
+      En storage:
+      - NO eliminar permanentSpoofs (se sigue usando)
+      - NO limpiar storage del usuario (migración suave)
+      - Los valores viejos simplemente se ignoran
+      
+      Archivos a modificar:
+      - background.js
+      - options.js
     priority: medium
     estimated_hours: 2
-    dependencies: [1, 3, 6, 9, 11]
+    dependencies: [25, 26, 27]
     status: pending
     
-  - id: 19
-    name: Crear ejemplos de archivos de configuración
+  - id: 29
+    name: Actualizar traducciones para sistema AUTO
     description: |
-      Crear archivos de ejemplo para ayudar a los usuarios:
+      Agregar y actualizar traducciones necesarias:
       
-      Archivos a crear:
-      1. example-export.json:
-         - Ejemplo completo de exportación
-         - Incluye varios user-agents
-         - Incluye varios permanent spoofs
-         - Incluye todas las configuraciones
-         - Bien comentado y documentado
+      Nuevas claves en _locales/*/messages.json:
+      - autoUserAgent: Nombre del UA AUTO
+      - autoUserAgentDesc: Descripción del modo AUTO
+      - autoUserAgentPreview: Texto preview en popup
+      - aliasReservedError: Error al usar AUTO como alias
+      - appliedToCurrentTab: "Applied to current tab only"
+      - appliedGlobally: "Applied to all tabs"
+      - autoModeActive: "AUTO mode active"
+      - autoModeUsingSspoof: "Using spoof for this URL"
+      - autoModeUsingDefault: "No spoof for this URL (using default)"
       
-      2. example-useragents-only.json:
-         - Solo user-agents
-         - Varios ejemplos útiles (móviles, desktop, bots)
+      Eliminar claves obsoletas:
+      - permanentOverride (y sus descripciones)
+      - perTabSpoof (y sus descripciones)
+      - Mantener las de permanent spoofs (esas sí se usan)
       
-      3. example-spoofs-only.json:
-         - Solo permanent spoofs
-         - Ejemplos para sitios comunes
-      
-      Ubicación:
-      - Crear carpeta "examples" en el proyecto
-      - Agregar README en la carpeta explicando cada ejemplo
-    priority: low
-    estimated_hours: 1
-    dependencies: [7, 8]
-    status: pending
-    
-  - id: 20
-    name: Optimización y limpieza de código
-    description: |
-      Revisar y optimizar el código implementado:
-      
-      Tareas:
-      - Eliminar código duplicado
-      - Optimizar funciones pesadas
-      - Mejorar nombres de variables y funciones
-      - Agregar comentarios donde sea necesario
-      - Consistencia en estilo de código
-      - Verificar que no hay console.logs en producción
-      - Minificar archivos si es necesario
-      
-      Verificar:
-      - No hay memory leaks
-      - Listeners se eliminan correctamente
-      - Storage se usa eficientemente
-      - Reglas de declarativeNetRequest se gestionan bien
-    priority: medium
-    estimated_hours: 3
-    dependencies: [13, 14, 15, 16]
-    status: pending
-    
-  - id: 21
-    name: Actualizar manifest.json y versión
-    description: |
-      Preparar la extensión para publicación:
-      
-      Actualizar manifest.json:
-      - Incrementar versión a 2.0.0
-      - Verificar permisos necesarios
-      - Actualizar descripción si es necesario
-      - Verificar host_permissions
-      
-      Verificar:
-      - Todos los archivos necesarios están incluidos
-      - No hay archivos innecesarios
-      - .gitignore está actualizado
-      - Licencia está actualizada
-    priority: high
-    estimated_hours: 1
-    dependencies: [20]
-    status: pending
-    
-  - id: 22
-    name: Crear CHANGELOG.md
-    description: |
-      Documentar todos los cambios en la versión 2.0.0:
-      
-      Estructura del CHANGELOG:
-      - Formato: Keep a Changelog
-      - Versión 2.0.0 - Fecha
-      
-      Secciones:
-      - Added (nuevas funcionalidades)
-      - Changed (cambios en funcionalidades existentes)
-      - Fixed (bugs corregidos)
-      - Security (mejoras de seguridad)
-      
-      Incluir:
-      - Menú de navegación lateral
-      - Permanent Spoof List completo
-      - Sistema de Import/Export
-      - Other Settings (todas las opciones)
-      - Sección About
-      - Mejoras de internacionalización
-      - Optimizaciones de performance
+      Archivos a modificar:
+      - _locales/en/messages.json
+      - _locales/es/messages.json
     priority: medium
     estimated_hours: 1
-    dependencies: [21]
+    dependencies: [24, 27]
     status: pending
-
-# ============================================================================
-# RESUMEN DEL PROYECTO
-# ============================================================================
-
-summary:
-  total_tasks: 22
-  total_estimated_hours: 54
-  phases:
-    - name: "Fase 1: Estructura y Navegación"
-      tasks: [1, 2]
-      hours: 5
-    - name: "Fase 2: Permanent Spoof List"
-      tasks: [3, 4, 5]
-      hours: 10
-    - name: "Fase 3: Import/Export Settings"
-      tasks: [6, 7, 8]
-      hours: 9
-    - name: "Fase 4: Other Settings"
-      tasks: [9, 10]
-      hours: 6
-    - name: "Fase 5: About Section"
-      tasks: [11]
-      hours: 2
-    - name: "Fase 6: Internacionalización"
-      tasks: [12]
-      hours: 3
-    - name: "Fase 7: Testing y Refinamiento"
-      tasks: [13, 14, 15, 16, 17]
-      hours: 11
-    - name: "Fase 8: Documentación y Finalización"
-      tasks: [18, 19, 20, 21, 22]
-      hours: 8
+    
+  - id: 30
+    name: Testing completo del sistema AUTO
+    description: |
+      Realizar pruebas exhaustivas del nuevo sistema:
+      
+      Escenarios a probar:
+      
+      1. Con 1 pestaña:
+         -

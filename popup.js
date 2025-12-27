@@ -10,6 +10,15 @@ const getDefaultUserAgents = () => [
     badgeBgColor: '#666666'
   },
   {
+    id: 'auto',
+    name: i18n.getMessage('autoUserAgent'),
+    alias: 'AUTO',
+    userAgent: '',
+    mode: 'auto',
+    badgeTextColor: '#ffffff',
+    badgeBgColor: '#10b981'
+  },
+  {
     id: 'iphone',
     name: 'iPhone 14',
     alias: 'iOS',
@@ -32,11 +41,21 @@ const getDefaultUserAgents = () => [
 // Initialize - wait for i18n to be ready
 document.addEventListener('DOMContentLoaded', async () => {
   await i18n.ready;
+  loadExtensionVersion();
   await initializeUserAgents();
   await updateDefaultUserAgentTranslation();
   await loadUserAgents();
   setupEventListeners();
 });
+
+// Load and display extension version
+function loadExtensionVersion() {
+  const manifest = chrome.runtime.getManifest();
+  const versionElement = document.getElementById('extensionVersion');
+  if (versionElement) {
+    versionElement.textContent = `v${manifest.version}`;
+  }
+}
 
 // Initialize default user-agents if none exist
 async function initializeUserAgents() {
@@ -47,6 +66,25 @@ async function initializeUserAgents() {
       userAgents: getDefaultUserAgents(),
       activeId: 'default'
     });
+  } else {
+    // Ensure AUTO user-agent exists (for existing installations)
+    const userAgents = result.userAgents;
+    const hasAuto = userAgents.some(ua => ua.id === 'auto');
+    
+    if (!hasAuto) {
+      const defaultUserAgents = getDefaultUserAgents();
+      const autoUA = defaultUserAgents.find(ua => ua.id === 'auto');
+      if (autoUA) {
+        // Insert AUTO after DEFAULT
+        const defaultIndex = userAgents.findIndex(ua => ua.id === 'default');
+        if (defaultIndex !== -1) {
+          userAgents.splice(defaultIndex + 1, 0, autoUA);
+        } else {
+          userAgents.unshift(autoUA);
+        }
+        await chrome.storage.local.set({ userAgents });
+      }
+    }
   }
 }
 
@@ -57,10 +95,19 @@ async function updateDefaultUserAgentTranslation() {
   
   const userAgents = result.userAgents;
   const defaultUA = userAgents.find(ua => ua.id === 'default');
+  const autoUA = userAgents.find(ua => ua.id === 'auto');
   
   if (defaultUA) {
     // Update the name with the current language translation
     defaultUA.name = i18n.getMessage('defaultUserAgent');
+  }
+  
+  if (autoUA) {
+    // Update the name with the current language translation
+    autoUA.name = i18n.getMessage('autoUserAgent');
+  }
+  
+  if (defaultUA || autoUA) {
     await chrome.storage.local.set({ userAgents });
   }
 }
@@ -79,10 +126,59 @@ async function loadUserAgents() {
     return;
   }
   
-  userAgents.forEach(ua => {
+  // Separate special user agents (default and auto) from custom ones
+  const defaultUA = userAgents.find(ua => ua.id === 'default');
+  const autoUA = userAgents.find(ua => ua.id === 'auto');
+  const customUAs = userAgents.filter(ua => ua.id !== 'default' && ua.id !== 'auto');
+  
+  // Create special row for default and auto (2 columns)
+  if (defaultUA && autoUA) {
+    const specialRow = createSpecialUserAgentsRow(defaultUA, autoUA, activeId);
+    listContainer.appendChild(specialRow);
+  }
+  
+  // Add custom user agents
+  customUAs.forEach(ua => {
     const item = createUserAgentItem(ua, activeId);
     listContainer.appendChild(item);
   });
+}
+
+// Create special row with DEFAULT and AUTO side by side
+function createSpecialUserAgentsRow(defaultUA, autoUA, activeId) {
+  const row = document.createElement('div');
+  row.className = 'special-user-agents-row';
+  
+  // Create DEFAULT button (left column)
+  const defaultBtn = document.createElement('div');
+  defaultBtn.className = `user-agent-item special-item${defaultUA.id === activeId ? ' active' : ''}`;
+  defaultBtn.dataset.id = defaultUA.id;
+  defaultBtn.innerHTML = `
+    <div class="user-agent-info">
+      <div class="user-agent-name">${defaultUA.name}</div>
+      <div class="user-agent-preview">${i18n.getMessage('defaultUserAgentPreview')}</div>
+    </div>
+  `;
+  defaultBtn.addEventListener('click', () => activateUserAgent(defaultUA.id));
+  
+  // Create AUTO button (right column)
+  const autoBtn = document.createElement('div');
+  autoBtn.className = `user-agent-item special-item${autoUA.id === activeId ? ' active' : ''}`;
+  autoBtn.dataset.id = autoUA.id;
+  autoBtn.innerHTML = `
+    <div class="user-agent-info">
+      <div class="user-agent-name">${autoUA.name}</div>
+    </div>
+    <div class="user-agent-badge" style="color: ${autoUA.badgeTextColor}; background-color: ${autoUA.badgeBgColor};">
+      ${autoUA.alias}
+    </div>
+  `;
+  autoBtn.addEventListener('click', () => activateUserAgent(autoUA.id));
+  
+  row.appendChild(defaultBtn);
+  row.appendChild(autoBtn);
+  
+  return row;
 }
 
 // Create user-agent item element
@@ -95,30 +191,19 @@ function createUserAgentItem(ua, activeId) {
   const badgeTextColor = ua.badgeTextColor || '#ffffff';
   const badgeBgColor = ua.badgeBgColor || '#1a73e8';
   
-  // Don't show badge for default user-agent
-  const badgeHtml = ua.id === 'default' ? '' : `
+  // Always show badge for custom user-agents
+  const badgeHtml = `
     <div class="user-agent-badge" style="color: ${badgeTextColor}; background-color: ${badgeBgColor};">
       ${ua.alias}
     </div>
   `;
   
-  // For default user-agent, show with preview text. For others, only title
-  if (ua.id === 'default') {
-    div.innerHTML = `
-      <div class="user-agent-info">
-        <div class="user-agent-name">${ua.name}</div>
-        <div class="user-agent-preview">${i18n.getMessage('defaultUserAgentPreview')}</div>
-      </div>
-      ${badgeHtml}
-    `;
-  } else {
-    div.innerHTML = `
-      <div class="user-agent-info">
-        <div class="user-agent-name">${ua.name}</div>
-      </div>
-      ${badgeHtml}
-    `;
-  }
+  div.innerHTML = `
+    <div class="user-agent-info">
+      <div class="user-agent-name">${ua.name}</div>
+    </div>
+    ${badgeHtml}
+  `;
   
   div.addEventListener('click', () => activateUserAgent(ua.id));
   
@@ -129,14 +214,25 @@ function createUserAgentItem(ua, activeId) {
 async function activateUserAgent(id) {
   await chrome.storage.local.set({ activeId: id });
   
-  // Get the selected user-agent
-  const result = await chrome.storage.local.get('userAgents');
+  // Get the selected user-agent and perTabSpoof setting
+  const result = await chrome.storage.local.get(['userAgents', 'perTabSpoof']);
   const userAgent = result.userAgents.find(ua => ua.id === id);
+  const perTabSpoof = result.perTabSpoof || false;
   
-  // Send message to background script
+  // Get current tab if perTabSpoof is enabled
+  let tabId = null;
+  if (perTabSpoof) {
+    const [currentTab] = await chrome.tabs.query({ active: true, currentWindow: true });
+    if (currentTab) {
+      tabId = currentTab.id;
+    }
+  }
+  
+  // Send message to background script with tabId if per-tab mode is enabled
   chrome.runtime.sendMessage({
     action: 'setUserAgent',
-    userAgent: userAgent
+    userAgent: userAgent,
+    tabId: tabId
   });
   
   // Reload the list to update active state

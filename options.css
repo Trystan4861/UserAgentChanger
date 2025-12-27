@@ -269,8 +269,14 @@ section h2 {
 
 .list-section {
   grid-column: 2;
+  display: flex;
+  flex-direction: column;
   max-height: 800px;
-  overflow-y: auto;
+  overflow: hidden;
+}
+
+.list-section h2 {
+  flex-shrink: 0;
 }
 
 @media (max-width: 1024px) {
@@ -431,6 +437,9 @@ section h2 {
   display: flex;
   flex-direction: column;
   gap: 12px;
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;
 }
 
 .user-agent-card {
@@ -547,21 +556,25 @@ section h2 {
 }
 
 /* Scrollbar styling */
-.list-section::-webkit-scrollbar {
+.user-agents-list::-webkit-scrollbar,
+.permanent-spoofs-list::-webkit-scrollbar {
   width: 8px;
 }
 
-.list-section::-webkit-scrollbar-track {
+.user-agents-list::-webkit-scrollbar-track,
+.permanent-spoofs-list::-webkit-scrollbar-track {
   background: #f1f1f1;
   border-radius: 4px;
 }
 
-.list-section::-webkit-scrollbar-thumb {
+.user-agents-list::-webkit-scrollbar-thumb,
+.permanent-spoofs-list::-webkit-scrollbar-thumb {
   background: #888;
   border-radius: 4px;
 }
 
-.list-section::-webkit-scrollbar-thumb:hover {
+.user-agents-list::-webkit-scrollbar-thumb:hover,
+.permanent-spoofs-list::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
 
@@ -570,6 +583,9 @@ section h2 {
   display: flex;
   flex-direction: column;
   gap: 12px;
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;
 }
 
 .spoof-card {
@@ -588,7 +604,8 @@ section h2 {
 .spoof-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
+  gap: 12px;
   margin-bottom: 12px;
 }
 
@@ -596,14 +613,31 @@ section h2 {
   font-size: 18px;
   font-weight: 600;
   color: #1a73e8;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 8px;
+  word-break: break-all;
+  overflow-wrap: break-word;
+  line-height: 1.4;
+  flex: 1;
+  min-width: 0;
+  text-decoration: none;
+  transition: color 0.2s ease;
 }
 
 .spoof-domain::before {
   content: '🌐';
   font-size: 20px;
+  flex-shrink: 0;
+}
+
+.spoof-domain:hover {
+  color: #1557b0;
+}
+
+.spoof-header .btn-danger {
+  flex-shrink: 0;
+  margin-top: 2px;
 }
 
 .spoof-info {

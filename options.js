@@ -10,6 +10,15 @@ const getDefaultUserAgents = () => [
     badgeBgColor: '#666666'
   },
   {
+    id: 'auto',
+    name: i18n.getMessage('autoUserAgent'),
+    alias: 'AUTO',
+    userAgent: '',
+    mode: 'auto',
+    badgeTextColor: '#ffffff',
+    badgeBgColor: '#10b981'
+  },
+  {
     id: 'iphone',
     name: 'iPhone 14',
     alias: 'iOS',
@@ -46,7 +55,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   await setupLanguageSelector();
   await setupNavigationMenu();
   await setupImportExport();
-  await setupOtherSettings();
   setupEventListeners();
 });
 
@@ -68,6 +76,25 @@ async function initializeUserAgents() {
       userAgents: getDefaultUserAgents(),
       activeId: 'default'
     });
+  } else {
+    // Ensure AUTO user-agent exists (for existing installations)
+    const userAgents = result.userAgents;
+    const hasAuto = userAgents.some(ua => ua.id === 'auto');
+    
+    if (!hasAuto) {
+      const defaultUserAgents = getDefaultUserAgents();
+      const autoUA = defaultUserAgents.find(ua => ua.id === 'auto');
+      if (autoUA) {
+        // Insert AUTO after DEFAULT
+        const defaultIndex = userAgents.findIndex(ua => ua.id === 'default');
+        if (defaultIndex !== -1) {
+          userAgents.splice(defaultIndex + 1, 0, autoUA);
+        } else {
+          userAgents.unshift(autoUA);
+        }
+        await chrome.storage.local.set({ userAgents });
+      }
+    }
   }
 }
 
@@ -78,10 +105,19 @@ async function updateDefaultUserAgentTranslation() {
   
   const userAgents = result.userAgents;
   const defaultUA = userAgents.find(ua => ua.id === 'default');
+  const autoUA = userAgents.find(ua => ua.id === 'auto');
   
   if (defaultUA) {
     // Update the name with the current language translation
     defaultUA.name = i18n.getMessage('defaultUserAgent');
+  }
+  
+  if (autoUA) {
+    // Update the name with the current language translation
+    autoUA.name = i18n.getMessage('autoUserAgent');
+  }
+  
+  if (defaultUA || autoUA) {
     await chrome.storage.local.set({ userAgents });
   }
 }
@@ -233,7 +269,10 @@ async function loadUserAgents() {
     return;
   }
   
-  userAgents.forEach(ua => {
+  // Filter out default and auto user agents (special internal user agents)
+  const customUserAgents = userAgents.filter(ua => ua.id !== 'default' && ua.id !== 'auto');
+  
+  customUserAgents.forEach(ua => {
     const card = createUserAgentCard(ua);
     listContainer.appendChild(card);
   });
@@ -323,6 +362,12 @@ async function addUserAgent() {
   
   if (!alias || !name || !userAgent) {
     alert(i18n.getMessage('fillAllFields'));
+    return;
+  }
+  
+  // Validate that 'AUTO' is not used as alias (reserved word)
+  if (alias === 'AUTO') {
+    showNotification(i18n.getMessage('aliasReservedError'), 'error');
     return;
   }
   
@@ -514,7 +559,10 @@ function setupUserAgentSelector(userAgents) {
   select.appendChild(defaultOption);
 
   // Add all user agents (except default)
-  userAgents.forEach(ua => {
+  // Filter out default and auto user agents (special internal user agents)
+  const customUserAgents = userAgents.filter(ua => ua.id !== 'default' && ua.id !== 'auto');
+  
+  customUserAgents.forEach(ua => {
     if (ua.id !== 'default') {
       const option = document.createElement('option');
       option.value = ua.id;
@@ -557,12 +605,16 @@ function createSpoofCard(spoof, ua) {
   const card = document.createElement('div');
   card.className = 'spoof-card';
   
+  // Ensure domain has protocol for the link
+  let linkDomain = spoof.domain;
+  if (!linkDomain.startsWith('http://') && !linkDomain.startsWith('https://')) {
+    linkDomain = 'https://' + linkDomain;
+  }
+  
   card.innerHTML = `
     <div class="spoof-header">
-      <div class="spoof-domain">${spoof.domain}</div>
-      <div class="card-actions">
-        <button class="btn btn-danger" data-id="${spoof.id}">🗑️ ${i18n.getMessage('deleteButton')}</button>
-      </div>
+      <a href="${linkDomain}" target="_blank" rel="noopener noreferrer" class="spoof-domain" title="${i18n.getMessage('openInNewTab') || 'Abrir en nueva pestaña'}">${spoof.domain}</a>
+      <button class="btn btn-danger" data-id="${spoof.id}">🗑️ ${i18n.getMessage('deleteButton')}</button>
     </div>
     <div class="spoof-info">
       <div class="spoof-info-row">
@@ -1187,82 +1239,5 @@ async function exportSettings() {
   } catch (error) {
     console.error('Export error:', error);
     alert('Error al exportar la configuración');
-  }
-}
-
-// Other Settings Functions
-async function setupOtherSettings() {
-  const permanentOverrideCheckbox = document.getElementById('permanentOverride');
-  const perTabSpoofCheckbox = document.getElementById('perTabSpoof');
-  const resetExtensionBtn = document.getElementById('resetExtensionBtn');
-  
-  if (!permanentOverrideCheckbox || !perTabSpoofCheckbox || !resetExtensionBtn) return;
-  
-  // Load current settings
-  const result = await chrome.storage.local.get(['permanentOverride', 'perTabSpoof']);
-  
-  permanentOverrideCheckbox.checked = result.permanentOverride || false;
-  perTabSpoofCheckbox.checked = result.perTabSpoof || false;
-  
-  // Add event listeners
-  permanentOverrideCheckbox.addEventListener('change', async (e) => {
-    await chrome.storage.local.set({ permanentOverride: e.target.checked });
-    showNotification(
-      e.target.checked 
-        ? 'Spoofs permanentes ahora tienen prioridad'
-        : 'Selección de toolbar tiene prioridad', 
-      'success'
-    );
-  });
-  
-  perTabSpoofCheckbox.addEventListener('change', async (e) => {
-    await chrome.storage.local.set({ perTabSpoof: e.target.checked });
-    showNotification(
-      e.target.checked 
-        ? 'Spoof por pestaña activado'
-        : 'Spoof global activado', 
-      'success'
-    );
-  });
-  
-  resetExtensionBtn.addEventListener('click', resetExtension);
-}
-
-async function resetExtension() {
-  const confirmMsg = i18n.getMessage('confirmReset') || 
-    '¿Estás seguro de que quieres resetear la extensión? Esta acción NO se puede deshacer y perderás todas tus configuraciones, user-agents y spoofs permanentes.';
-  
-  if (!confirm(confirmMsg)) {
-    showNotification(i18n.getMessage('resetCancelled') || 'Reseteo cancelado', 'info');
-    return;
-  }
-  
-  try {
-    // Clear all storage
-    await chrome.storage.local.clear();
-    
-    // Reinitialize with defaults
-    await chrome.storage.local.set({
-      userAgents: getDefaultUserAgents(),
-      activeId: 'default',
-      permanentSpoofs: [],
-      permanentOverride: false,
-      perTabSpoof: false,
-      activeSection: 'custom-user-agents'
-    });
-    
-    // Reset badge
-    await chrome.action.setBadgeText({ text: '' });
-    
-    // Reload the page
-    showNotification(i18n.getMessage('resetSuccess') || 'Extensión reseteada correctamente. Se recargarán las configuraciones por defecto.', 'success');
-    
-    setTimeout(() => {
-      window.location.reload();
-    }, 2000);
-    
-  } catch (error) {
-    console.error('Reset error:', error);
-    showNotification('Error al resetear la extensión', 'error');
   }
 }

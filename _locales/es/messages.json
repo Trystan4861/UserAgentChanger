@@ -387,5 +387,17 @@
   },
   "resetCancelled": {
     "message": "Reseteo cancelado"
+  },
+  "autoUserAgent": {
+    "message": "Definido en Spoof List"
+  },
+  "autoUserAgentDesc": {
+    "message": "Usa spoofs permanentes según URL"
+  },
+  "aliasReservedError": {
+    "message": "'AUTO' es una palabra reservada y no puede ser usada como alias"
+  },
+  "selectAll": {
+    "message": "Seleccionar todos"
   }
 }
