@@ -7,6 +7,10 @@
     "message": "Change your browser's User-Agent easily",
     "description": "Extension description"
   },
+  "pageTitle": {
+    "message": "User-Agent Changer - Configuration",
+    "description": "Browser tab title"
+  },
   "popupTitle": {
     "message": "User-Agent Changer",
     "description": "Popup title"
@@ -16,7 +20,7 @@
     "description": "Button to manage user-agents"
   },
   "optionsTitle": {
-    "message": "User-Agent Changer - Settings",
+    "message": "UAC - Settings",
     "description": "Options page title"
   },
   "optionsSubtitle": {
