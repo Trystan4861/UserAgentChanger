@@ -226,7 +226,7 @@ header h1 {
 
 .version-badge {
   display: inline-block;
-  padding: 4px 10px;
+  padding: 3px 9px;
   background: #e8f0fe;
   color: #1a73e8;
   border-radius: 12px;
@@ -378,11 +378,16 @@ section h2 {
 }
 
 .preview-badge {
-  padding: 6px 12px;
+  padding: 3px 9px;
   border-radius: 4px;
   font-size: 12px;
   font-weight: bold;
   letter-spacing: 0.5px;
+  width: 50px;
+  text-align: center;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 .btn {
@@ -479,11 +484,16 @@ section h2 {
 }
 
 .card-badge {
-  padding: 4px 10px;
+  padding: 3px 9px;
   border-radius: 4px;
   font-size: 11px;
   font-weight: bold;
   letter-spacing: 0.5px;
+  width: 50px;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .card-actions {
@@ -664,9 +674,62 @@ section h2 {
   min-width: 100px;
 }
 
+.spoof-ua-display {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+}
+
 .spoof-ua-name {
   color: #1a73e8;
   font-weight: 500;
+  flex: 1;
+}
+
+.spoof-ua-select {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #dadce0;
+  border-radius: 4px;
+  font-size: 14px;
+  background: white;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.spoof-ua-select:focus {
+  outline: none;
+  border-color: #1a73e8;
+  box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.1);
+}
+
+.spoof-ua-edit-btn {
+  background: transparent;
+  border: none;
+  color: #5f6368;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.spoof-ua-edit-btn:hover {
+  background: #e8f0fe;
+  color: #1a73e8;
+}
+
+.spoof-ua-edit-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+.hidden {
+  display: none !important;
 }
 
 .spoof-preview {
@@ -1050,11 +1113,16 @@ section h2 {
 }
 
 .preview-item-badge {
-  padding: 4px 10px;
+  padding: 3px 9px;
   border-radius: 4px;
   font-size: 11px;
   font-weight: bold;
   letter-spacing: 0.5px;
+  width: 50px;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .preview-item-ua {
@@ -1284,7 +1352,6 @@ section h2 {
   display: flex;
   flex-direction: column;
   gap: 20px;
-  padding: 24px;
   flex: 1;
   overflow-y: auto;
   min-height: 0;
@@ -1339,11 +1406,23 @@ section h2 {
 
 .import-selection-list {
   padding: 16px;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
   gap: 12px;
   max-height: 500px;
   overflow-y: auto;
+}
+
+@media (max-width: 1200px) {
+  .import-selection-list {
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .import-selection-list {
+    grid-template-columns: 1fr;
+  }
 }
 
 .import-selection-item {
@@ -1352,6 +1431,7 @@ section h2 {
   border-radius: 6px;
   padding: 12px;
   transition: all 0.2s ease;
+  height: 100%;
 }
 
 .import-selection-item:hover {
@@ -1393,12 +1473,17 @@ section h2 {
 }
 
 .import-item-badge {
-  padding: 4px 10px;
+  padding: 3px 9px;
   border-radius: 4px;
   font-size: 11px;
   font-weight: bold;
   letter-spacing: 0.5px;
   flex-shrink: 0;
+  width: 50px;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .import-item-details {
@@ -1420,34 +1505,59 @@ section h2 {
 
 /* Import Actions Bar - FIXED at bottom */
 .import-actions-bar {
-  display: flex;
-  justify-content: flex-end;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
   gap: 12px;
-  padding: 20px 24px;
+  padding: 16px;
   background: #f8f9fa;
-  border-top: 2px solid #e0e0e0;
+  border-top: 1px solid #e0e0e0;
   flex-shrink: 0;
   position: sticky;
   bottom: 0;
   border-radius: 0 0 8px 8px;
 }
 
+@media (max-width: 1200px) {
+  .import-actions-bar {
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .import-actions-bar {
+    grid-template-columns: 1fr;
+  }
+}
+
 .import-actions-bar .btn {
-  min-width: 150px;
+  width: 100%;
   justify-content: center;
 }
 
-.import-actions-bar .btn-danger {
+.import-actions-bar .btn-secondary {
   background: #d93025;
   color: white;
-  padding: 12px 24px;
-  font-size: 15px;
+  padding: 10px 20px;
+  font-size: 14px;
 }
 
-.import-actions-bar .btn-danger:hover {
+.import-actions-bar .btn-secondary:hover {
   background: #b31412;
   transform: translateY(-1px);
   box-shadow: 0 4px 8px rgba(217, 48, 37, 0.3);
+}
+
+.import-actions-bar .btn-primary {
+  background: #1a73e8;
+  color: white;
+  padding: 10px 20px;
+  font-size: 14px;
+}
+
+.import-actions-bar .btn-primary:hover {
+  background: #1557b0;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(26, 115, 232, 0.3);
 }
 
 /* Other Settings Section Styles */

@@ -202,23 +202,6 @@ function setupEventListeners() {
     await addUserAgent();
   });
   
-  // Color picker sync for background color only
-  const badgeBgColor = document.getElementById('badgeBgColor');
-  const badgeBgColorHex = document.getElementById('badgeBgColorHex');
-  
-  badgeBgColor.addEventListener('input', (e) => {
-    badgeBgColorHex.value = e.target.value.toUpperCase();
-    updateBadgePreview();
-  });
-  
-  badgeBgColorHex.addEventListener('input', (e) => {
-    const value = e.target.value;
-    if (/^#[0-9A-F]{6}$/i.test(value)) {
-      badgeBgColor.value = value;
-      updateBadgePreview();
-    }
-  });
-  
   // Update preview when alias changes
   document.getElementById('alias').addEventListener('input', updateBadgePreview);
   
@@ -236,18 +219,11 @@ function setupEventListeners() {
 function updateBadgePreview() {
   const preview = document.getElementById('badgePreview');
   const alias = document.getElementById('alias').value.toUpperCase() || 'TEST';
-  const bgColor = document.getElementById('badgeBgColor').value;
   
-  // Determine text color based on background brightness (Chrome does this automatically)
-  const r = parseInt(bgColor.slice(1, 3), 16);
-  const g = parseInt(bgColor.slice(3, 5), 16);
-  const b = parseInt(bgColor.slice(5, 7), 16);
-  const brightness = (r * 299 + g * 587 + b * 114) / 1000;
-  const textColor = brightness > 128 ? '#000000' : '#ffffff';
-  
+  // Always use black background and white text
   preview.textContent = alias;
-  preview.style.color = textColor;
-  preview.style.backgroundColor = bgColor;
+  preview.style.color = '#ffffff';
+  preview.style.backgroundColor = '#000000';
 }
 
 // Load and display user-agents
@@ -351,14 +327,10 @@ async function addUserAgent() {
   const name = document.getElementById('name').value.trim();
   const mode = document.getElementById('mode').value;
   const userAgent = document.getElementById('userAgent').value.trim();
-  const badgeBgColor = document.getElementById('badgeBgColor').value;
   
-  // Calculate text color based on background brightness
-  const r = parseInt(badgeBgColor.slice(1, 3), 16);
-  const g = parseInt(badgeBgColor.slice(3, 5), 16);
-  const b = parseInt(badgeBgColor.slice(5, 7), 16);
-  const brightness = (r * 299 + g * 587 + b * 114) / 1000;
-  const badgeTextColor = brightness > 128 ? '#000000' : '#ffffff';
+  // Always use black background and white text for user-defined badges
+  const badgeBgColor = '#000000';
+  const badgeTextColor = '#ffffff';
   
   if (!alias || !name || !userAgent) {
     alert(i18n.getMessage('fillAllFields'));
@@ -389,8 +361,6 @@ async function addUserAgent() {
   
   // Clear form
   document.getElementById('addUserAgentForm').reset();
-  document.getElementById('badgeBgColor').value = '#1a73e8';
-  document.getElementById('badgeBgColorHex').value = '#1A73E8';
   updateBadgePreview();
   
   // Reload list
@@ -619,7 +589,17 @@ function createSpoofCard(spoof, ua) {
     <div class="spoof-info">
       <div class="spoof-info-row">
         <span class="spoof-info-label">${i18n.getMessage('labelSelectUserAgent')}</span>
-        <span class="spoof-ua-name">${ua.name}</span>
+        <div class="spoof-ua-display">
+          <span class="spoof-ua-name" data-spoof-id="${spoof.id}">${ua.name}</span>
+          <select class="spoof-ua-select hidden" data-spoof-id="${spoof.id}">
+            <option value="">${i18n.getMessage('selectUserAgentOption') || 'Selecciona un User-Agent'}</option>
+          </select>
+          <button class="spoof-ua-edit-btn" data-spoof-id="${spoof.id}" title="Editar User-Agent">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+              <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
+            </svg>
+          </button>
+        </div>
       </div>
     </div>
     <div class="spoof-preview">
@@ -630,6 +610,9 @@ function createSpoofCard(spoof, ua) {
   
   const deleteBtn = card.querySelector('.btn-danger');
   deleteBtn.addEventListener('click', () => deletePermanentSpoof(spoof.id));
+  
+  const editBtn = card.querySelector('.spoof-ua-edit-btn');
+  editBtn.addEventListener('click', () => editSpoofUserAgent(spoof.id, card));
   
   return card;
 }
@@ -1200,14 +1183,95 @@ async function confirmImport() {
   }
 }
 
+async function editSpoofUserAgent(spoofId, card) {
+  const result = await chrome.storage.local.get('userAgents');
+  const userAgents = result.userAgents || [];
+  
+  // Filter out default and auto user agents
+  const customUserAgents = userAgents.filter(ua => ua.id !== 'default' && ua.id !== 'auto');
+  
+  // Get references to the elements
+  const nameSpan = card.querySelector(`.spoof-ua-name[data-spoof-id="${spoofId}"]`);
+  const select = card.querySelector(`.spoof-ua-select[data-spoof-id="${spoofId}"]`);
+  const editBtn = card.querySelector(`.spoof-ua-edit-btn[data-spoof-id="${spoofId}"]`);
+  
+  if (!nameSpan || !select || !editBtn) return;
+  
+  // Populate the select with user agents
+  select.innerHTML = `<option value="">${i18n.getMessage('selectUserAgentOption') || 'Selecciona un User-Agent'}</option>`;
+  customUserAgents.forEach(ua => {
+    const option = document.createElement('option');
+    option.value = ua.id;
+    option.textContent = `${ua.name} (${ua.alias})`;
+    select.appendChild(option);
+  });
+  
+  // Toggle visibility
+  nameSpan.classList.add('hidden');
+  select.classList.remove('hidden');
+  editBtn.classList.add('hidden');
+  
+  // Focus on the select
+  select.focus();
+  
+  // Handle selection change
+  const handleChange = async () => {
+    const selectedUAId = select.value;
+    
+    if (selectedUAId) {
+      // Update the permanent spoof
+      const spoofResult = await chrome.storage.local.get('permanentSpoofs');
+      let spoofs = spoofResult.permanentSpoofs || [];
+      
+      const spoofIndex = spoofs.findIndex(s => s.id === spoofId);
+      if (spoofIndex !== -1) {
+        spoofs[spoofIndex].userAgentId = selectedUAId;
+        await chrome.storage.local.set({ permanentSpoofs: spoofs });
+        
+        // Reload the list to reflect changes
+        await loadPermanentSpoofs();
+        
+        showNotification('User-Agent actualizado correctamente', 'success');
+      }
+    } else {
+      // User cancelled, restore original view
+      nameSpan.classList.remove('hidden');
+      select.classList.add('hidden');
+      editBtn.classList.remove('hidden');
+    }
+  };
+  
+  // Handle blur (when user clicks outside)
+  const handleBlur = () => {
+    // Small delay to allow click on option to register
+    setTimeout(() => {
+      if (!select.value || select.value === '') {
+        nameSpan.classList.remove('hidden');
+        select.classList.add('hidden');
+        editBtn.classList.remove('hidden');
+      }
+    }, 150);
+  };
+  
+  // Add event listeners
+  select.addEventListener('change', handleChange);
+  select.addEventListener('blur', handleBlur);
+}
+
 async function exportSettings() {
   try {
     const result = await chrome.storage.local.get(['userAgents', 'permanentSpoofs', 'activeSection', 'permanentOverride', 'perTabSpoof']);
     
     const manifest = chrome.runtime.getManifest();
     
-    // Filter out the default user agent from export
-    const userAgentsToExport = (result.userAgents || []).filter(ua => ua.id !== 'default');
+    // Filter out default and auto user agents from export (special internal user agents)
+    const userAgentsToExport = (result.userAgents || [])
+      .filter(ua => ua.id !== 'default' && ua.id !== 'auto')
+      .map(ua => {
+        // Remove unnecessary badge color fields (all badges are now black with white text)
+        const { badgeBgColor, badgeTextColor, ...cleanUA } = ua;
+        return cleanUA;
+      });
     
     const exportData = {
       version: manifest.version,

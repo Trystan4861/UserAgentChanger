@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>User-Agent Changer</title>
-  <link rel="stylesheet" href="options.css">
+  <link rel="stylesheet" href="css/options.css">
 </head>
 <body>
   <div class="container">
@@ -77,24 +77,16 @@
                 <option value="append" data-i18n="modeAppendDescription">Agregar al User-Agent</option>
               </select>
             </div>
+            
+            <div class="form-group">
+              <label data-i18n="badgePreview">Vista previa del badge:</label>
+              <div id="badgePreview" class="preview-badge" style="background-color: #000000; color: #ffffff;">TEST</div>
+            </div>
           </div>
 
           <div class="form-group">
             <label for="userAgent" data-i18n="labelUserAgentString">User-Agent String:</label>
             <textarea id="userAgent" rows="3" data-i18n-placeholder="placeholderUserAgent" placeholder="Mozilla/5.0..." required></textarea>
-          </div>
-
-          <div class="form-group">
-            <label for="badgeBgColor" data-i18n="labelBadgeBgColor">Color de la insignia:</label>
-            <div class="color-input-group">
-              <input type="color" id="badgeBgColor" value="#1a73e8">
-              <input type="text" id="badgeBgColorHex" value="#1a73e8" maxlength="7" placeholder="#1a73e8">
-            </div>
-          </div>
-
-          <div class="badge-preview">
-            <span data-i18n="badgePreview">Vista previa del badge:</span>
-            <div id="badgePreview" class="preview-badge">TEST</div>
           </div>
           
           <button type="submit" class="btn btn-primary">
@@ -212,9 +204,104 @@
 
         <!-- Section 4: About -->
         <div id="about" class="content-section">
-          <h2 data-i18n="aboutTitle">About</h2>
-          <p data-i18n="aboutDescription">Information about User-Agent Changer extension.</p>
-          <!-- Content will be added in future tasks -->
+          <div class="about-container">
+            <!-- Extension Info Card -->
+            <section class="about-card">
+              <div class="about-header">
+                <div class="about-icon">🌐</div>
+                <div class="about-title-section">
+                  <h2 data-i18n="aboutExtensionTitle">User-Agent Changer</h2>
+                  <p class="about-version">Version <span id="aboutVersion">0.0.0</span></p>
+                </div>
+              </div>
+              <div class="about-description">
+                <p data-i18n="aboutExtensionDescription">
+                  Una extensión potente y fácil de usar para Firefox que te permite cambiar tu User-Agent con un solo clic. 
+                  Perfecto para desarrolladores web, testers y usuarios que necesitan emular diferentes navegadores y dispositivos.
+                </p>
+              </div>
+            </section>
+
+            <!-- Features Card -->
+            <section class="about-card">
+              <h3 data-i18n="aboutFeaturesTitle">✨ Características Principales</h3>
+              <ul class="features-list">
+                <li data-i18n="aboutFeature1">🎯 Cambio rápido de User-Agent con un clic</li>
+                <li data-i18n="aboutFeature2">📝 User-Agents personalizados con alias y colores</li>
+                <li data-i18n="aboutFeature3">📌 Spoofs permanentes para dominios específicos</li>
+                <li data-i18n="aboutFeature4">💾 Importar y exportar configuraciones</li>
+                <li data-i18n="aboutFeature5">🌍 Soporte multiidioma (Español e Inglés)</li>
+                <li data-i18n="aboutFeature6">🎨 Interfaz moderna y fácil de usar</li>
+              </ul>
+            </section>
+
+            <!-- Author Card -->
+            <section class="about-card author-card">
+              <h3 data-i18n="aboutAuthorTitle">👤 Autor</h3>
+              <div class="author-info">
+                <div class="author-avatar">
+                  <span class="avatar-emoji">👨‍💻</span>
+                </div>
+                <div class="author-details">
+                  <h4 class="author-name">Trystan4861</h4>
+                  <p class="author-role" data-i18n="aboutAuthorRole">Desarrollador Full-Stack</p>
+                  <div class="author-links">
+                    <a href="https://github.com/Trystan4861" target="_blank" class="author-link">
+                      <span class="link-icon">🔗</span>
+                      <span data-i18n="aboutGithubProfile">Perfil de GitHub</span>
+                    </a>
+                    <a href="https://github.com/Trystan4861/UserAgentChanger" target="_blank" class="author-link">
+                      <span class="link-icon">📦</span>
+                      <span data-i18n="aboutRepository">Repositorio de la Extensión</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- Support Card -->
+            <section class="about-card">
+              <h3 data-i18n="aboutSupportTitle">💬 Soporte</h3>
+              <p data-i18n="aboutSupportDescription">
+                Si encuentras algún problema o tienes sugerencias para mejorar la extensión, 
+                no dudes en abrir un issue en el repositorio de GitHub.
+              </p>
+              <a href="https://github.com/Trystan4861/UserAgentChanger/issues" target="_blank" class="btn btn-primary support-btn">
+                <span class="btn-icon">🐛</span>
+                <span data-i18n="aboutReportIssue">Reportar un Problema</span>
+              </a>
+            </section>
+
+            <!-- Reset Settings Card -->
+            <section class="about-card danger-zone">
+              <div class="danger-title">
+                <span class="danger-icon">⚠️</span>
+                <h3 data-i18n="aboutDangerZone">Zona de Peligro</h3>
+              </div>
+              <div class="reset-section">
+                <div class="reset-info">
+                  <h4 data-i18n="aboutResetTitle">Resetear Extensión</h4>
+                  <p data-i18n="aboutResetDescription">
+                    Esto eliminará todas tus configuraciones, User-Agents personalizados y Spoofs permanentes. 
+                    Esta acción no se puede deshacer.
+                  </p>
+                </div>
+                <button id="resetExtensionBtn" class="btn btn-danger">
+                  <span class="btn-icon">🔄</span>
+                  <span data-i18n="aboutResetButton">Resetear Todo</span>
+                </button>
+              </div>
+            </section>
+
+            <!-- License Card -->
+            <section class="about-card license-card">
+              <p class="license-text">
+                <span data-i18n="aboutLicense">Licencia:</span> 
+                <a href="https://github.com/Trystan4861/UserAgentChanger/blob/main/LICENSE" target="_blank">MIT License</a>
+              </p>
+              <p class="copyright-text">© 2024 Trystan4861. <span data-i18n="aboutRights">Todos los derechos reservados.</span></p>
+            </section>
+          </div>
         </div>
       </div>
     </div>
@@ -223,7 +310,10 @@
   <script src="js/i18n.js"></script>
   <script src="js/notify.js"></script>
   <script src="js/storage.js"></script>
-  <script src="js/commons.js"></script>
+  <script src="js/validations.js"></script>
+  <script src="js/ua.js"></script>
+  <script src="js/version.js"></script>
+  <script src="js/messaging.js"></script>
   <script src="js/utils.js"></script>
   <script src="js/options.js"></script>
 </body>
