@@ -742,7 +742,7 @@ function showImportPreview(data) {
           <h3>📱 ${i18n.getMessage('userAgentsLabel') || 'User-Agents'}</h3>
           <div class="import-section-info">
             <span class="count-badge">${userAgentsToShow.length}</span>
-            <button type="button" class="btn-link" onclick="toggleAllUserAgents()">
+            <button type="button" class="btn-link toggle-ua-btn">
               ${i18n.getMessage('selectAll') || 'Seleccionar todos'}
             </button>
           </div>
@@ -778,7 +778,7 @@ function showImportPreview(data) {
           <h3>📌 ${i18n.getMessage('permanentSpoofListTitle') || 'Permanent Spoofs'}</h3>
           <div class="import-section-info">
             <span class="count-badge">${data.permanentSpoofs.length}</span>
-            <button type="button" class="btn-link" onclick="toggleAllSpoofs()">
+            <button type="button" class="btn-link toggle-spoofs-btn">
               ${i18n.getMessage('selectAll') || 'Seleccionar todos'}
             </button>
           </div>
@@ -834,10 +834,10 @@ function showImportPreview(data) {
     </div>
     
     <div class="import-actions-bar">
-      <button class="btn btn-secondary" onclick="cancelImport()">
+      <button class="btn btn-secondary cancel-import-btn">
         ${i18n.getMessage('cancelButton') || 'Cancelar'}
       </button>
-      <button class="btn btn-primary" onclick="confirmImportSelected()">
+      <button class="btn btn-primary confirm-import-btn">
         ${i18n.getMessage('confirmImportButton') || 'Confirmar Importación'}
       </button>
     </div>
@@ -847,6 +847,30 @@ function showImportPreview(data) {
   
   // Store data for import
   previewContainer.dataset.importData = JSON.stringify(data);
+  
+  // Add event listeners to dynamically created buttons
+  setTimeout(() => {
+    const toggleUABtn = previewContent.querySelector('.toggle-ua-btn');
+    const toggleSpoofsBtn = previewContent.querySelector('.toggle-spoofs-btn');
+    const cancelBtn = previewContent.querySelector('.cancel-import-btn');
+    const confirmBtn = previewContent.querySelector('.confirm-import-btn');
+    
+    if (toggleUABtn) {
+      toggleUABtn.addEventListener('click', window.toggleAllUserAgents);
+    }
+    
+    if (toggleSpoofsBtn) {
+      toggleSpoofsBtn.addEventListener('click', window.toggleAllSpoofs);
+    }
+    
+    if (cancelBtn) {
+      cancelBtn.addEventListener('click', window.cancelImport);
+    }
+    
+    if (confirmBtn) {
+      confirmBtn.addEventListener('click', window.confirmImportSelected);
+    }
+  }, 0);
 }
 
 // Toggle all user agents checkboxes
@@ -954,12 +978,17 @@ window.cancelImport = function() {
     previewContainer.style.display = 'none';
   }
   
-  // Show import and export sections again
+  // Show import and export sections again using grid
+  const importExportContent = document.querySelector('#import-export .content');
+  if (importExportContent) {
+    importExportContent.style.display = 'grid';
+  }
+  
   if (importSection) {
-    importSection.style.display = 'block';
+    importSection.style.display = '';
   }
   if (exportSection) {
-    exportSection.style.display = 'block';
+    exportSection.style.display = '';
   }
   
   // Clear file input
@@ -1113,4 +1142,3 @@ async function exportSettings() {
     alert('Error al exportar la configuración');
   }
 }
-

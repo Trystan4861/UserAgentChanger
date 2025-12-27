@@ -157,7 +157,8 @@
         <!-- Section 3: Import/Export Settings -->
         <div id="import-export" class="content-section">
           <div class="content">
-            <section class="form-section">
+            <!-- Import Section -->
+            <section class="form-section" id="importSection">
               <h2 data-i18n="importTitle">Import Settings</h2>
               <p class="section-description" data-i18n="importDescription">Import user-agent strings from a local JSON file.</p>
               
@@ -171,39 +172,11 @@
                   <span id="selectedFileName" class="selected-file-name"></span>
                 </div>
                 <div id="drop-feedback" class="drop-feedback" style="display: none;">Arrastrar y soltar archivo aquí</div>
-                
-                <div id="importPreview" class="import-preview" style="display: none;">
-                  <h3 data-i18n="importPreviewTitle">Import Preview</h3>
-                  <div id="importPreviewContent" class="import-preview-content"></div>
-                  
-                  <div class="import-options">
-                    <h4 data-i18n="importOptionsTitle">Import Options</h4>
-                    <label class="radio-option">
-                      <input type="radio" name="importMode" value="replace" checked>
-                      <span data-i18n="importModeReplace">Replace all existing settings</span>
-                    </label>
-                    <label class="radio-option">
-                      <input type="radio" name="importMode" value="merge">
-                      <span data-i18n="importModeMerge">Merge with existing settings</span>
-                    </label>
-                    <label class="radio-option">
-                      <input type="radio" name="importMode" value="userAgentsOnly">
-                      <span data-i18n="importModeUserAgents">Import only User-Agents</span>
-                    </label>
-                    <label class="radio-option">
-                      <input type="radio" name="importMode" value="spoofOnly">
-                      <span data-i18n="importModeSpoofs">Import only Permanent Spoofs</span>
-                    </label>
-                  </div>
-                  
-                  <button id="confirmImportBtn" class="btn btn-primary">
-                    <span data-i18n="confirmImportButton">Confirm Import</span>
-                  </button>
-                </div>
               </div>
             </section>
 
-            <section class="list-section">
+            <!-- Export Section -->
+            <section class="list-section" id="exportSection">
               <h2 data-i18n="exportTitle">Export Settings</h2>
               <p class="section-description" data-i18n="exportDescription">Export settings to a JSON file.</p>
               
@@ -231,6 +204,11 @@
                   </div>
                 </div>
               </div>
+            </section>
+
+            <!-- Import Preview Section (Hidden by default, shown when file is selected) -->
+            <section class="form-section" id="importPreview" style="display: none;">
+              <div id="importPreviewContent" class="import-preview-content"></div>
             </section>
           </div>
         </div>
