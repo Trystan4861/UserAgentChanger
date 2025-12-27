@@ -714,31 +714,132 @@ function validateImportData(data) {
 function showImportPreview(data) {
   const previewContainer = document.getElementById('importPreview');
   const previewContent = document.getElementById('importPreviewContent');
+  const importSection = document.getElementById('importSection');
+  const exportSection = document.getElementById('exportSection');
   
   if (!previewContainer || !previewContent) return;
   
-  // Count items
-  const userAgentsCount = data.userAgents ? data.userAgents.length : 0;
-  const spoofCount = data.permanentSpoofs ? data.permanentSpoofs.length : 0;
+  // Hide the import and export sections
+  if (importSection) {
+    importSection.style.display = 'none';
+  }
+  if (exportSection) {
+    exportSection.style.display = 'none';
+  }
+  
+  // Filter out default user agent from preview
+  const userAgentsToShow = data.userAgents ? data.userAgents.filter(ua => ua.id !== 'default') : [];
+  
   const version = data.version || 'Unknown';
   const exportDate = data.exportDate ? new Date(data.exportDate).toLocaleString() : 'Unknown';
   
+  // Build user agents selection list
+  let userAgentsHTML = '';
+  if (userAgentsToShow.length > 0) {
+    userAgentsHTML = `
+      <div class="import-selection-section">
+        <div class="import-section-header">
+          <h3>📱 ${i18n.getMessage('userAgentsLabel') || 'User-Agents'}</h3>
+          <div class="import-section-info">
+            <span class="count-badge">${userAgentsToShow.length}</span>
+            <button type="button" class="btn-link" onclick="toggleAllUserAgents()">
+              ${i18n.getMessage('selectAll') || 'Seleccionar todos'}
+            </button>
+          </div>
+        </div>
+        <div class="import-selection-list">
+          ${userAgentsToShow.map(ua => `
+            <div class="import-selection-item">
+              <label class="import-checkbox-label">
+                <input type="checkbox" class="import-ua-checkbox" value="${ua.id}" checked>
+                <div class="import-item-content">
+                  <div class="import-item-header">
+                    <span class="import-item-name">${ua.name}</span>
+                    <span class="import-item-badge" style="background: ${ua.badgeBgColor || '#1a73e8'}; color: ${ua.badgeTextColor || '#ffffff'};">
+                      ${ua.alias}
+                    </span>
+                  </div>
+                  <div class="import-item-details">${ua.userAgent}</div>
+                </div>
+              </label>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+  }
+  
+  // Build permanent spoofs selection list
+  let spoofsHTML = '';
+  if (data.permanentSpoofs && data.permanentSpoofs.length > 0) {
+    spoofsHTML = `
+      <div class="import-selection-section">
+        <div class="import-section-header">
+          <h3>📌 ${i18n.getMessage('permanentSpoofListTitle') || 'Permanent Spoofs'}</h3>
+          <div class="import-section-info">
+            <span class="count-badge">${data.permanentSpoofs.length}</span>
+            <button type="button" class="btn-link" onclick="toggleAllSpoofs()">
+              ${i18n.getMessage('selectAll') || 'Seleccionar todos'}
+            </button>
+          </div>
+        </div>
+        <div class="import-selection-list">
+          ${data.permanentSpoofs.map(spoof => {
+            const ua = userAgentsToShow.find(u => u.id === spoof.userAgentId);
+            return `
+              <div class="import-selection-item">
+                <label class="import-checkbox-label">
+                  <input type="checkbox" class="import-spoof-checkbox" value="${spoof.id}" checked>
+                  <div class="import-item-content">
+                    <div class="import-item-header">
+                      <span class="import-item-name">🌐 ${spoof.domain}</span>
+                    </div>
+                    ${ua ? `
+                      <div class="import-item-details">→ ${ua.name} (${ua.alias})</div>
+                    ` : `
+                      <div class="import-item-details warning">
+                        ⚠️ User-Agent ${spoof.userAgentId} ${i18n.getMessage('notFoundLabel') || 'no encontrado'}
+                      </div>
+                    `}
+                  </div>
+                </label>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      </div>
+    `;
+  }
+  
   previewContent.innerHTML = `
-    <div class="preview-item">
-      <span class="preview-label">${i18n.getMessage('versionLabel') || 'Version'}:</span>
-      <span class="preview-value">${version}</span>
+    <div class="import-preview-header">
+      <div class="import-preview-title">
+        <h2>${i18n.getMessage('importPreviewTitle') || 'Vista Previa de Importación'}</h2>
+        <div class="import-metadata">
+          <span>📦 v${version}</span>
+          <span>📅 ${exportDate}</span>
+        </div>
+      </div>
     </div>
-    <div class="preview-item">
-      <span class="preview-label">${i18n.getMessage('exportDateLabel') || 'Export Date'}:</span>
-      <span class="preview-value">${exportDate}</span>
+    
+    <div class="import-selection-container">
+      ${userAgentsHTML}
+      ${spoofsHTML}
+      
+      ${!userAgentsHTML && !spoofsHTML ? `
+        <div class="preview-empty">
+          ${i18n.getMessage('noDataToImport') || 'No hay datos para importar'}
+        </div>
+      ` : ''}
     </div>
-    <div class="preview-item">
-      <span class="preview-label">${i18n.getMessage('userAgentsCountLabel') || 'User-Agents'}:</span>
-      <span class="preview-value">${userAgentsCount}</span>
-    </div>
-    <div class="preview-item">
-      <span class="preview-label">${i18n.getMessage('permanentSpoofCountLabel') || 'Permanent Spoofs'}:</span>
-      <span class="preview-value">${spoofCount}</span>
+    
+    <div class="import-actions-bar">
+      <button class="btn btn-secondary" onclick="cancelImport()">
+        ${i18n.getMessage('cancelButton') || 'Cancelar'}
+      </button>
+      <button class="btn btn-primary" onclick="confirmImportSelected()">
+        ${i18n.getMessage('confirmImportButton') || 'Confirmar Importación'}
+      </button>
     </div>
   `;
   
@@ -747,6 +848,129 @@ function showImportPreview(data) {
   // Store data for import
   previewContainer.dataset.importData = JSON.stringify(data);
 }
+
+// Toggle all user agents checkboxes
+window.toggleAllUserAgents = function() {
+  const checkboxes = document.querySelectorAll('.import-ua-checkbox');
+  const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+  
+  checkboxes.forEach(cb => {
+    cb.checked = !allChecked;
+  });
+};
+
+// Toggle all spoofs checkboxes
+window.toggleAllSpoofs = function() {
+  const checkboxes = document.querySelectorAll('.import-spoof-checkbox');
+  const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+  
+  checkboxes.forEach(cb => {
+    cb.checked = !allChecked;
+  });
+};
+
+// Confirm import with selected items
+window.confirmImportSelected = async function() {
+  const previewContainer = document.getElementById('importPreview');
+  const importData = JSON.parse(previewContainer.dataset.importData || '{}');
+  const importFile = document.getElementById('importFile');
+  const selectedFileName = document.getElementById('selectedFileName');
+  
+  // Get selected user agents
+  const selectedUACheckboxes = document.querySelectorAll('.import-ua-checkbox:checked');
+  const selectedUAIds = Array.from(selectedUACheckboxes).map(cb => cb.value);
+  
+  // Get selected spoofs
+  const selectedSpoofCheckboxes = document.querySelectorAll('.import-spoof-checkbox:checked');
+  const selectedSpoofIds = Array.from(selectedSpoofCheckboxes).map(cb => cb.value);
+  
+  try {
+    const result = await chrome.storage.local.get(['userAgents', 'permanentSpoofs']);
+    let existingUserAgents = result.userAgents || getDefaultUserAgents();
+    let existingSpoofs = result.permanentSpoofs || [];
+    
+    // Filter imported user agents by selection
+    const selectedUserAgents = (importData.userAgents || []).filter(ua => 
+      selectedUAIds.includes(ua.id) && ua.id !== 'default'
+    );
+    
+    // Filter imported spoofs by selection
+    const selectedSpoofs = (importData.permanentSpoofs || []).filter(spoof => 
+      selectedSpoofIds.includes(spoof.id)
+    );
+    
+    // Merge with existing data (avoid duplicates)
+    const existingUAIds = new Set(existingUserAgents.map(ua => ua.id));
+    const newUserAgents = selectedUserAgents.filter(ua => !existingUAIds.has(ua.id));
+    
+    const existingSpoofDomains = new Set(existingSpoofs.map(s => s.domain));
+    const newSpoofs = selectedSpoofs.filter(s => !existingSpoofDomains.has(s.domain));
+    
+    // Combine with existing
+    const finalUserAgents = [...existingUserAgents, ...newUserAgents];
+    const finalSpoofs = [...existingSpoofs, ...newSpoofs];
+    
+    // Save to storage
+    await chrome.storage.local.set({
+      userAgents: finalUserAgents,
+      permanentSpoofs: finalSpoofs
+    });
+    
+    // Reload UI
+    await loadUserAgents();
+    await loadPermanentSpoofs();
+    
+    // Reset and hide preview
+    importFile.value = '';
+    selectedFileName.textContent = '';
+    previewContainer.style.display = 'none';
+    
+    // Show import and export sections again
+    const importSection = document.getElementById('importSection');
+    const exportSection = document.getElementById('exportSection');
+    if (importSection) importSection.style.display = 'block';
+    if (exportSection) exportSection.style.display = 'block';
+    
+    // Show success message
+    const count = newUserAgents.length + newSpoofs.length;
+    showNotification(`${count} elementos importados correctamente`, 'success');
+    
+  } catch (error) {
+    console.error('Import error:', error);
+    showNotification('Error al importar la configuración', 'error');
+  }
+};
+
+// Cancel import and return to file selection
+window.cancelImport = function() {
+  const previewContainer = document.getElementById('importPreview');
+  const importSection = document.getElementById('importSection');
+  const exportSection = document.getElementById('exportSection');
+  const importFile = document.getElementById('importFile');
+  const selectedFileName = document.getElementById('selectedFileName');
+  
+  // Hide preview
+  if (previewContainer) {
+    previewContainer.style.display = 'none';
+  }
+  
+  // Show import and export sections again
+  if (importSection) {
+    importSection.style.display = 'block';
+  }
+  if (exportSection) {
+    exportSection.style.display = 'block';
+  }
+  
+  // Clear file input
+  if (importFile) {
+    importFile.value = '';
+  }
+  
+  if (selectedFileName) {
+    selectedFileName.textContent = '';
+  }
+};
 
 function showImportError(message) {
   const previewContainer = document.getElementById('importPreview');
@@ -856,10 +1080,13 @@ async function exportSettings() {
     
     const manifest = chrome.runtime.getManifest();
     
+    // Filter out the default user agent from export
+    const userAgentsToExport = (result.userAgents || []).filter(ua => ua.id !== 'default');
+    
     const exportData = {
       version: manifest.version,
       exportDate: new Date().toISOString(),
-      userAgents: result.userAgents || getDefaultUserAgents(),
+      userAgents: userAgentsToExport,
       permanentSpoofs: result.permanentSpoofs || [],
       settings: {
         activeSection: result.activeSection || 'custom-user-agents'
@@ -886,3 +1113,4 @@ async function exportSettings() {
     alert('Error al exportar la configuración');
   }
 }
+
