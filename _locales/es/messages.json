@@ -309,5 +309,50 @@
   },
   "importErrorReadFile": {
     "message": "Error al leer el archivo. Asegúrate de que sea un JSON válido."
+  },
+  "importPreviewTitle": {
+    "message": "Vista Previa de Importación"
+  },
+  "importOptionsTitle": {
+    "message": "Opciones de Importación"
+  },
+  "importModeUserAgents": {
+    "message": "Importar solo User-Agents"
+  },
+  "importModeSpoofs": {
+    "message": "Importar solo Spoofs Permanentes"
+  },
+  "exportInfoTitle": {
+    "message": "¿Qué se exportará?"
+  },
+  "exportItemUserAgents": {
+    "message": "• User-Agents personalizados"
+  },
+  "exportItemSpoofs": {
+    "message": "• Lista de Spoofs Permanentes"
+  },
+  "exportItemSettings": {
+    "message": "• Configuración de la extensión"
+  },
+  "exportItemMetadata": {
+    "message": "• Metadatos de exportación"
+  },
+  "exportHint": {
+    "message": "El archivo se guardará con una marca de tiempo."
+  },
+  "cancelButton": {
+    "message": "Cancelar"
+  },
+  "userAgentsLabel": {
+    "message": "User-Agents"
+  },
+  "permanentSpoofListTitle": {
+    "message": "Spoofs Permanentes"
+  },
+  "notFoundLabel": {
+    "message": "no encontrado"
+  },
+  "noDataToImport": {
+    "message": "No hay datos para importar"
   }
 }

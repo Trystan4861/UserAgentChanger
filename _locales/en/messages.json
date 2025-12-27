@@ -308,6 +308,51 @@
     "message": "The file does not have a valid format"
   },
   "importErrorReadFile": {
-    "message": "Error reading the file. Make sure it's a valid JSON."
+    "message": "Error reading file. Make sure it's a valid JSON."
+  },
+  "importPreviewTitle": {
+    "message": "Import Preview"
+  },
+  "importOptionsTitle": {
+    "message": "Import Options"
+  },
+  "importModeUserAgents": {
+    "message": "Import only User-Agents"
+  },
+  "importModeSpoofs": {
+    "message": "Import only Permanent Spoofs"
+  },
+  "exportInfoTitle": {
+    "message": "What will be exported?"
+  },
+  "exportItemUserAgents": {
+    "message": "• Custom User-Agents"
+  },
+  "exportItemSpoofs": {
+    "message": "• Permanent Spoof List"
+  },
+  "exportItemSettings": {
+    "message": "• Extension Settings"
+  },
+  "exportItemMetadata": {
+    "message": "• Export metadata"
+  },
+  "exportHint": {
+    "message": "The file will be saved with a timestamp."
+  },
+  "cancelButton": {
+    "message": "Cancel"
+  },
+  "userAgentsLabel": {
+    "message": "User-Agents"
+  },
+  "permanentSpoofListTitle": {
+    "message": "Permanent Spoofs"
+  },
+  "notFoundLabel": {
+    "message": "not found"
+  },
+  "noDataToImport": {
+    "message": "No data to import"
   }
 }
