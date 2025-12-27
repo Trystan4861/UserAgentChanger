@@ -29,9 +29,15 @@ const getDefaultUserAgents = () => [
   }
 ];
 
+// Update page title with i18n
+function updatePageTitle() {
+  document.title = i18n.getMessage('pageTitle') || 'User-Agent Changer';
+}
+
 // Initialize - wait for i18n to be ready
 document.addEventListener('DOMContentLoaded', async () => {
   await i18n.ready;
+  updatePageTitle();
   loadExtensionVersion();
   await initializeUserAgents();
   await updateDefaultUserAgentTranslation();
