@@ -317,17 +317,9 @@ async function updatePermanentSpoofRules() {
       .filter(rule => rule.id >= 1000)
       .map(rule => rule.id);
     
-    // Remove existing permanent spoof rules
-    if (permanentRuleIds.length > 0) {
-      await chrome.declarativeNetRequest.updateDynamicRules({
-        removeRuleIds: permanentRuleIds
-      });
-    }
-    
     // Create new rules for active permanent spoofs
     const newRules = [];
     let ruleId = 1000; // Start IDs at 1000 for permanent spoofs
-    console.log("Starting rule ID generation");
     
     for (const spoof of permanentSpoofs) {
       if (!spoof.enabled) {
@@ -349,7 +341,7 @@ async function updatePermanentSpoofRules() {
       const priority = permanentOverride ? 3 : 1;
       
       const rule = {
-        id: ruleId++,
+        id: ruleId,
         priority: priority,
         action: {
           type: 'modifyHeaders',
@@ -383,18 +375,25 @@ async function updatePermanentSpoofRules() {
         }
       };
 
-      console.log(`Generated rule ID: ${rule.id} with priority: ${priority}`);
       newRules.push(rule);
+      ruleId++; // Increment after adding the rule
     }
     
-    // Add new permanent spoof rules
+    // Remove old rules and add new ones in a single atomic operation
+    // This prevents the "duplicate ID" error
+    const updateOptions = {};
+    if (permanentRuleIds.length > 0) {
+      updateOptions.removeRuleIds = permanentRuleIds;
+    }
     if (newRules.length > 0) {
-      await chrome.declarativeNetRequest.updateDynamicRules({
-        addRules: newRules
-      });
+      updateOptions.addRules = newRules;
     }
     
-    console.log(`Updated ${newRules.length} permanent spoof rules`);
+    if (Object.keys(updateOptions).length > 0) {
+      await chrome.declarativeNetRequest.updateDynamicRules(updateOptions);
+      console.log(`Updated ${newRules.length} permanent spoof rules`);
+    }
+    
   } catch (error) {
     console.error('Error updating permanent spoof rules:', error);
   }
@@ -418,7 +417,8 @@ async function initializePermanentSpoofs() {
     
     // Also reapply any active user-agent from toolbar if it exists
     const result = await chrome.storage.local.get(['userAgents', 'activeId', 'permanentOverride']);
-    const permanentOverride = result.permanentOverride || false;
+    const permanentOverride = result
+.permanentOverride || false;
     
     // Only reapply manual selection if permanentOverride is false
     if (!permanentOverride && result.userAgents && result.activeId) {
@@ -460,3 +460,5 @@ chrome.tabs.onRemoved.addListener(async (tabId, removeInfo) => {
     console.error('Error cleaning up tab rule:', error);
   }
 });
+
+
