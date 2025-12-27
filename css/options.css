@@ -1644,16 +1644,26 @@ section h2 {
 .danger-title {
   display: flex;
   align-items: center;
-  gap: 10px;
-  font-size: 18px;
-  font-weight: 600;
-  color: #d93025;
-  margin: 0 0 16px 0;
+  gap: 12px;
+  margin: 0 0 20px 0;
+  padding-bottom: 16px;
+  border-bottom: 2px solid rgba(217, 48, 37, 0.2);
 }
 
 .danger-icon {
-  font-size: 24px;
+  font-size: 32px;
   line-height: 1;
+  flex-shrink: 0;
+}
+
+.danger-title h3 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #d93025;
+  margin: 0;
+  padding: 0;
+  border: none;
+  line-height: 1.2;
 }
 
 .reset-section {
@@ -1707,8 +1717,20 @@ section h2 {
   display: flex;
   flex-direction: column;
   gap: 20px;
-  max-width: 900px;
+  max-width: 1200px;
   margin: 0 auto;
+}
+
+.about-cards-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+@media (max-width: 968px) {
+  .about-cards-row {
+    grid-template-columns: 1fr;
+  }
 }
 
 .about-card {
@@ -1808,10 +1830,17 @@ section h2 {
   align-items: center;
   justify-content: center;
   border: 3px solid #1a73e8;
+  overflow: hidden;
 }
 
 .avatar-emoji {
   font-size: 40px;
+}
+
+.avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .author-details {
@@ -1860,9 +1889,19 @@ section h2 {
   font-size: 16px;
 }
 
+.about-card p {
+  line-height: 1.6;
+  margin: 0;
+}
+
 .support-btn {
-  margin-top: 16px;
+  margin-top: 20px;
   width: fit-content;
+  text-decoration: none;
+}
+
+.support-btn:hover {
+  text-decoration: none;
 }
 
 .license-card {
@@ -1932,4 +1971,10 @@ section h2 {
   .support-btn {
     width: 100%;
   }
+}
+.support-btn {
+    display: flex;
+    position: relative;
+    right: 0px;
+    bottom: -40px;
 }

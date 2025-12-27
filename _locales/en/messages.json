@@ -399,5 +399,50 @@
   },
   "selectAll": {
     "message": "Select all"
+  },
+  "aboutExtensionTitle": {
+    "message": "User-Agent Changer"
+  },
+  "aboutExtensionDescription": {
+    "message": "A powerful and easy-to-use extension that allows you to change your User-Agent with a single click. Perfect for web developers, testers, and users who need to emulate different browsers and devices."
+  },
+  "aboutAuthorTitle": {
+    "message": "Author"
+  },
+  "aboutAuthorRole": {
+    "message": "Full-Stack Developer"
+  },
+  "aboutGithubProfile": {
+    "message": "GitHub Profile"
+  },
+  "aboutRepository": {
+    "message": "Extension Repository"
+  },
+  "aboutSupportTitle": {
+    "message": "Support"
+  },
+  "aboutSupportDescription": {
+    "message": "If you encounter any issues or have suggestions to improve the extension, feel free to open an issue on the GitHub repository."
+  },
+  "aboutReportIssue": {
+    "message": "Report an Issue"
+  },
+  "aboutDangerZone": {
+    "message": "Danger Zone"
+  },
+  "aboutResetTitle": {
+    "message": "Reset Extension"
+  },
+  "aboutResetDescription": {
+    "message": "This will delete all your settings, custom User-Agents and Permanent Spoofs. This action cannot be undone."
+  },
+  "aboutResetButton": {
+    "message": "Reset Everything"
+  },
+  "aboutLicense": {
+    "message": "License:"
+  },
+  "aboutRights": {
+    "message": "All rights reserved."
   }
 }
