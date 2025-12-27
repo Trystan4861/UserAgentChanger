@@ -62,8 +62,14 @@ document.addEventListener('DOMContentLoaded', async () => {
 function loadExtensionVersion() {
   const manifest = chrome.runtime.getManifest();
   const versionElement = document.getElementById('extensionVersion');
+  const aboutVersionElement = document.getElementById('aboutVersion');
+  
   if (versionElement) {
     versionElement.textContent = `v${manifest.version}`;
+  }
+  
+  if (aboutVersionElement) {
+    aboutVersionElement.textContent = manifest.version;
   }
 }
 
@@ -209,6 +215,12 @@ function setupEventListeners() {
   const spoofForm = document.getElementById('addPermanentSpoofForm');
   if (spoofForm) {
     spoofForm.addEventListener('submit', addPermanentSpoof);
+  }
+  
+  // Reset extension button
+  const resetBtn = document.getElementById('resetExtensionBtn');
+  if (resetBtn) {
+    resetBtn.addEventListener('click', resetExtension);
   }
   
   // Initial preview
@@ -1256,6 +1268,34 @@ async function editSpoofUserAgent(spoofId, card) {
   // Add event listeners
   select.addEventListener('change', handleChange);
   select.addEventListener('blur', handleBlur);
+}
+
+async function resetExtension() {
+  if (!confirm('¿Estás seguro de que quieres resetear la extensión? Se eliminarán todos los User-Agents personalizados y Spoofs Permanentes. Esta acción no se puede deshacer.')) {
+    return;
+  }
+  
+  try {
+    // Clear all storage
+    await chrome.storage.local.clear();
+    
+    // Reinitialize with defaults
+    await chrome.storage.local.set({
+      userAgents: getDefaultUserAgents(),
+      activeId: 'default'
+    });
+    
+    // Reload the page to refresh all data
+    showNotification('Extensión reseteada correctamente', 'success');
+    
+    setTimeout(() => {
+      window.location.reload();
+    }, 1500);
+    
+  } catch (error) {
+    console.error('Reset error:', error);
+    showNotification('Error al resetear la extensión', 'error');
+  }
 }
 
 async function exportSettings() {
