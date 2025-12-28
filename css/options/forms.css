@@ -1,0 +1,173 @@
+/**
+ * Options Forms Styles
+ * Form groups, inputs, textareas, selects
+ */
+
+/* ============================================================================
+   SECTIONS
+   ============================================================================ */
+
+section {
+  background: var(--color-bg-primary);
+  padding: var(--spacing-2xl);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-sm);
+}
+
+section h2 {
+  color: var(--color-text-primary);
+  font-size: var(--font-size-3xl);
+  margin-bottom: var(--spacing-xl);
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--color-border-primary);
+}
+
+.form-section {
+  grid-column: 1;
+}
+
+.list-section {
+  grid-column: 2;
+  display: flex;
+  flex-direction: column;
+  max-height: 800px;
+  overflow: hidden;
+}
+
+.list-section h2 {
+  flex-shrink: 0;
+}
+
+.section-description {
+  color: var(--color-text-quaternary);
+  margin-bottom: var(--spacing-2xl);
+  line-height: 1.5;
+}
+
+@media (max-width: 1024px) {
+  .form-section,
+  .list-section {
+    grid-column: 1;
+  }
+}
+
+/* ============================================================================
+   FORM ELEMENTS
+   ============================================================================ */
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-lg);
+  margin-bottom: var(--spacing-lg);
+}
+
+@media (max-width: 768px) {
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.form-group {
+  margin-bottom: var(--spacing-lg);
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: var(--spacing-xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--scrollbar-thumb-hover);
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: var(--spacing-sm) 12px;
+  border: 1px solid var(--color-border-secondary);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-base);
+  font-family: inherit;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+.form-group small {
+  display: block;
+  margin-top: var(--spacing-xs);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-tertiary);
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 80px;
+  font-family: var(--font-family-mono);
+}
+
+/* ============================================================================
+   COLOR INPUT
+   ============================================================================ */
+
+.color-input-group {
+  display: flex;
+  gap: var(--spacing-md);
+  align-items: center;
+}
+
+.color-input-group input[type="color"] {
+  width: 60px;
+  height: 40px;
+  padding: 2px;
+  cursor: pointer;
+  border: 2px solid var(--color-border-secondary);
+}
+
+.color-input-group input[type="text"] {
+  flex: 1;
+  font-family: var(--font-family-mono);
+  text-transform: uppercase;
+}
+
+/* ============================================================================
+   BADGE PREVIEW
+   ============================================================================ */
+
+/* El form-group con badge preview no tiene label visible */
+.form-group--badge-preview {
+  display: flex;
+  align-items: center;
+}
+
+/* Wrapper que contiene "Vista previa:" y el badge, alineado con el select */
+.badge-preview-wrapper {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  margin-top: calc(var(--spacing-xs) + 1.5em); /* Compensa el espacio del label + margin-bottom */
+}
+
+.badge-preview-wrapper span:first-child {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-primary);
+  font-weight: var(--font-weight-semibold);
+  white-space: nowrap;
+}
+
+#badgePreview.preview-badge {
+  padding: 3px 9px;
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-2xs);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 0.5px;
+  min-width: 50px;
+  text-align: center;
+  white-space: nowrap;
+  display: inline-block;
+}

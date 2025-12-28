@@ -91,6 +91,10 @@
     "message": "Badge preview:",
     "description": "Text for badge preview"
   },
+  "badgePreviewLabel": {
+    "message": "Preview:",
+    "description": "Short label for badge preview"
+  },
   "addButton": {
     "message": "Add User-Agent",
     "description": "Button to add user-agent"

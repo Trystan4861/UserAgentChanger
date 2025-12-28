@@ -91,6 +91,10 @@
     "message": "Vista previa de la insignia:",
     "description": "Texto para vista previa de la insignia"
   },
+  "badgePreviewLabel": {
+    "message": "Vista previa:",
+    "description": "Label corto para vista previa de la insignia"
+  },
   "addButton": {
     "message": "Agregar User-Agent",
     "description": "Botón para agregar user-agent"

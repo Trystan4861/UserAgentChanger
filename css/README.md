@@ -1,287 +1,246 @@
-# CSS Architecture - User Agent Changer Extension
+# CSS Architecture - User Agent Changer
 
-This document explains the CSS architecture, theme system, and BEM methodology implementation.
-
-## Files Structure
+## 📁 Estructura de Archivos
 
 ```
 css/
-├── theme.css     # CSS Variables and Design Tokens
-├── popup.css     # Popup styles with BEM methodology
-├── options.css   # Options page styles with BEM methodology
-└── README.md     # This file
+├── theme.css              # Variables CSS globales (colores, espaciado, tipografía)
+├── commons.css            # Estilos compartidos entre popup y options
+├── popup.css              # Estilos específicos del popup
+├── options.css            # Estilos principales de options (importa módulos)
+└── options/               # Módulos de la página de opciones
+    ├── layout.css         # Layout, container, navegación
+    ├── header.css         # Header, título, selector de idioma
+    ├── forms.css          # Formularios, inputs, secciones
+    ├── cards.css          # User agent cards y spoof cards
+    ├── import-export.css  # Funcionalidad de importar/exportar
+    └── about.css          # Sección About, autor, soporte
 ```
 
-## Theme System (theme.css)
+## 🎨 Sistema de Diseño
 
-The `theme.css` file contains all design tokens as CSS custom properties (variables). This centralized approach makes it easy to:
+### Variables CSS (theme.css)
 
-- Create consistent designs across all pages
-- Quickly modify the entire theme
-- Support dark mode and other theme variants
-- Maintain design system standards
+El archivo `theme.css` contiene todas las variables CSS que definen el sistema de diseño:
 
-### Variable Categories
+#### Colores
+- **Primarios**: `--color-primary`, `--color-primary-dark`, `--color-primary-hover`
+- **Fondos**: `--color-bg-primary`, `--color-bg-secondary`, `--color-bg-tertiary`
+- **Texto**: `--color-text-primary` hasta `--color-text-quaternary`
+- **Estados**: `--color-success`, `--color-warning`, `--color-danger`
+- **Bordes**: `--color-border-primary`, `--color-border-secondary`, `--color-border-tertiary`
 
-#### Colors
-- **Primary Colors**: Main brand colors (blue theme)
-- **Status Colors**: Success, danger, warning, info
-- **Background Colors**: Various background shades
-- **Text Colors**: Text hierarchy colors
-- **Border Colors**: Border variations
+#### Espaciado
+Sistema basado en múltiplos de 4px:
+- `--spacing-xs` (4px)
+- `--spacing-sm` (8px)
+- `--spacing-md` (12px)
+- `--spacing-lg` (16px)
+- `--spacing-xl` (20px)
+- `--spacing-2xl` (24px)
+- `--spacing-3xl` (32px)
 
-#### Spacing
-- Consistent spacing scale from `--spacing-xs` (4px) to `--spacing-5xl` (48px)
+#### Tipografía
+- **Familias**: `--font-family-base`, `--font-family-mono`
+- **Tamaños**: De `--font-size-2xs` (10px) hasta `--font-size-8xl` (64px)
+- **Pesos**: `--font-weight-normal` (400), `--font-weight-medium` (500), etc.
 
-#### Typography
-- **Font Sizes**: From `--font-size-xs` to `--font-size-7xl`
-- **Font Weights**: normal, medium, semibold, bold
-- **Line Heights**: tight, normal, relaxed, loose
-- **Font Families**: base and monospace
+#### Bordes y Sombras
+- **Radios**: De `--radius-sm` (4px) hasta `--radius-2xl` (24px)
+- **Sombras**: `--shadow-sm`, `--shadow-md`, `--shadow-lg`
 
-#### Other Tokens
-- Border radius values
-- Box shadows
-- Transitions
-- Z-index levels
-- Component-specific values
+#### Transiciones
+- `--transition-fast` (0.15s)
+- `--transition-normal` (0.3s)
 
-### Using Theme Variables
+#### Dimensiones
+- **Popup**: `--popup-min-width`, `--popup-max-width`
+- **Container**: `--container-max-width`
+- **Navegación**: `--nav-menu-width`
 
-```css
-/* Example usage */
-.my-component {
-  background: var(--color-bg-primary);
-  color: var(--color-text-primary);
-  padding: var(--spacing-lg);
-  border-radius: var(--radius-xl);
-  transition: all var(--transition-fast);
-}
-```
+## 🏗️ Arquitectura Modular
 
-## BEM Methodology
+### commons.css
+Contiene estilos compartidos entre popup.html y options.html:
+- Reset básico y estilos base
+- Botones (`.btn`, `.btn-primary`, `.btn-secondary`, `.btn-danger`)
+- Badges (`.badge`, `.version-badge`, `.card-badge`)
+- Estados vacíos (`.empty-state`)
+- Scrollbars personalizados
+- Animaciones comunes
 
-BEM (Block Element Modifier) is used for consistent, maintainable CSS naming.
+### popup.css
+Estilos específicos del popup (importa `commons.css`):
+- Layout del popup
+- Header del popup
+- Lista de user agents
+- Items de user agent especiales (DEFAULT, AUTO)
+- Footer del popup
 
-### Naming Convention
+### options.css
+Archivo principal que importa todos los módulos (importa `commons.css` y módulos):
 
-```
-.block {}                    /* Component */
-.block__element {}           /* Part of component */
-.block--modifier {}          /* Variant of component */
-.block__element--modifier {} /* Variant of element */
-```
+#### options/layout.css
+- Container y layout principal
+- Sistema de grid de dos columnas
+- Menú de navegación lateral
+- Responsive design (mobile: menú horizontal)
 
-### Examples in Our Codebase
+#### options/header.css
+- Header principal
+- Título y subtítulo
+- Selector de idioma
+- Credits
 
-#### Popup.css
+#### options/forms.css
+- Secciones (`.form-section`, `.list-section`)
+- Form groups y labels
+- Inputs, textareas, selects
+- Color input personalizado
+- Badge preview
+
+#### options/cards.css
+- User agent cards (`.user-agent-card`)
+- Permanent spoof cards (`.spoof-card`)
+- Card headers, titles, actions
+- Información de las cards
+- Estados vacíos
+
+#### options/import-export.css
+- Container de import/export
+- Drag & drop de archivos
+- Preview de importación
+- Selección de items a importar
+- Barra de acciones
+- Sección de exportación
+
+#### options/about.css
+- Container de about
+- About cards
+- Author card con avatar
+- Support card
+- Danger zone
+
+## 🎯 Metodología BEM
+
+Todos los estilos siguen la metodología BEM (Block Element Modifier):
+
 ```css
 /* Block */
-.ua-item {}
-
-/* Elements */
-.ua-item__info {}
-.ua-item__name {}
-.ua-item__preview {}
-.ua-item__badge {}
-
-/* Modifiers */
-.ua-item--active {}
-.ua-item--special {}
-```
-
-#### Options.css
-```css
-/* Block */
-.user-agent-card {}
-
-/* Elements */
-.ua-card-header {}
-.ua-card-title {}
-.ua-card-content {}
-.ua-card-actions {}
-
-/* Modifiers */
-.user-agent-card:hover {}
-```
-
-### Button Component Example
-
-```css
-/* Block */
-.btn {}
-
-/* Modifiers */
-.btn--primary {}
-.btn--danger {}
-.btn--secondary {}
-.btn--link {}
+.user-agent-card { }
 
 /* Element */
-.btn__icon {}
+.user-agent-card__header { }
+.user-agent-card__title { }
+
+/* Modifier */
+.user-agent-card--default { }
+.user-agent-card--active { }
 ```
 
-## Creating Custom Themes
+### Ejemplos de uso:
 
-### Step 1: Duplicate theme.css
-Create a new file like `theme-dark.css` or `theme-custom.css`
+```html
+<!-- User Agent Card -->
+<div class="user-agent-card user-agent-card--default">
+  <div class="card-header">
+    <div class="card-title">
+      <h3>Chrome Desktop</h3>
+      <span class="card-badge">WIN</span>
+    </div>
+    <div class="card-actions">
+      <button class="btn btn-edit">Edit</button>
+      <button class="btn btn-danger">Delete</button>
+    </div>
+  </div>
+  <div class="card-info">
+    <div class="info-row">
+      <span class="info-label">Platform:</span>
+      <span class="info-value">Windows</span>
+    </div>
+  </div>
+</div>
 
-### Step 2: Modify Color Variables
+<!-- Button Examples -->
+<button class="btn btn-primary">Save</button>
+<button class="btn btn-secondary">Cancel</button>
+<button class="btn btn-danger">Delete</button>
+
+<!-- Badge Examples -->
+<span class="badge">NEW</span>
+<span class="version-badge">v1.0.0</span>
+<span class="card-badge">WIN</span>
+```
+
+## 🎨 Creación de Temas
+
+Para crear un nuevo tema, modifica las variables en `theme.css`:
+
 ```css
 :root {
+  /* Cambiar colores primarios */
   --color-primary: #your-color;
+  --color-primary-dark: #your-dark-color;
+  
+  /* Cambiar fondos */
   --color-bg-primary: #your-bg;
-  /* ... modify other colors */
+  
+  /* etc. */
 }
 ```
 
-### Step 3: Import Custom Theme
-In your HTML or main CSS file:
-```css
-@import 'theme-dark.css';
-```
-
-## Dark Theme Support
-
-The `theme.css` file includes a commented-out dark theme example:
+### Tema Oscuro (Futuro)
+Para implementar un tema oscuro, crea un media query o clase:
 
 ```css
 @media (prefers-color-scheme: dark) {
   :root {
-    /* Dark theme variables */
+    --color-bg-primary: #1a1a1a;
+    --color-text-primary: #ffffff;
+    /* ... más variables ... */
   }
 }
 ```
 
-To enable it:
-1. Uncomment the dark theme block in `theme.css`
-2. Adjust colors as needed
-3. The theme will automatically activate based on system preference
+## 📱 Responsive Design
 
-## Best Practices
+El diseño es completamente responsive:
 
-### 1. Always Use Theme Variables
-❌ **Don't do this:**
-```css
-.component {
-  color: #333;
-  padding: 16px;
-}
-```
+### Breakpoints
+- **Desktop**: > 1024px (layout de dos columnas con menú lateral)
+- **Tablet**: ≤ 1024px (layout de una columna, menú horizontal)
+- **Mobile**: ≤ 768px (optimizaciones adicionales)
 
-✅ **Do this:**
-```css
-.component {
-  color: var(--color-text-primary);
-  padding: var(--spacing-lg);
-}
-```
+### Características Responsive
+- Grid de contenido adapta de 2 a 1 columna
+- Menú de navegación cambia de vertical a horizontal
+- Import selection grid se ajusta automáticamente
+- Formularios en una sola columna en mobile
 
-### 2. Follow BEM Naming
-❌ **Don't do this:**
-```css
-.card .title {}
-.card-active {}
-```
+## 🔧 Mantenimiento
 
-✅ **Do this:**
-```css
-.card__title {}
-.card--active {}
-```
+### Añadir nuevos estilos
+1. Determina si el estilo es compartido (commons.css) o específico
+2. Si es específico de options, añádelo al módulo correspondiente
+3. Usa las variables CSS del theme.css
+4. Sigue la metodología BEM para nombres de clases
 
-### 3. Keep Selectors Flat
-❌ **Don't do this:**
-```css
-.card .header .title .icon {}
-```
+### Modificar colores o espaciado
+1. Edita las variables en `theme.css`
+2. Los cambios se aplicarán automáticamente en toda la aplicación
 
-✅ **Do this:**
-```css
-.card__header-title-icon {}
-/* or separate components */
-.card-header__title-icon {}
-```
+### Debugging
+1. Usa las DevTools del navegador
+2. Inspecciona los elementos para ver qué clases y variables se aplican
+3. Verifica que los @import están cargando correctamente
 
-### 4. Use Utility Classes Sparingly
-Utility classes are provided for common patterns:
-```css
-.hidden
-.text-center
-.text-muted
-.mt-1, .mt-2
-.mb-1, .mb-2
-```
-
-## Responsive Design
-
-Media queries are included for responsive layouts:
-```css
-@media (max-width: 1024px) {
-  /* Tablet styles */
-}
-
-@media (max-width: 768px) {
-  /* Mobile styles */
-}
-```
-
-## Migration Notes
-
-### Current Status
-The CSS has been refactored to use:
-- ✅ CSS variables from theme.css
-- ✅ BEM naming conventions
-- ✅ Consistent spacing and typography
-- ✅ Modular component structure
-
-### HTML Updates Needed
-Some HTML class names may need to be updated to fully match the new BEM structure. When updating:
-
-1. Replace old class names with BEM equivalents
-2. Update JavaScript selectors if needed
-3. Test all functionality after changes
-
-### Example Migration
-```html
-<!-- Before -->
-<div class="user-agent active">
-  <div class="name">iPhone</div>
-  <span class="badge">iOS</span>
-</div>
-
-<!-- After -->
-<div class="ua-item ua-item--active">
-  <div class="ua-item__name">iPhone</div>
-  <span class="ua-item__badge">iOS</span>
-</div>
-```
-
-## Maintenance
-
-### Adding New Components
-1. Define component in appropriate CSS file
-2. Use theme variables for all values
-3. Follow BEM naming convention
-4. Add documentation if complex
-
-### Modifying Theme
-1. Update variables in `theme.css`
-2. Changes apply globally automatically
-3. Test in both popup and options pages
-
-### Adding New Colors
-1. Add to theme.css with descriptive name
-2. Consider light/dark variants
-3. Document usage purpose
-
-## Resources
+## 📚 Referencias
 
 - [BEM Methodology](http://getbem.com/)
 - [CSS Custom Properties](https://developer.mozilla.org/en-US/docs/Web/CSS/--*)
-- [Design Tokens](https://css-tricks.com/what-are-design-tokens/)
+- [CSS @import](https://developer.mozilla.org/en-US/docs/Web/CSS/@import)
 
 ---
 
-**Last Updated**: December 2024
-**Maintained by**: @Trystan4861
+**Última actualización**: Diciembre 2024  
+**Versión**: 2.0 - Arquitectura Modular

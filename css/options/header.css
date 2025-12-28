@@ -1,0 +1,91 @@
+/**
+ * Options Header Styles
+ * Header, title, language selector
+ */
+
+/* ============================================================================
+   HEADER
+   ============================================================================ */
+
+header {
+  background: var(--color-bg-primary);
+  padding: 30px;
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-sm);
+  margin-bottom: var(--spacing-2xl);
+  text-align: center;
+  position: relative;
+}
+
+header h1 {
+  color: var(--color-primary);
+  font-size: var(--font-size-7xl);
+  margin-bottom: var(--spacing-sm);
+}
+
+.subtitle {
+  color: var(--color-text-tertiary);
+  font-size: var(--font-size-xl);
+}
+
+/* ============================================================================
+   LANGUAGE SELECTOR
+   ============================================================================ */
+
+.language-selector {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  font-size: var(--font-size-base);
+}
+
+.language-selector label {
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-quaternary);
+}
+
+.language-selector select {
+  padding: var(--spacing-xs) 12px;
+  border: 1px solid var(--color-border-secondary);
+  border-radius: var(--radius-md);
+  background: var(--color-bg-primary);
+  cursor: pointer;
+  font-size: var(--font-size-base);
+  transition: all var(--transition-fast);
+}
+
+.language-selector select:hover {
+  border-color: var(--color-primary);
+}
+
+.language-selector select:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+/* ============================================================================
+   CREDITS
+   ============================================================================ */
+
+.options-credit {
+  margin-top: var(--spacing-sm);
+  font-size: var(--font-size-base);
+  color: var(--color-text-quaternary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+}
+
+.options-credit a {
+  color: var(--color-primary);
+  text-decoration: none;
+  font-weight: var(--font-weight-semibold);
+}
+
+.options-credit a:hover {
+  text-decoration: underline;
+}

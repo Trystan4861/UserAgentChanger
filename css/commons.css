@@ -1,0 +1,247 @@
+/**
+ * Common Styles
+ * User Agent Changer Extension
+ * Shared styles between popup and options pages
+ */
+
+@import url('theme.css');
+
+/* ============================================================================
+   BASE STYLES
+   ============================================================================ */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-base);
+  color: var(--color-text-primary);
+  background: var(--color-bg-secondary);
+  line-height: var(--line-height-relaxed);
+}
+
+/* ============================================================================
+   BUTTONS
+   ============================================================================ */
+
+.btn {
+  padding: var(--spacing-md) var(--spacing-lg);
+  border: none;
+  border-radius: var(--radius-lg);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+.btn-primary {
+  background: var(--color-primary);
+  color: var(--color-bg-primary);
+  width: 100%;
+  justify-content: center;
+}
+
+.btn-primary:hover {
+  background: var(--color-primary-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(26, 115, 232, 0.3);
+}
+
+.btn-secondary {
+  width: 100%;
+  padding: var(--spacing-md);
+  background: var(--color-bg-tertiary);
+  border: 2px solid var(--color-border-primary);
+  border-radius: var(--radius-xl);
+  color: var(--color-text-primary);
+  transition: all var(--transition-fast);
+  font-weight: var(--font-weight-bold);
+}
+
+.btn-secondary:hover {
+  background: var(--color-primary-light);
+  border-color: var(--color-primary);
+}
+
+.btn-danger {
+  background: var(--color-danger);
+  color: var(--color-bg-primary);
+  padding: var(--spacing-sm) 16px;
+  font-size: var(--font-size-sm);
+}
+
+.btn-danger:hover {
+  background: var(--color-danger-dark);
+}
+
+.btn-edit {
+  background: var(--color-success);
+  color: var(--color-bg-primary);
+  padding: var(--spacing-sm) 16px;
+  font-size: var(--font-size-sm);
+}
+
+.btn-edit:hover {
+  background: var(--color-success-dark);
+}
+
+.btn-link {
+  background: none;
+  border: none;
+  color: var(--color-primary);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  padding: var(--spacing-xs) 12px;
+  border-radius: var(--radius-md);
+  transition: all var(--transition-fast);
+}
+
+.btn-link:hover {
+  background: var(--color-primary-light);
+}
+
+/* ============================================================================
+   BADGES
+   ============================================================================ */
+
+.badge {
+  padding: 3px 9px;
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 0.5px;
+  display: inline-block;
+}
+
+.version-badge {
+  display: inline-block;
+  padding: 3px 9px;
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+  border-radius: var(--radius-2xl);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: 0.5px;
+  border: 1px solid var(--color-primary-border);
+}
+
+.card-badge,
+.preview-badge {
+  padding: 3px 9px;
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-2xs);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 0.5px;
+  min-width: 50px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.mode-badge {
+  display: inline-block;
+  padding: 2px var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-2xs);
+  font-weight: var(--font-weight-semibold);
+}
+
+.mode-replace {
+  background: var(--color-danger-light);
+  color: var(--color-danger);
+}
+
+.mode-append {
+  background: var(--color-success-light);
+  color: var(--color-success-text);
+}
+
+/* ============================================================================
+   EMPTY STATES
+   ============================================================================ */
+
+.empty-state {
+  text-align: center;
+  padding: var(--spacing-3xl) var(--spacing-lg);
+  color: var(--color-text-tertiary);
+}
+
+.empty-state p {
+  margin: 0;
+}
+
+/* ============================================================================
+   USER AGENT PREVIEW
+   ============================================================================ */
+
+.user-agent-preview {
+  font-size: var(--font-size-xs);
+  opacity: 0.7;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ============================================================================
+   SCROLLBAR
+   ============================================================================ */
+
+.scrollable::-webkit-scrollbar,
+.user-agents-list::-webkit-scrollbar,
+.permanent-spoofs-list::-webkit-scrollbar {
+  width: var(--scrollbar-width);
+}
+
+.scrollable::-webkit-scrollbar-track,
+.user-agents-list::-webkit-scrollbar-track,
+.permanent-spoofs-list::-webkit-scrollbar-track {
+  background: var(--color-border-tertiary);
+  border-radius: var(--radius-md);
+}
+
+.scrollable::-webkit-scrollbar-thumb,
+.user-agents-list::-webkit-scrollbar-thumb,
+.permanent-spoofs-list::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: var(--radius-md);
+}
+
+.scrollable::-webkit-scrollbar-thumb:hover,
+.user-agents-list::-webkit-scrollbar-thumb:hover,
+.permanent-spoofs-list::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover);
+}
+
+/* ============================================================================
+   UTILITY CLASSES
+   ============================================================================ */
+
+.hidden {
+  display: none !important;
+}
+
+/* ============================================================================
+   ANIMATIONS
+   ============================================================================ */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease;
+}
