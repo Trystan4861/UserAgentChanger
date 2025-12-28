@@ -66,6 +66,7 @@
   --spacing-5xl: 48px;
   
   /* Font Sizes */
+  --font-size-2xs: 10px;
   --font-size-xs: 11px;
   --font-size-sm: 12px;
   --font-size-md: 13px;
@@ -78,6 +79,7 @@
   --font-size-5xl: 24px;
   --font-size-6xl: 28px;
   --font-size-7xl: 32px;
+  --font-size-8xl: 40px;
   
   /* Font Weights */
   --font-weight-normal: 400;
@@ -137,31 +139,154 @@
   /* Font Family */
   --font-family-base: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
   --font-family-mono: 'Courier New', monospace;
+  
+  /* Button Neutral Colors (for dark theme default state) */
+  --btn-neutral-bg: #5f6368;
+  --btn-neutral-text: #e8eaed;
 }
 
-/* Dark Theme Support (Example - Uncomment and customize as needed) */
-/*
+/* Dark Theme */
+[data-theme="dark"] {
+  --color-primary: #8ab4f8;
+  --color-primary-hover: #aecbfa;
+  --color-primary-light: #1e3a5f;
+  --color-primary-border: #4c7db8;
+  
+  --color-success: #81c995;
+  --color-success-hover: #a0d6b0;
+  --color-success-light: #2d4a35;
+  
+  --color-danger: #ff6b6b;
+  --color-danger-hover: #ff8787;
+  --color-danger-light: #5a2927;
+  
+  --color-warning: #fdd663;
+  --color-warning-light: #4a3f1e;
+  
+  --color-info: #78b9ff;
+  --color-info-hover: #a3d0ff;
+  
+  /* Background Colors */
+  --color-bg-primary: #202124;
+  --color-bg-secondary: #292a2d;
+  --color-bg-tertiary: #35363a;
+  --color-bg-quaternary: #2d2e31;
+  --color-bg-hover: #3c4043;
+  
+  /* Text Colors */
+  --color-text-primary: #e8eaed;
+  --color-text-secondary: #bdc1c6;
+  --color-text-tertiary: #9aa0a6;
+  --color-text-quaternary: #9aa0a6;
+  --color-text-muted: #80868b;
+  --color-text-disabled: #5f6368;
+  --color-text-light: #ffffff;
+  
+  /* Border Colors */
+  --color-border-primary: #3c4043;
+  --color-border-secondary: #5f6368;
+  --color-border-tertiary: #5f6368;
+  --color-border-light: #3c4043;
+  
+  /* Shadow */
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.5);
+  --shadow-primary: 0 4px 8px rgba(138, 180, 248, 0.3);
+  --shadow-danger: 0 4px 8px rgba(255, 107, 107, 0.3);
+  --shadow-success: 0 4px 8px rgba(129, 201, 149, 0.3);
+  
+  /* Mode Badge Colors */
+  --mode-replace-bg: #5a2927;
+  --mode-replace-text: #f28b82;
+  --mode-append-bg: #2d4a35;
+  --mode-append-text: #81c995;
+  
+  /* Scrollbar */
+  --scrollbar-track: #292a2d;
+  --scrollbar-thumb: #5f6368;
+  --scrollbar-thumb-hover: #80868b;
+  
+  /* Button Neutral Colors */
+  --btn-neutral-bg: #5f6368;
+  --btn-neutral-text: #e8eaed;
+}
+
+/* Auto Theme - Respects system preference */
 @media (prefers-color-scheme: dark) {
-  :root {
+  [data-theme="auto"] {
     --color-primary: #8ab4f8;
     --color-primary-hover: #aecbfa;
     --color-primary-light: #1e3a5f;
+    --color-primary-border: #4c7db8;
     
+    --color-success: #81c995;
+    --color-success-hover: #a0d6b0;
+    --color-success-light: #2d4a35;
+    
+    --color-danger: #ff6b6b;
+    --color-danger-hover: #ff8787;
+    --color-danger-light: #5a2927;
+    
+    --color-warning: #fdd663;
+    --color-warning-light: #4a3f1e;
+    
+    --color-info: #78b9ff;
+    --color-info-hover: #a3d0ff;
+    
+    /* Background Colors */
     --color-bg-primary: #202124;
     --color-bg-secondary: #292a2d;
     --color-bg-tertiary: #35363a;
+    --color-bg-quaternary: #2d2e31;
     --color-bg-hover: #3c4043;
     
+    /* Text Colors */
     --color-text-primary: #e8eaed;
     --color-text-secondary: #bdc1c6;
     --color-text-tertiary: #9aa0a6;
+    --color-text-quaternary: #9aa0a6;
+    --color-text-muted: #80868b;
+    --color-text-disabled: #5f6368;
+    --color-text-light: #ffffff;
     
+    /* Border Colors */
     --color-border-primary: #3c4043;
     --color-border-secondary: #5f6368;
+    --color-border-tertiary: #5f6368;
+    --color-border-light: #3c4043;
     
-    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.3);
-    --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.3);
-    --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.4);
+    /* Shadow */
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.4);
+    --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.5);
+    --shadow-primary: 0 4px 8px rgba(138, 180, 248, 0.3);
+    --shadow-danger: 0 4px 8px rgba(255, 107, 107, 0.3);
+    --shadow-success: 0 4px 8px rgba(129, 201, 149, 0.3);
+    
+    /* Mode Badge Colors */
+    --mode-replace-bg: #5a2927;
+    --mode-replace-text: #f28b82;
+    --mode-append-bg: #2d4a35;
+    --mode-append-text: #81c995;
+    
+    /* Scrollbar */
+    --scrollbar-track: #292a2d;
+    --scrollbar-thumb: #5f6368;
+    --scrollbar-thumb-hover: #80868b;
+    
+    /* Button Neutral Colors */
+    --btn-neutral-bg: #5f6368;
+    --btn-neutral-text: #e8eaed;
   }
 }
-*/
+
+/* Smooth theme transitions */
+html {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+body {
+  background: var(--color-bg-secondary);
+  color: var(--color-text-primary);
+}

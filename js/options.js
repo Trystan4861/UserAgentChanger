@@ -53,6 +53,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   await loadUserAgents();
   await loadPermanentSpoofs();
   await setupLanguageSelector();
+  await setupThemeSelector();
   await setupNavigationMenu();
   await setupImportExport();
   setupEventListeners();
@@ -151,6 +152,47 @@ async function setupLanguageSelector() {
       window.location.reload();
     }, 1500);
   });
+}
+
+// Setup theme selector
+async function setupThemeSelector() {
+  const select = document.getElementById('themeSelect');
+  const result = await chrome.storage.local.get('theme');
+  const currentTheme = result.theme || 'auto';
+  
+  // Set current theme
+  select.value = currentTheme;
+  
+  // Apply the theme
+  applyTheme(currentTheme);
+  
+  // Add change event listener
+  select.addEventListener('change', async (e) => {
+    const newTheme = e.target.value;
+    
+    // Save the theme preference
+    await chrome.storage.local.set({ theme: newTheme });
+    
+    // Apply the theme
+    applyTheme(newTheme);
+    
+    // Show notification
+    showNotification(i18n.getMessage('themeChanged'), 'success');
+  });
+}
+
+// Apply theme
+function applyTheme(theme) {
+  const html = document.documentElement;
+  
+  if (theme === 'dark') {
+    html.setAttribute('data-theme', 'dark');
+  } else if (theme === 'light') {
+    html.setAttribute('data-theme', 'light');
+  } else {
+    // Auto: use browser preference
+    html.removeAttribute('data-theme');
+  }
 }
 
 // Setup navigation menu
@@ -1026,10 +1068,21 @@ window.confirmImportSelected = async function() {
     const finalUserAgents = [...existingUserAgents, ...newUserAgents];
     const finalSpoofs = [...existingSpoofs, ...newSpoofs];
     
+    // Handle settings import (including theme)
+    const settingsToImport = {};
+    if (importData.settings) {
+      if (importData.settings.theme) {
+        settingsToImport.theme = importData.settings.theme;
+        // Apply the imported theme
+        applyTheme(importData.settings.theme);
+      }
+    }
+    
     // Save to storage
     await chrome.storage.local.set({
       userAgents: finalUserAgents,
-      permanentSpoofs: finalSpoofs
+      permanentSpoofs: finalSpoofs,
+      ...settingsToImport
     });
     
     // Reload UI
@@ -1300,7 +1353,7 @@ async function resetExtension() {
 
 async function exportSettings() {
   try {
-    const result = await chrome.storage.local.get(['userAgents', 'permanentSpoofs', 'activeSection', 'permanentOverride', 'perTabSpoof']);
+    const result = await chrome.storage.local.get(['userAgents', 'permanentSpoofs', 'activeSection', 'permanentOverride', 'perTabSpoof', 'theme']);
     
     const manifest = chrome.runtime.getManifest();
     
@@ -1321,7 +1374,8 @@ async function exportSettings() {
       settings: {
         activeSection: result.activeSection || 'custom-user-agents',
         permanentOverride: result.permanentOverride || false,
-        perTabSpoof: result.perTabSpoof || false
+        perTabSpoof: result.perTabSpoof || false,
+        theme: result.theme || 'auto'
       }
     };
     

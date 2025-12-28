@@ -84,11 +84,13 @@ section h2 {
 .form-group textarea {
   width: 100%;
   padding: var(--spacing-sm) 12px;
-  border: 1px solid var(--color-border-secondary);
+  border: 2px solid var(--color-border-secondary);
   border-radius: var(--radius-md);
   font-size: var(--font-size-base);
   font-family: inherit;
-  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  background: var(--color-bg-tertiary);
+  color: var(--color-text-primary);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast), background-color var(--transition-fast);
 }
 
 .form-group input:focus,
@@ -96,6 +98,14 @@ section h2 {
 .form-group textarea:focus {
   outline: none;
   border-color: var(--color-primary);
+  background: var(--color-bg-primary);
+  box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.1);
+}
+
+.form-group input:hover:not(:focus),
+.form-group select:hover:not(:focus),
+.form-group textarea:hover:not(:focus) {
+  border-color: var(--color-border-primary);
 }
 
 .form-group small {

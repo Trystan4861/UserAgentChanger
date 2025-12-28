@@ -448,5 +448,25 @@
   },
   "aboutRights": {
     "message": "All rights reserved."
+  },
+  "themeLabel": {
+    "message": "Theme:",
+    "description": "Label for theme selector"
+  },
+  "themeAuto": {
+    "message": "Auto",
+    "description": "Auto theme option"
+  },
+  "themeLight": {
+    "message": "Light",
+    "description": "Light theme option"
+  },
+  "themeDark": {
+    "message": "Dark",
+    "description": "Dark theme option"
+  },
+  "themeChanged": {
+    "message": "Theme changed successfully",
+    "description": "Message when theme is changed"
   }
 }

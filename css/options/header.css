@@ -29,41 +29,57 @@ header h1 {
 }
 
 /* ============================================================================
-   LANGUAGE SELECTOR
+   LANGUAGE SELECTOR & THEME SELECTOR
    ============================================================================ */
 
-.language-selector {
+.header-selectors {
   position: absolute;
   top: 10px;
   right: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.language-selector,
+.theme-selector {
   display: flex;
   align-items: center;
   gap: var(--spacing-sm);
   font-size: var(--font-size-base);
 }
 
-.language-selector label {
+.language-selector label,
+.theme-selector label {
   font-weight: var(--font-weight-semibold);
   color: var(--color-text-quaternary);
+  min-width: 85px;
+  text-align: right;
 }
 
-.language-selector select {
+.language-selector select,
+.theme-selector select {
   padding: var(--spacing-xs) 12px;
   border: 1px solid var(--color-border-secondary);
   border-radius: var(--radius-md);
   background: var(--color-bg-primary);
+  color: var(--color-text-primary);
   cursor: pointer;
   font-size: var(--font-size-base);
   transition: all var(--transition-fast);
+  min-width: 120px;
 }
 
-.language-selector select:hover {
+.language-selector select:hover,
+.theme-selector select:hover {
   border-color: var(--color-primary);
 }
 
-.language-selector select:focus {
+.language-selector select:focus,
+.theme-selector select:focus {
   outline: none;
   border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.1);
 }
 
 /* ============================================================================
