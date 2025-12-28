@@ -317,7 +317,7 @@ function createUserAgentCard(ua) {
     
   // Badge colors
   const badgeTextColor = '#ffffff';
-  const badgeBgColor = '#1a73e8';
+  const badgeBgColor = '#000';
   
   const modeClass = ua.mode === 'append' ? 'mode-append' : 'mode-replace';
   
@@ -879,7 +879,7 @@ function showImportPreview(data) {
                 <div class="import-item-content">
                   <div class="import-item-header">
                     <span class="import-item-name">${ua.name}</span>
-                    <span class="import-item-badge" style="background: '#1a73e8'; color: '#ffffff'};">
+                    <span class="import-item-badge" style="background: '#000'; color: '#ffffff'};">
                       ${ua.alias}
                     </span>
                   </div>

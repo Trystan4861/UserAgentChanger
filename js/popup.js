@@ -213,7 +213,7 @@ function createUserAgentItem(ua, activeId) {
   
   // Badge colors
   const badgeTextColor = '#ffffff';
-  const badgeBgColor = '#1a73e8';
+  const badgeBgColor = '#000';
 
   // Always show badge for custom user-agents
   const badgeHtml = `
