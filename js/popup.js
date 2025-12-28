@@ -41,12 +41,30 @@ const getDefaultUserAgents = () => [
 // Initialize - wait for i18n to be ready
 document.addEventListener('DOMContentLoaded', async () => {
   await i18n.ready;
+  await applyTheme();
   loadExtensionVersion();
   await initializeUserAgents();
   await updateDefaultUserAgentTranslation();
   await loadUserAgents();
   setupEventListeners();
 });
+
+// Apply theme from storage
+async function applyTheme() {
+  const result = await chrome.storage.local.get('theme');
+  const theme = result.theme || 'auto';
+  
+  const html = document.documentElement;
+  
+  if (theme === 'dark') {
+    html.setAttribute('data-theme', 'dark');
+  } else if (theme === 'light') {
+    html.setAttribute('data-theme', 'light');
+  } else {
+    // Auto: use browser preference
+    html.removeAttribute('data-theme');
+  }
+}
 
 // Load and display extension version
 function loadExtensionVersion() {
