@@ -5,36 +5,28 @@ const getDefaultUserAgents = () => [
     name: i18n.getMessage('defaultUserAgent'),
     alias: 'DEF',
     userAgent: '',
-    mode: 'replace',
-    badgeTextColor: '#ffffff',
-    badgeBgColor: '#666666'
+    mode: 'replace'
   },
   {
     id: 'auto',
     name: i18n.getMessage('autoUserAgent'),
     alias: 'AUTO',
     userAgent: '',
-    mode: 'auto',
-    badgeTextColor: '#ffffff',
-    badgeBgColor: '#10b981'
+    mode: 'auto'
   },
   {
     id: 'iphone',
     name: 'iPhone 14',
     alias: 'iOS',
     userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.0 Mobile/15E148 Safari/604.1',
-    mode: 'replace',
-    badgeTextColor: '#ffffff',
-    badgeBgColor: '#1a73e8'
+    mode: 'replace'
   },
   {
     id: 'android',
     name: 'Android',
     alias: 'AND',
     userAgent: 'Mozilla/5.0 (Linux; Android 13) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Mobile Safari/537.36',
-    mode: 'replace',
-    badgeTextColor: '#ffffff',
-    badgeBgColor: '#34a853'
+    mode: 'replace'
   }
 ];
 
@@ -220,9 +212,9 @@ function createUserAgentItem(ua, activeId) {
   div.dataset.id = ua.id;
   
   // Badge colors
-  const badgeTextColor = ua.badgeTextColor || '#ffffff';
-  const badgeBgColor = ua.badgeBgColor || '#1a73e8';
-  
+  const badgeTextColor = '#ffffff';
+  const badgeBgColor = '#1a73e8';
+
   // Always show badge for custom user-agents
   const badgeHtml = `
     <div class="user-agent-badge" style="color: ${badgeTextColor}; background-color: ${badgeBgColor};">

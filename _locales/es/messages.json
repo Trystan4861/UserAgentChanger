@@ -79,10 +79,6 @@
     "message": "Mozilla/5.0...",
     "description": "Placeholder para el campo user-agent"
   },
-  "labelBadgeTextColor": {
-    "message": "Color de texto de la insignia:",
-    "description": "Etiqueta para color de texto de la insignia"
-  },
   "labelBadgeBgColor": {
     "message": "Color de la insignia:",
     "description": "Etiqueta para color de la insignia"
@@ -162,10 +158,6 @@
   "languageChanged": {
     "message": "Idioma cambiado correctamente. La página se recargará.",
     "description": "Mensaje cuando se cambia el idioma"
-  },
-  "badgeTextColorNote": {
-    "message": "El color del texto es determinado automáticamente por Chrome",
-    "description": "Nota sobre el color del texto de la insignia"
   },
   "menuCustomUserAgents": {
     "message": "Lista de Agentes Usuario"

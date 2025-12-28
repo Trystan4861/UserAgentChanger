@@ -4,8 +4,6 @@
   "userAgents": [
     {
       "alias": "I18N",
-      "badgeBgColor": "#000000",
-      "badgeTextColor": "#ffffff",
       "id": "1766754771378",
       "mode": "append",
       "name": "DebugLang",
@@ -13,8 +11,6 @@
     },
     {
       "alias": "DM",
-      "badgeBgColor": "#000000",
-      "badgeTextColor": "#ffffff",
       "id": "1766854089732",
       "mode": "append",
       "name": "DebugMode",

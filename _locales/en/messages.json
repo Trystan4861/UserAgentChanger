@@ -79,10 +79,6 @@
     "message": "Mozilla/5.0...",
     "description": "Placeholder for user-agent field"
   },
-  "labelBadgeTextColor": {
-    "message": "Badge text color:",
-    "description": "Label for badge text color"
-  },
   "labelBadgeBgColor": {
     "message": "Badge color:",
     "description": "Label for badge color"
@@ -162,10 +158,6 @@
   "languageChanged": {
     "message": "Language changed successfully. Page will reload.",
     "description": "Message when language is changed"
-  },
-  "badgeTextColorNote": {
-    "message": "Text color is automatically determined by Chrome",
-    "description": "Note about badge text color"
   },
   "menuCustomUserAgents": {
     "message": "Custom User-Agents"
