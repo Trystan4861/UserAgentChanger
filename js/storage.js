@@ -101,21 +101,63 @@ async function findUserAgentById(id) {
 }
 
 /**
- * Get the current active user agent
- * @returns {Promise<object|null>} - Active user agent object or null
+ * Get the global user agent setting (default/auto/specific)
+ * @returns {Promise<string>} - Global user agent ID
  */
-async function getActiveUserAgent() {
-  const data = await getStorage('activeUserAgent');
-  return data.activeUserAgent || null;
+async function getGlobalUserAgent() {
+  const data = await getStorage('globalUserAgent');
+  return data.globalUserAgent || 'default';
 }
 
 /**
- * Set the active user agent
- * @param {object|null} userAgent - User agent object to set as active
+ * Set the global user agent (default/auto)
+ * @param {string} id - User agent ID ('default' or 'auto')
  * @returns {Promise<void>}
  */
-async function setActiveUserAgent(userAgent) {
-  await setStorage({ activeUserAgent: userAgent });
+async function setGlobalUserAgent(id) {
+  await setStorage({ globalUserAgent: id });
+}
+
+/**
+ * Get tab-specific user agent ID
+ * @param {number} tabId - Tab ID
+ * @returns {Promise<string|null>} - User agent ID for tab or null
+ */
+async function getTabUserAgent(tabId) {
+  const data = await getStorage(`tab_${tabId}`);
+  return data[`tab_${tabId}`] || null;
+}
+
+/**
+ * Set tab-specific user agent
+ * @param {number} tabId - Tab ID
+ * @param {string} userAgentId - User agent ID
+ * @returns {Promise<void>}
+ */
+async function setTabUserAgent(tabId, userAgentId) {
+  await setStorage({ [`tab_${tabId}`]: userAgentId });
+}
+
+/**
+ * Remove tab-specific user agent
+ * @param {number} tabId - Tab ID
+ * @returns {Promise<void>}
+ */
+async function removeTabUserAgent(tabId) {
+  await removeStorage(`tab_${tabId}`);
+}
+
+/**
+ * Get effective user agent for a tab (tab-specific or global)
+ * @param {number} tabId - Tab ID
+ * @returns {Promise<string>} - Effective user agent ID
+ */
+async function getEffectiveUserAgent(tabId) {
+  const tabUA = await getTabUserAgent(tabId);
+  if (tabUA) {
+    return tabUA;
+  }
+  return await getGlobalUserAgent();
 }
 
 // ============================================================================
@@ -151,14 +193,14 @@ async function savePermanentSpoofs(spoofs) {
 async function exportSettings() {
   const userAgents = await getUserAgents();
   const permanentSpoofs = await getPermanentSpoofs();
-  const activeUserAgent = await getActiveUserAgent();
+  const globalUserAgent = await getGlobalUserAgent();
   
   return {
     version: chrome.runtime.getManifest().version,
     exportDate: new Date().toISOString(),
     userAgents,
     permanentSpoofs,
-    activeUserAgent
+    globalUserAgent
   };
 }
 
@@ -184,9 +226,9 @@ async function importSettings(settings) {
       await savePermanentSpoofs(settings.permanentSpoofs);
     }
     
-    // Import active user agent if present
-    if (settings.activeUserAgent) {
-      await setActiveUserAgent(settings.activeUserAgent);
+    // Import global user agent if present
+    if (settings.globalUserAgent) {
+      await setGlobalUserAgent(settings.globalUserAgent);
     }
     
     return {

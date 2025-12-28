@@ -77,12 +77,12 @@ function loadExtensionVersion() {
 
 // Initialize default user-agents if none exist
 async function initializeUserAgents() {
-  const result = await chrome.storage.local.get(['userAgents', 'activeId']);
+  const result = await chrome.storage.local.get(['userAgents', 'globalUserAgent']);
   
   if (!result.userAgents) {
     await chrome.storage.local.set({
       userAgents: getDefaultUserAgents(),
-      activeId: 'default'
+      globalUserAgent: 'default'
     });
   } else {
     // Ensure AUTO user-agent exists (for existing installations)
@@ -103,6 +103,11 @@ async function initializeUserAgents() {
         await chrome.storage.local.set({ userAgents });
       }
     }
+  }
+  
+  // Initialize globalUserAgent if not set
+  if (!result.globalUserAgent) {
+    await chrome.storage.local.set({ globalUserAgent: 'default' });
   }
 }
 
@@ -132,9 +137,21 @@ async function updateDefaultUserAgentTranslation() {
 
 // Load and display user-agents
 async function loadUserAgents() {
-  const result = await chrome.storage.local.get(['userAgents', 'activeId']);
+  const result = await chrome.storage.local.get(['userAgents']);
   const userAgents = result.userAgents || getDefaultUserAgents();
-  const activeId = result.activeId || 'default';
+  
+  // Get current tab
+  const [currentTab] = await chrome.tabs.query({ active: true, currentWindow: true });
+  
+  // Get effective user agent for current tab
+  const tabUA = await chrome.storage.local.get(`tab_${currentTab.id}`);
+  const tabUserAgentId = tabUA[`tab_${currentTab.id}`];
+  
+  const globalUA = await chrome.storage.local.get('globalUserAgent');
+  const globalUserAgentId = globalUA.globalUserAgent || 'default';
+  
+  // Active ID is tab-specific if exists, otherwise global
+  const activeId = tabUserAgentId || globalUserAgentId;
   
   const listContainer = document.getElementById('userAgentsList');
   listContainer.innerHTML = '';
@@ -187,9 +204,6 @@ function createSpecialUserAgentsRow(defaultUA, autoUA, activeId) {
     <div class="user-agent-info">
       <div class="user-agent-name">${autoUA.name}</div>
     </div>
-    <div class="user-agent-badge" style="color: ${autoUA.badgeTextColor}; background-color: ${autoUA.badgeBgColor};">
-      ${autoUA.alias}
-    </div>
   `;
   autoBtn.addEventListener('click', () => activateUserAgent(autoUA.id));
   
@@ -230,27 +244,28 @@ function createUserAgentItem(ua, activeId) {
 
 // Activate a user-agent
 async function activateUserAgent(id) {
-  await chrome.storage.local.set({ activeId: id });
+  // Get current tab
+  const [currentTab] = await chrome.tabs.query({ active: true, currentWindow: true });
   
-  // Get the selected user-agent and perTabSpoof setting
-  const result = await chrome.storage.local.get(['userAgents', 'perTabSpoof']);
-  const userAgent = result.userAgents.find(ua => ua.id === id);
-  const perTabSpoof = result.perTabSpoof || false;
-  
-  // Get current tab if perTabSpoof is enabled
-  let tabId = null;
-  if (perTabSpoof) {
-    const [currentTab] = await chrome.tabs.query({ active: true, currentWindow: true });
-    if (currentTab) {
-      tabId = currentTab.id;
-    }
+  if (id === 'default' || id === 'auto') {
+    // Store globally
+    await chrome.storage.local.set({ globalUserAgent: id });
+    // Remove per-tab setting if exists (global takes precedence)
+    await chrome.storage.local.remove([`tab_${currentTab.id}`]);
+  } else {
+    // Store per-tab for specific user agents (manual selection)
+    await chrome.storage.local.set({ [`tab_${currentTab.id}`]: id });
   }
   
-  // Send message to background script with tabId if per-tab mode is enabled
+  // Get the selected user-agent
+  const result = await chrome.storage.local.get(['userAgents']);
+  const userAgent = result.userAgents.find(ua => ua.id === id);
+  
+  // Send message to background script
   chrome.runtime.sendMessage({
     action: 'setUserAgent',
     userAgent: userAgent,
-    tabId: tabId
+    tabId: currentTab.id
   });
   
   // Reload the list to update active state
