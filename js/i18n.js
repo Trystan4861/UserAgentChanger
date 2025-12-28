@@ -3,9 +3,19 @@ const i18n = {
   messages: {},
   currentLang: 'en',
 
+  // Check if running in extension context
+  isExtensionContext: () => {
+    return typeof chrome !== 'undefined' && chrome.runtime && chrome.runtime.getURL;
+  },
+
   // Load messages from JSON file
   loadMessages: async (lang) => {
     try {
+      if (!i18n.isExtensionContext()) {
+        console.warn('Not in extension context, using default messages');
+        return false;
+      }
+      
       const response = await fetch(chrome.runtime.getURL(`_locales/${lang}/messages.json`));
       if (response.ok) {
         i18n.messages = await response.json();
@@ -42,6 +52,14 @@ const i18n = {
 
   // Get current language
   getLanguage: async () => {
+    if (!i18n.isExtensionContext()) {
+      // Default to browser language when not in extension context
+      const browserLang = navigator.language || navigator.userLanguage || 'en';
+      const langCode = browserLang.split('-')[0];
+      const supportedLanguages = ['en', 'es'];
+      return supportedLanguages.includes(langCode) ? langCode : 'en';
+    }
+    
     const result = await chrome.storage.local.get('language');
     
     // If no language is stored, use browser's language as default
@@ -66,7 +84,9 @@ const i18n = {
 
   // Set language
   setLanguage: async (lang) => {
-    await chrome.storage.local.set({ language: lang });
+    if (i18n.isExtensionContext()) {
+      await chrome.storage.local.set({ language: lang });
+    }
   },
 
   // Translate all elements with data-i18n attribute
@@ -98,10 +118,20 @@ const i18n = {
       const message = i18n.getMessage(key);
       element.title = message;
     });
+
+    // Mark page as ready to prevent FOUC
+    document.body.classList.add('i18n-ready');
   },
 
   // Initialize i18n on page load
   init: async () => {
+    if (!i18n.isExtensionContext()) {
+      console.warn('Running outside extension context - skipping i18n initialization');
+      // Just mark as ready to show the page with hardcoded text
+      document.body.classList.add('i18n-ready');
+      return;
+    }
+    
     // Get the stored language preference
     const lang = await i18n.getLanguage();
     
@@ -126,5 +156,20 @@ i18n.ready = (async () => {
   if (document.readyState === 'loading') {
     await new Promise(resolve => document.addEventListener('DOMContentLoaded', resolve));
   }
-  await i18n.init();
+  
+  try {
+    await i18n.init();
+  } catch (error) {
+    console.error('Error initializing i18n:', error);
+    // Even if there's an error, mark as ready to prevent infinite spinner
+    document.body.classList.add('i18n-ready');
+  }
 })();
+
+// Fallback: ensure page is visible even if something goes wrong
+setTimeout(() => {
+  if (!document.body.classList.contains('i18n-ready')) {
+    console.warn('i18n initialization timeout - forcing page display');
+    document.body.classList.add('i18n-ready');
+  }
+}, 2000); // 2 second timeout

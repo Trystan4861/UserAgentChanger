@@ -6,6 +6,17 @@
   <title>User-Agent Changer</title>
   <link rel="stylesheet" href="css/theme.css">
   <link rel="stylesheet" href="css/options.css">
+  <style>
+    /* Prevent FOUC (Flash of Unstyled Content) while loading translations */
+    body:not(.i18n-ready) {
+      opacity: 0;
+    }
+    
+    body.i18n-ready {
+      opacity: 1;
+      transition: opacity 0.3s ease-in;
+    }
+  </style>
 </head>
 <body>
   <div class="container">
