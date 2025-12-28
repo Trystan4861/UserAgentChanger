@@ -1,4 +1,30 @@
+/**
+ * Options Page Styles
+ * User Agent Changer Extension
+ * 
+ * Table of Contents:
+ * 1. Base Styles
+ * 2. Layout Components (Container, Main Layout)
+ * 3. Navigation Menu
+ * 4. Header & Language Selector
+ * 5. Content Sections
+ * 6. Forms (Form Groups, Inputs, Badges)
+ * 7. Buttons
+ * 8. User Agent Cards
+ * 9. Permanent Spoof Cards
+ * 10. Import/Export Sections
+ * 11. Settings Section
+ * 12. About Section
+ * 13. Scrollbar Styling
+ * 14. Utility Classes
+ * 15. Responsive Design
+ */
+
 @import url('theme.css');
+
+/* ============================================================================
+   1. BASE STYLES
+   ============================================================================ */
 
 * {
   margin: 0;
