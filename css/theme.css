@@ -1,0 +1,167 @@
+/**
+ * Theme Variables
+ * CSS Custom Properties for User Agent Changer Extension
+ * Modify these variables to create custom themes
+ */
+
+:root {
+  /* Primary Colors */
+  --color-primary: #1a73e8;
+  --color-primary-hover: #1557b0;
+  --color-primary-light: #e8f0fe;
+  --color-primary-border: #d2e3fc;
+  
+  --color-success: #34a853;
+  --color-success-hover: #2d8e47;
+  --color-success-light: #e6f4ea;
+  
+  --color-danger: #d93025;
+  --color-danger-hover: #b31412;
+  --color-danger-light: #fce8e6;
+  
+  --color-warning: #fbbc04;
+  --color-warning-light: #fef7e0;
+  
+  --color-info: #2196F3;
+  --color-info-hover: #0b7dda;
+  
+  /* Background Colors */
+  --color-bg-primary: #ffffff;
+  --color-bg-secondary: #f5f5f5;
+  --color-bg-tertiary: #f8f9fa;
+  --color-bg-quaternary: #fafafa;
+  --color-bg-hover: #e8eaed;
+  
+  /* Text Colors */
+  --color-text-primary: #333333;
+  --color-text-secondary: #555555;
+  --color-text-tertiary: #666666;
+  --color-text-quaternary: #5f6368;
+  --color-text-muted: #888888;
+  --color-text-disabled: #999999;
+  --color-text-light: #ffffff;
+  
+  /* Border Colors */
+  --color-border-primary: #e0e0e0;
+  --color-border-secondary: #dadce0;
+  --color-border-tertiary: #ddd;
+  --color-border-light: #f1f1f1;
+  
+  /* Shadow */
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.15);
+  --shadow-primary: 0 4px 8px rgba(26, 115, 232, 0.3);
+  --shadow-danger: 0 4px 8px rgba(217, 48, 37, 0.3);
+  
+  /* Spacing */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 12px;
+  --spacing-lg: 16px;
+  --spacing-xl: 20px;
+  --spacing-2xl: 24px;
+  --spacing-3xl: 32px;
+  --spacing-4xl: 40px;
+  --spacing-5xl: 48px;
+  
+  /* Font Sizes */
+  --font-size-xs: 11px;
+  --font-size-sm: 12px;
+  --font-size-md: 13px;
+  --font-size-base: 14px;
+  --font-size-lg: 15px;
+  --font-size-xl: 16px;
+  --font-size-2xl: 18px;
+  --font-size-3xl: 20px;
+  --font-size-4xl: 22px;
+  --font-size-5xl: 24px;
+  --font-size-6xl: 28px;
+  --font-size-7xl: 32px;
+  
+  /* Font Weights */
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  
+  /* Line Heights */
+  --line-height-tight: 1.2;
+  --line-height-normal: 1.4;
+  --line-height-relaxed: 1.6;
+  --line-height-loose: 1.8;
+  
+  /* Border Radius */
+  --radius-sm: 3px;
+  --radius-md: 4px;
+  --radius-lg: 6px;
+  --radius-xl: 8px;
+  --radius-2xl: 12px;
+  --radius-full: 50%;
+  
+  /* Transitions */
+  --transition-fast: 0.2s ease;
+  --transition-normal: 0.3s ease;
+  --transition-slow: 0.4s ease;
+  
+  /* Z-index */
+  --z-index-base: 1;
+  --z-index-dropdown: 10;
+  --z-index-sticky: 20;
+  --z-index-modal: 100;
+  --z-index-tooltip: 200;
+  
+  /* Badge Colors */
+  --badge-bg: #333333;
+  --badge-text: #ffffff;
+  
+  /* Mode Badge Colors */
+  --mode-replace-bg: #fce8e6;
+  --mode-replace-text: #d93025;
+  --mode-append-bg: #e6f4ea;
+  --mode-append-text: #137333;
+  
+  /* Scrollbar */
+  --scrollbar-width: 8px;
+  --scrollbar-track: #f1f1f1;
+  --scrollbar-thumb: #888888;
+  --scrollbar-thumb-hover: #555555;
+  
+  /* Container Widths */
+  --container-max-width: 1400px;
+  --nav-menu-width: 250px;
+  --popup-min-width: 320px;
+  --popup-max-width: 400px;
+  --manage-panel-width: 400px;
+  
+  /* Font Family */
+  --font-family-base: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  --font-family-mono: 'Courier New', monospace;
+}
+
+/* Dark Theme Support (Example - Uncomment and customize as needed) */
+/*
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-primary: #8ab4f8;
+    --color-primary-hover: #aecbfa;
+    --color-primary-light: #1e3a5f;
+    
+    --color-bg-primary: #202124;
+    --color-bg-secondary: #292a2d;
+    --color-bg-tertiary: #35363a;
+    --color-bg-hover: #3c4043;
+    
+    --color-text-primary: #e8eaed;
+    --color-text-secondary: #bdc1c6;
+    --color-text-tertiary: #9aa0a6;
+    
+    --color-border-primary: #3c4043;
+    --color-border-secondary: #5f6368;
+    
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.3);
+    --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.4);
+  }
+}
+*/
