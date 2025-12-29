@@ -4,6 +4,20 @@
  */
 
 /**
+ * Check if a URL is a Chrome special page where extension should be disabled
+ * @param {string} url - The URL to check
+ * @returns {boolean} - True if it's a special page
+ */
+function isChromeSpecialPage(url) {
+  if (!url) return false;
+  return url.startsWith('chrome://') || 
+         url.startsWith('chrome-extension://') ||
+         url.startsWith('edge://') ||
+         url.startsWith('about:') ||
+         url.startsWith('view-source:');
+}
+
+/**
  * Check if a URL matches a permanent spoof domain
  * @param {string} url - The URL to check
  * @param {string} domain - The domain pattern to match against
@@ -97,6 +111,22 @@ async function findActiveSpoofForTab(tabId) {
  */
 async function updateBadgeForTab(tabId) {
   try {
+    // First check if this is a Chrome special page
+    const tab = await chrome.tabs.get(tabId);
+    if (tab && tab.url && isChromeSpecialPage(tab.url)) {
+      // Show disabled state for Chrome special pages
+      await chrome.action.setBadgeText({ text: '✕', tabId });
+      await chrome.action.setBadgeBackgroundColor({ 
+        color: '#808080', // Gray background for disabled state
+        tabId 
+      });
+      await chrome.action.setTitle({ 
+        title: 'User-Agent Changer\nDeshabilitado (página especial de Chrome)',
+        tabId
+      });
+      return;
+    }
+    
     const result = await chrome.storage.local.get(['userAgents', 'globalUserAgent', `tab_${tabId}`]);
     const userAgents = result.userAgents || [];
     const globalUserAgent = result.globalUserAgent || 'default';

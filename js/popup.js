@@ -1,3 +1,34 @@
+// Check if current tab is a Chrome special page
+async function isCurrentTabSpecialPage() {
+  const [currentTab] = await chrome.tabs.query({ active: true, currentWindow: true });
+  if (!currentTab || !currentTab.url) return false;
+  
+  return currentTab.url.startsWith('chrome://') || 
+         currentTab.url.startsWith('chrome-extension://') ||
+         currentTab.url.startsWith('edge://') ||
+         currentTab.url.startsWith('about:') ||
+         currentTab.url.startsWith('view-source:');
+}
+
+// Show disabled message for Chrome special pages
+async function showDisabledMessage() {
+  const listContainer = document.getElementById('userAgentsList');
+  listContainer.innerHTML = `
+    <div class="disabled-message">
+      <div class="disabled-icon">🚫</div>
+      <h3>Extensión deshabilitada</h3>
+      <p>Esta extensión no puede modificar páginas especiales del navegador (chrome://, edge://, etc.) por motivos de seguridad.</p>
+    </div>
+  `;
+  
+  // Disable manage button
+  const manageBtn = document.getElementById('manageBtn');
+  if (manageBtn) {
+    manageBtn.style.opacity = '0.5';
+    manageBtn.style.pointerEvents = 'none';
+  }
+}
+
 // Default user-agents with badge colors - function to get them after i18n is loaded
 const getDefaultUserAgents = () => [
   {
@@ -35,6 +66,13 @@ document.addEventListener('DOMContentLoaded', async () => {
   await i18n.ready;
   await applyTheme();
   loadExtensionVersion();
+  
+  // Check if we're on a special page first
+  if (await isCurrentTabSpecialPage()) {
+    showDisabledMessage();
+    return;
+  }
+  
   await initializeUserAgents();
   await updateDefaultUserAgentTranslation();
   await loadUserAgents();
