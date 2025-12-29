@@ -1,157 +1,334 @@
-# User-Agent Changer - Extensión para Chrome
+# User-Agent Changer - Chrome Extension
 
-Una extensión profesional para Google Chrome que permite cambiar el User-Agent del navegador de manera rápida y sencilla.
+A professional Chrome extension that allows you to quickly and easily change your browser's User-Agent string. Perfect for web developers, testers, and users who need to emulate different browsers and devices.
 
-## 🌟 Características
+## 🌟 Key Features
 
-- **Interfaz intuitiva**: Popup con lista de User-Agents configurados para cambio rápido
-- **Badge personalizado**: Muestra el alias del User-Agent activo en el icono de la extensión
-  - Sin badge cuando está activo el User-Agent por defecto
-  - Badge personalizable con colores de texto y fondo para cada User-Agent
-- **Dos modos de operación**:
-  - **Reemplazar**: Sustituye completamente el User-Agent del navegador
-  - **Agregar**: Añade texto al final del User-Agent actual
-- **Página de gestión completa**: Interfaz en pestaña separada para gestionar User-Agents
-  - Agregar nuevos User-Agents con alias personalizados (máx. 4 caracteres)
-  - Eliminar User-Agents personalizados
-  - Selector de colores para badge (texto y fondo)
-  - Vista previa en tiempo real del badge
-- **User-Agents predefinidos**:
-  - Por defecto (Chrome) - Sin badge
-  - iPhone 14 - Badge: "iOS" (azul)
-  - Android - Badge: "AND" (verde)
+### 🎯 Quick User-Agent Switching
+- **Intuitive popup interface**: Fast User-Agent switching with a single click
+- **Global and per-tab modes**: 
+  - **DEFAULT**: Use browser's original User-Agent
+  - **AUTO**: Automatically detect and use the best User-Agent for each site
+  - **Custom User-Agents**: Set specific User-Agents per tab
+- **Visual badge system**: Shows the active User-Agent alias on the extension icon
+  - No badge when DEFAULT is active
+  - Custom badge for each User-Agent
 
-## 📦 Instalación
+### 🔧 Comprehensive Management Interface
+Full-featured options page with multiple sections:
 
-1. Descarga o clona este repositorio
-2. Abre Google Chrome y ve a `chrome://extensions/`
-3. Activa el **Modo de desarrollador** (esquina superior derecha)
-4. Haz clic en **Cargar extensión sin empaquetar**
-5. Selecciona la carpeta del proyecto `UserAgentChanger`
-6. ¡Listo! El icono de la extensión aparecerá en la barra de herramientas
+#### 1. **Custom User-Agents**
+- Add unlimited custom User-Agents
+- Two operation modes:
+  - **Replace**: Completely replaces the browser's User-Agent
+  - **Append**: Adds text to the current User-Agent
+- Customizable badge with:
+  - Alias (max 4 characters)
+- Edit and delete custom User-Agents
+- Pre-configured User-Agents included (iPhone 14, Android)
 
-## 🚀 Uso
+#### 2. **Permanent Spoof List**
+- Set specific User-Agents for particular domains
+- Supports wildcards: `*.example.com`, `localhost/core/*`
+- Automatic application without manual intervention
+- Manage your permanent spoofs list easily
 
-### Cambiar User-Agent:
-1. Haz clic en el icono de la extensión en la barra de herramientas
-2. Selecciona el User-Agent que deseas activar de la lista
-3. El badge en el icono mostrará el alias del User-Agent activo (o ninguno si es el por defecto)
-4. El User-Agent se aplicará automáticamente a todas las peticiones
+#### 3. **Import/Export Settings**
+- **Export**: Save all your settings to a JSON file
+  - Custom User-Agents
+  - Permanent Spoof List
+  - Extension settings
+  - Timestamped file names
+- **Import**: Restore settings from a JSON file
+  - Drag & drop support
+  - Preview before importing
+  - Merge or replace existing settings
 
-### Gestionar User-Agents:
-1. Haz clic en el icono de la extensión
-2. Haz clic en el botón **"⚙️ Gestionar User-Agents"**
-3. Se abrirá una nueva pestaña con la interfaz de gestión
-4. En la interfaz podrás:
-   - Agregar nuevos User-Agents con nombre, alias, modo y string personalizado
-   - Elegir colores personalizados para el badge (texto y fondo)
-   - Ver vista previa del badge en tiempo real
-   - Ver todos los User-Agents configurados con sus detalles
-   - Eliminar User-Agents personalizados (excepto el por defecto)
+#### 4. **About & Settings**
+- Theme selector (Auto, Light, Dark)
+- Language selector (English, Spanish)
+- Extension information and version
+- Reset functionality
+- Support and contribution links
 
-## 🎨 Personalización del Badge
+### 🛡️ Chrome Special Pages Protection
+- Extension automatically disables on Chrome special pages
+- Prevents modification of protected pages like:
+  - `chrome://` (Chrome internal pages)
+  - `chrome-extension://` (Extension pages)
+  - `edge://` (Edge internal pages)
+  - `about:` (About pages)
+  - `view-source:` (Source view pages)
+- Clear visual feedback with:
+  - Gray badge with ✕ symbol
+  - Disabled message in popup
+  - Security explanation
 
-Cada User-Agent puede tener su propio estilo de badge:
-- **Color de texto**: Elige el color del texto del badge (hex)
-- **Color de fondo**: Elige el color de fondo del badge (hex)
-- **Vista previa**: Visualiza cómo se verá el badge antes de guardarlo
+### 🌍 Multi-language Support
+- **English** (en)
+- **Spanish** (es)
+- Easy to add more languages via JSON locale files
 
-**Nota**: Chrome determina automáticamente el color del texto del badge basándose en el color de fondo para garantizar la legibilidad. Los colores personalizados se aplicarán lo más posible dentro de las limitaciones de la API de Chrome.
+### 🎨 Theme Support
+- **Auto**: Follows system preference
+- **Light**: Light theme
+- **Dark**: Dark theme
+- Consistent styling across all interfaces
 
-## 📁 Estructura del Proyecto
+## 📦 Installation
+
+1. Download or clone this repository
+2. Open Google Chrome and navigate to `chrome://extensions/`
+3. Enable **Developer mode** (toggle in the top right corner)
+4. Click **Load unpacked**
+5. Select the `UserAgentChanger` project folder
+6. Done! The extension icon will appear in your toolbar
+
+## 🚀 Usage
+
+### Quick User-Agent Change:
+1. Click the extension icon in the toolbar
+2. Select one of the options:
+   - **DEFAULT**: Use browser's original User-Agent (global setting)
+   - **AUTO**: Automatic User-Agent detection (global setting)
+   - **Custom User-Agent**: Apply specific User-Agent to current tab
+3. The badge will show the active User-Agent alias
+4. Changes apply immediately
+
+### Manage User-Agents:
+1. Click the extension icon
+2. Click **"⚙️ Manage User-Agents"** button
+3. A new tab opens with the full management interface
+
+#### Add Custom User-Agent:
+1. Go to **"Custom User-Agents"** section
+2. Fill in the form:
+   - **Name**: Descriptive name (e.g., "iPhone 14 Pro")
+   - **Alias**: Short identifier for badge (max 4 characters)
+   - **Mode**: Choose "Replace" or "Append"
+   - **User-Agent String**: Full User-Agent string
+3. Click **"Add User-Agent"**
+
+#### Configure Permanent Spoofs:
+1. Go to **"Permanent Spoof List"** section
+2. Enter the domain pattern (e.g., `*.google.com`, `localhost/*`)
+3. Select the User-Agent to apply
+4. Click **"Add Permanent Spoof"**
+5. The spoof will apply automatically to matching domains
+
+#### Import/Export Settings:
+1. Go to **"Import/Export Settings"** section
+2. **To Export**:
+   - Click **"Click Here To Download"**
+   - Save the JSON file with your settings
+3. **To Import**:
+   - Select a JSON file or drag & drop it
+   - Preview the settings before importing
+   - Choose to merge or replace existing settings
+   - Confirm the import
+
+## 📁 Project Structure
 
 ```
 UserAgentChanger/
-├── manifest.json          # Configuración de la extensión
-├── popup.html            # HTML del popup (lista de User-Agents)
-├── popup.js              # Lógica del popup
-├── options.html          # HTML de la página de opciones/gestión
-├── options.js            # Lógica de la página de opciones
-├── options.css           # Estilos de la página de opciones
-├── background.js         # Service worker (cambio de User-Agent y badge)
-├── styles.css            # Estilos del popup
-├── icons/                # Iconos de la extensión
+├── manifest.json                    # Extension configuration
+├── popup.html                       # Popup HTML
+├── options.html                     # Options page HTML
+├── generate_icons.html              # Icon generator utility
+├── README.md                        # This file (English)
+├── README_ES.md                     # Spanish README
+├── LICENSE                          # MIT License
+├── todo.yml                         # Project tasks
+├── _locales/                        # Internationalization
+│   ├── en/
+│   │   └── messages.json           # English translations
+│   └── es/
+│       └── messages.json           # Spanish translations
+├── css/                            # Stylesheets
+│   ├── commons.css                 # Common styles
+│   ├── popup.css                   # Popup styles
+│   ├── theme.css                   # Theme variables
+│   └── options/                    # Options page styles
+│       ├── about.css
+│       ├── cards.css
+│       ├── forms.css
+│       ├── header.css
+│       ├── import-export.css
+│       └── layout.css
+├── icons/                          # Extension icons
 │   ├── icon16.png
 │   ├── icon32.png
 │   ├── icon48.png
-│   └── icon128.png
-└── README.md            # Este archivo
+│   ├── icon128.png
+│   ├── icon256.png
+│   └── logo.png
+└── js/                             # JavaScript files
+    ├── background.js               # Main background service worker
+    ├── background-badge.js         # Badge management
+    ├── background-listeners.js     # Event listeners
+    ├── background-permanentSpoofs.js # Permanent spoofs logic
+    ├── background-userAgent.js     # User-Agent application
+    ├── popup.js                    # Popup logic
+    ├── options.js                  # Options page logic
+    ├── i18n.js                     # Internationalization
+    ├── messaging.js                # Inter-component communication
+    ├── notify.js                   # Notification system
+    ├── storage.js                  # Storage utilities
+    ├── ua.js                       # User-Agent utilities
+    ├── utils.js                    # General utilities
+    ├── validations.js              # Input validations
+    └── version.js                  # Version management
 ```
 
-## 🔧 Tecnologías Utilizadas
+## 🔧 Technologies Used
 
-- **Manifest V3**: Última versión del sistema de extensiones de Chrome
-- **declarativeNetRequest API**: Para modificar headers de las peticiones HTTP
-- **Chrome Storage API**: Para persistir configuraciones
-- **Chrome Badge API**: Para mostrar indicadores en el icono
-- **HTML5/CSS3/JavaScript**: Interfaz moderna y responsive
+- **Manifest V3**: Latest Chrome extension system
+- **declarativeNetRequest API**: For modifying HTTP request headers
+- **Chrome Storage API**: For persisting configurations
+- **Chrome Badge API**: For showing indicators on the icon
+- **Chrome Tabs API**: For per-tab User-Agent management
+- **HTML5/CSS3/JavaScript**: Modern and responsive interface
+- **CSS Custom Properties**: Dynamic theming
+- **Internationalization API**: Multi-language support
 
-## ⚙️ Permisos Necesarios
+## ⚙️ Required Permissions
 
-- `declarativeNetRequest`: Para modificar el User-Agent header
-- `declarativeNetRequestWithHostAccess`: Para aplicar cambios en todos los sitios
-- `storage`: Para guardar configuraciones
-- `tabs`: Para abrir la página de opciones en nueva pestaña
-- `<all_urls>`: Para aplicar el User-Agent en todos los sitios web
+This extension requires the following permissions to function properly:
 
-## 💡 Casos de Uso
+### Chrome API Permissions:
 
-1. **Desarrollo web**: Probar cómo se ve tu sitio en diferentes dispositivos
-2. **Testing**: Verificar comportamiento específico por User-Agent
-3. **Web scraping**: Simular diferentes navegadores o dispositivos
-4. **Privacidad**: Modificar tu huella digital del navegador
-5. **Acceso a contenido**: Algunos sitios muestran diferente contenido según el dispositivo
+- **`declarativeNetRequest`**
+  - **Purpose**: Allows the extension to modify HTTP request headers
+  - **Why needed**: Essential for changing the User-Agent header in web requests. This API enables the extension to intercept and modify the User-Agent string before requests are sent to servers.
 
-## 🛡️ Privacidad
+- **`declarativeNetRequestWithHostAccess`**
+  - **Purpose**: Extends declarativeNetRequest capabilities to work with host permissions
+  - **Why needed**: Required to apply User-Agent modifications across all websites. Works in conjunction with `<all_urls>` to ensure the extension can modify headers on any domain.
 
-- Todos los datos se almacenan localmente en tu navegador
-- No se envía información a servidores externos
-- No se recopilan datos de navegación
-- Código abierto y auditable
+- **`storage`**
+  - **Purpose**: Provides access to Chrome's storage API
+  - **Why needed**: Stores all extension configurations locally, including:
+    - Custom User-Agent definitions
+    - Permanent spoof list
+    - User preferences (theme, language)
+    - Badge colors and settings
+    - Active User-Agent state per tab
 
-## 📝 Notas Técnicas
+- **`tabs`**
+  - **Purpose**: Allows interaction with browser tabs
+  - **Why needed**: Required for:
+    - Detecting when tabs are created, updated, or removed
+    - Managing per-tab User-Agent settings
+    - Updating the badge on the extension icon for each tab
+    - Opening the options page in a new tab
+    - Detecting Chrome special pages to disable the extension
 
-- El User-Agent se aplica a todas las peticiones HTTP/HTTPS
-- Los cambios son inmediatos sin necesidad de recargar pestañas
-- El modo "Agregar" usa como base el User-Agent de Chrome actual
-- El User-Agent por defecto no muestra badge en el icono
-- Los colores del badge se personalizan por User-Agent
+- **`scripting`**
+  - **Purpose**: Provides access to Chrome's scripting API
+  - **Why needed**: Enables advanced functionality for:
+    - Dynamic content interaction if needed
+    - Future feature enhancements
+    - Improved compatibility with web pages
 
-## 👨‍💻 Autor
+### Host Permissions:
+
+- **`<all_urls>`**
+  - **Purpose**: Grants permission to access and modify requests on all websites
+  - **Why needed**: Allows the extension to apply User-Agent changes across all domains. Without this permission, the extension would need to request permission for each individual website, making it impractical to use.
+  - **Note**: This permission is necessary for the core functionality but the extension never reads page content or collects browsing data.
+
+### Security Notes:
+- All data is stored locally using Chrome's storage API
+- No data is transmitted to external servers
+- The extension only modifies User-Agent headers, not page content
+- Automatic protection prevents modifications on Chrome special pages (`chrome://`, `edge://`, etc.)
+
+## 💡 Use Cases
+
+1. **Web Development**: Test how your site looks on different devices
+2. **Testing**: Verify User-Agent-specific behavior
+3. **Web Scraping**: Simulate different browsers or devices
+4. **Privacy**: Modify your browser fingerprint
+5. **Content Access**: Some sites show different content based on device
+6. **Automation**: Set permanent spoofs for specific development environments
+7. **API Testing**: Test API responses for different User-Agents
+
+## 🛡️ Privacy & Security
+
+- All data is stored locally in your browser
+- No information is sent to external servers
+- No browsing data is collected
+- Open source and auditable
+- Automatic protection on Chrome special pages
+- Respects browser security restrictions
+
+## 📝 Technical Notes
+
+- User-Agent applies to all HTTP/HTTPS requests
+- Changes are immediate without needing to reload tabs
+- "Append" mode uses the current Chrome User-Agent as base
+- DEFAULT mode shows no badge on icon
+- Permanent spoofs take precedence over global settings
+- Extension is disabled on Chrome special pages for security
+
+## 🌐 Supported Browsers
+
+- Google Chrome (Chromium-based browsers)
+- Microsoft Edge
+- Brave
+- Opera
+- Any Chromium-based browser supporting Manifest V3
+
+## 👨‍💻 Author
 
 **Trystan4861**
 - GitHub: [@Trystan4861](https://github.com/Trystan4861)
-- Repositorio: [UserAgentSwitcher](https://github.com/Trystan4861/UserAgentSwitcher.git)
+- Repository: [UserAgentChanger](https://github.com/Trystan4861/UserAgentChanger)
 
-## 🤝 Contribuciones
+## 🤝 Contributing
 
-Las contribuciones son bienvenidas. Si encuentras algún bug o tienes una sugerencia:
+Contributions are welcome! If you find a bug or have a suggestion:
 
-1. Abre un issue en el [repositorio de GitHub](https://github.com/Trystan4861/UserAgentSwitcher/issues)
-2. Si quieres contribuir con código, haz un fork y crea un pull request
+1. Open an issue on the [GitHub repository](https://github.com/Trystan4861/UserAgentChanger/issues)
+2. If you want to contribute code, fork the repository and create a pull request
+3. Follow the existing code style and conventions
+4. Add appropriate tests for new features
+5. Update documentation as needed
 
-## 📄 Licencia
+### Development Setup
 
-Este proyecto está bajo la licencia MIT. Consulta el archivo LICENSE para más detalles.
+1. Clone the repository
+2. Make your changes
+3. Test in Chrome by loading the unpacked extension
+4. Submit a pull request with a clear description
 
-## 🆘 Soporte
+## 📄 License
 
-Si tienes problemas o preguntas:
-- Revisa que la extensión esté habilitada en `chrome://extensions/`
-- Verifica que tienes permisos suficientes
-- Comprueba la consola de errores de la extensión
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
-## 🔄 Actualizaciones
+## 🆘 Support
 
-**Versión 1.0.0**
-- Lanzamiento inicial
-- Cambio de User-Agent con dos modos (reemplazar/agregar)
-- Badge personalizado por User-Agent
-- Página de opciones en pestaña separada
-- Colores personalizables para badges
-- User-Agents predefinidos
-- Sin badge para User-Agent por defecto
+If you have problems or questions:
+- Check that the extension is enabled in `chrome://extensions/`
+- Verify you have sufficient permissions
+- Check the extension's error console
+- Review [closed issues](https://github.com/Trystan4861/UserAgentChanger/issues?q=is%3Aissue+is%3Aclosed) for similar problems
+- Open a [new issue](https://github.com/Trystan4861/UserAgentChanger/issues/new) if needed
+
+## 🎯 Roadmap
+
+Future features under consideration:
+- More pre-configured User-Agents
+- User-Agent templates
+- Statistics and usage tracking
+- Cloud sync (optional)
+- Browser detection improvements
+- Additional language support
+- Custom User-Agent rotation
+- Advanced filtering options
 
 ---
 
-Desarrollado con ❤️ para facilitar el desarrollo y testing web.
+Developed with ❤️ to facilitate web development and testing.
+
+**Star ⭐ this repository if you find it useful!**
