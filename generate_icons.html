@@ -3,108 +3,388 @@
 <head>
     <title>Generate Icons from Logo</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             padding: 20px;
             max-width: 1200px;
             margin: 0 auto;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
         }
+        
+        .main-container {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        
+        h1 {
+            color: #667eea;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .upload-area {
+            border: 3px dashed #667eea;
+            border-radius: 12px;
+            padding: 40px;
+            text-align: center;
+            background: #f8f9ff;
+            margin: 20px 0;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .upload-area:hover {
+            border-color: #764ba2;
+            background: #f0f1ff;
+        }
+        
+        .upload-area.dragover {
+            border-color: #4caf50;
+            background: #e8f5e9;
+            transform: scale(1.02);
+        }
+        
+        .upload-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+        
+        .upload-text {
+            font-size: 18px;
+            color: #555;
+            margin-bottom: 10px;
+        }
+        
+        .upload-hint {
+            font-size: 14px;
+            color: #888;
+        }
+        
+        #fileInput {
+            display: none;
+        }
+        
+        .preview-section {
+            margin: 30px 0;
+            text-align: center;
+            display: none;
+        }
+        
+        .preview-section.active {
+            display: block;
+        }
+        
+        #preview {
+            max-width: 300px;
+            max-height: 300px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin: 20px auto;
+            display: block;
+        }
+        
+        .icons-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .icon-card {
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #f8f9ff 0%, #f0f1ff 100%);
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.2s ease;
+        }
+        
+        .icon-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+        }
+        
         canvas {
-            border: 1px solid #ccc;
-            margin: 10px;
+            border: 1px solid #ddd;
+            margin: 15px auto;
+            display: block;
             image-rendering: -webkit-optimize-contrast;
             image-rendering: crisp-edges;
+            background: white;
+            border-radius: 4px;
         }
-        .container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            margin-top: 20px;
+        
+        .icon-label {
+            font-weight: bold;
+            color: #667eea;
+            margin: 10px 0 5px 0;
         }
-        .icon-container {
-            text-align: center;
-            padding: 15px;
-            background: #f5f5f5;
-            border-radius: 8px;
+        
+        .icon-size {
+            font-size: 12px;
+            color: #888;
+            margin-bottom: 15px;
         }
+        
         button {
-            padding: 10px 20px;
-            background: #1a73e8;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border: none;
-            border-radius: 4px;
+            border-radius: 6px;
             cursor: pointer;
             font-size: 16px;
-            margin: 5px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
         }
+        
         button:hover {
-            background: #1557b0;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.5);
         }
-        .main-button {
-            font-size: 18px;
-            padding: 15px 30px;
-            margin-top: 20px;
+        
+        button:active {
+            transform: translateY(0);
         }
+        
+        .reset-button {
+            background: linear-gradient(135deg, #f44336 0%, #e91e63 100%);
+            box-shadow: 0 2px 8px rgba(244, 67, 54, 0.3);
+            margin-left: 10px;
+        }
+        
+        .reset-button:hover {
+            box-shadow: 0 4px 12px rgba(244, 67, 54, 0.5);
+        }
+        
         #status {
-            padding: 15px;
+            padding: 15px 20px;
             margin: 20px 0;
-            border-radius: 4px;
+            border-radius: 8px;
             background: #e3f2fd;
-            border-left: 4px solid #1a73e8;
+            border-left: 4px solid #2196F3;
+            font-weight: 500;
+            display: none;
         }
-        .error {
-            background: #ffebee !important;
-            border-left-color: #f44336 !important;
+        
+        #status.active {
+            display: block;
         }
-        .success {
-            background: #e8f5e9 !important;
-            border-left-color: #4caf50 !important;
+        
+        #status.error {
+            background: #ffebee;
+            border-left-color: #f44336;
+            color: #c62828;
         }
-        h1 {
-            color: #1a73e8;
+        
+        #status.success {
+            background: #e8f5e9;
+            border-left-color: #4caf50;
+            color: #2e7d32;
+        }
+        
+        #status.info {
+            background: #e3f2fd;
+            border-left-color: #2196F3;
+            color: #1565c0;
+        }
+        
+        .instructions {
+            background: #fff3e0;
+            border-left: 4px solid #ff9800;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        .instructions h3 {
+            color: #e65100;
+            margin-bottom: 10px;
+        }
+        
+        .instructions ul {
+            margin-left: 20px;
+        }
+        
+        .instructions li {
+            margin: 5px 0;
+            color: #555;
+        }
+        
+        .button-group {
+            text-align: center;
+            margin: 20px 0;
         }
     </style>
 </head>
 <body>
-    <h1>🎨 Generador de Iconos - User-Agent Changer</h1>
-    <div id="status">Cargando logo.png...</div>
-    
-    <p><strong>Instrucciones:</strong></p>
-    <ul>
-        <li>El script cargará automáticamente <code>icons/logo.png</code></li>
-        <li>Generará iconos en 4 tamaños: 16x16, 32x32, 48x48 y 128x128 píxeles</li>
-        <li>Haz clic en los botones de descarga para guardar cada icono</li>
-        <li>O usa el botón "Descargar Todos" para descargarlos de una vez</li>
-    </ul>
-    
-    <button class="main-button" onclick="downloadAll()">📥 Descargar Todos los Iconos</button>
-    
-    <div class="container" id="container"></div>
+    <div class="main-container">
+        <h1>🎨 Generador de Iconos</h1>
+        
+        <div class="instructions">
+            <h3>📋 Instrucciones:</h3>
+            <ul>
+                <li>Arrastra y suelta una imagen o haz clic para seleccionar un archivo</li>
+                <li>Se generarán automáticamente iconos en 4 tamaños: 16x16, 32x32, 48x48 y 128x128 píxeles</li>
+                <li>Descarga cada icono individualmente haciendo clic en su botón de descarga</li>
+                <li>Formatos soportados: PNG, JPG, JPEG, GIF, WebP, BMP, SVG</li>
+            </ul>
+        </div>
+        
+        <div class="upload-area" id="uploadArea">
+            <div class="upload-icon">📁</div>
+            <div class="upload-text">Arrastra y suelta tu imagen aquí</div>
+            <div class="upload-hint">o haz clic para seleccionar un archivo</div>
+            <input type="file" id="fileInput" accept="image/*">
+        </div>
+        
+        <div id="status"></div>
+        
+        <div class="preview-section" id="previewSection">
+            <h2>Vista Previa</h2>
+            <img id="preview" alt="Vista previa de la imagen">
+            <div class="button-group">
+                <button class="reset-button" onclick="resetApp()">🔄 Cargar otra imagen</button>
+            </div>
+        </div>
+        
+        <div id="iconsContainer" class="icons-container"></div>
+    </div>
 
     <script>
         let sourceImage = null;
-        const sizes = [16, 32, 48, 128, 256];
+        const sizes = [16, 32, 48, 128];
+        
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const previewSection = document.getElementById('previewSection');
+        const preview = document.getElementById('preview');
+        const iconsContainer = document.getElementById('iconsContainer');
+        const statusDiv = document.getElementById('status');
+        
+        // Eventos para el área de carga
+        uploadArea.addEventListener('click', () => fileInput.click());
+        
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+        
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+        
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                handleFile(files[0]);
+            }
+        });
+        
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                handleFile(e.target.files[0]);
+            }
+        });
         
         function updateStatus(message, type = 'info') {
-            const status = document.getElementById('status');
-            status.textContent = message;
-            status.className = type;
+            statusDiv.textContent = message;
+            statusDiv.className = `${type} active`;
         }
         
-        function loadSourceImage() {
-            return new Promise((resolve, reject) => {
-                const img = new Image();
-                img.onload = () => {
-                    sourceImage = img;
-                    updateStatus(`✓ Logo cargado exitosamente: ${img.width}x${img.height} píxeles`, 'success');
-                    resolve(img);
-                };
-                img.onerror = () => {
-                    updateStatus('✗ Error: No se pudo cargar icons/logo.png. Asegúrate de que el archivo existe.', 'error');
-                    reject(new Error('No se pudo cargar el logo'));
-                };
-                img.src = 'icons/logo.png';
+        function handleFile(file) {
+            // Validar tipo de archivo
+            const validTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/gif', 'image/webp', 'image/bmp', 'image/svg+xml'];
+            
+            if (!validTypes.includes(file.type)) {
+                updateStatus('❌ Error: El archivo seleccionado no es una imagen válida. Por favor, selecciona un archivo PNG, JPG, GIF, WebP, BMP o SVG.', 'error');
+                return;
+            }
+            
+            updateStatus('⏳ Cargando imagen...', 'info');
+            
+            const reader = new FileReader();
+            
+            reader.onload = (e) => {
+                loadImage(e.target.result, file.name);
+            };
+            
+            reader.onerror = () => {
+                updateStatus('❌ Error al leer el archivo. Por favor, intenta de nuevo.', 'error');
+            };
+            
+            reader.readAsDataURL(file);
+        }
+        
+        function loadImage(dataUrl, filename) {
+            const img = new Image();
+            
+            img.onload = () => {
+                sourceImage = img;
+                
+                // Mostrar vista previa
+                preview.src = dataUrl;
+                previewSection.classList.add('active');
+                uploadArea.style.display = 'none';
+                
+                updateStatus(`✅ Imagen "${filename}" cargada exitosamente (${img.width}x${img.height} píxeles)`, 'success');
+                
+                // Generar iconos automáticamente
+                generateIcons();
+            };
+            
+            img.onerror = () => {
+                updateStatus('❌ Error al cargar la imagen. Por favor, intenta con otra imagen.', 'error');
+            };
+            
+            img.src = dataUrl;
+        }
+        
+        function generateIcons() {
+            iconsContainer.innerHTML = '';
+            
+            sizes.forEach(size => {
+                const card = document.createElement('div');
+                card.className = 'icon-card';
+                
+                const canvas = createIcon(size);
+                if (!canvas) return;
+                
+                canvas.id = `icon${size}`;
+                
+                const label = document.createElement('div');
+                label.className = 'icon-label';
+                label.textContent = `icon${size}.png`;
+                
+                const sizeInfo = document.createElement('div');
+                sizeInfo.className = 'icon-size';
+                sizeInfo.textContent = `${size}×${size} píxeles`;
+                
+                const downloadBtn = document.createElement('button');
+                downloadBtn.textContent = `⬇️ Descargar`;
+                downloadBtn.onclick = () => downloadIcon(canvas, `icon${size}.png`);
+                
+                card.appendChild(label);
+                card.appendChild(sizeInfo);
+                card.appendChild(canvas);
+                card.appendChild(downloadBtn);
+                iconsContainer.appendChild(card);
             });
+            
+            updateStatus('✅ Todos los iconos generados correctamente. Haz clic en los botones para descargarlos.', 'success');
         }
         
         function createIcon(size) {
@@ -122,69 +402,59 @@
             ctx.imageSmoothingEnabled = true;
             ctx.imageSmoothingQuality = 'high';
             
-            // Dibujar la imagen redimensionada
-            ctx.drawImage(sourceImage, 0, 0, size, size);
+            // Calcular dimensiones para mantener el aspecto y centrar
+            const sourceRatio = sourceImage.width / sourceImage.height;
+            let drawWidth = size;
+            let drawHeight = size;
+            let offsetX = 0;
+            let offsetY = 0;
+            
+            if (sourceRatio > 1) {
+                // Imagen más ancha que alta
+                drawHeight = size / sourceRatio;
+                offsetY = (size - drawHeight) / 2;
+            } else if (sourceRatio < 1) {
+                // Imagen más alta que ancha
+                drawWidth = size * sourceRatio;
+                offsetX = (size - drawWidth) / 2;
+            }
+            
+            // Dibujar la imagen redimensionada y centrada
+            ctx.drawImage(sourceImage, offsetX, offsetY, drawWidth, drawHeight);
             
             return canvas;
         }
         
-        function generateAll() {
-            const container = document.getElementById('container');
-            container.innerHTML = '';
-            
-            sizes.forEach(size => {
-                const div = document.createElement('div');
-                div.className = 'icon-container';
-                
-                const canvas = createIcon(size);
-                if (!canvas) return;
-                
-                canvas.id = `icon${size}`;
-                
-                const label = document.createElement('p');
-                label.innerHTML = `<strong>icon${size}.png</strong><br>${size}x${size} píxeles`;
-                
-                const downloadBtn = document.createElement('button');
-                downloadBtn.textContent = `⬇️ Descargar`;
-                downloadBtn.onclick = () => downloadIcon(canvas, `icon${size}.png`);
-                
-                div.appendChild(canvas);
-                div.appendChild(label);
-                div.appendChild(downloadBtn);
-                container.appendChild(div);
-            });
-            
-            updateStatus('✓ Todos los iconos generados. Usa los botones de descarga para guardarlos.', 'success');
-        }
-        
         function downloadIcon(canvas, filename) {
-            const link = document.createElement('a');
-            link.download = filename;
-            link.href = canvas.toDataURL('image/png');
-            link.click();
-        }
-        
-        function downloadAll() {
-            sizes.forEach((size, index) => {
-                setTimeout(() => {
-                    const canvas = document.getElementById(`icon${size}`);
-                    if (canvas) {
-                        downloadIcon(canvas, `icon${size}.png`);
-                    }
-                }, index * 500); // Delay de 500ms entre descargas
-            });
-            updateStatus('⬇️ Descargando todos los iconos...', 'info');
-        }
-        
-        // Inicializar al cargar la página
-        window.onload = async () => {
             try {
-                await loadSourceImage();
-                generateAll();
+                canvas.toBlob((blob) => {
+                    const url = URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    link.download = filename;
+                    link.href = url;
+                    link.click();
+                    
+                    // Liberar el objeto URL después de un breve retraso
+                    setTimeout(() => URL.revokeObjectURL(url), 100);
+                }, 'image/png');
+                
+                updateStatus(`⬇️ Descargando ${filename}...`, 'info');
             } catch (error) {
-                console.error('Error al inicializar:', error);
+                updateStatus(`❌ Error al descargar ${filename}. Por favor, intenta de nuevo.`, 'error');
+                console.error('Error al descargar:', error);
             }
-        };
+        }
+        
+        function resetApp() {
+            sourceImage = null;
+            fileInput.value = '';
+            preview.src = '';
+            previewSection.classList.remove('active');
+            uploadArea.style.display = 'block';
+            iconsContainer.innerHTML = '';
+            statusDiv.className = '';
+            statusDiv.style.display = 'none';
+        }
     </script>
 </body>
 </html>
