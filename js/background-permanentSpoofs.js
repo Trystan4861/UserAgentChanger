@@ -50,12 +50,16 @@ function getDomainPattern(domain) {
 /**
  * Update permanent spoof rules in declarativeNetRequest
  * Rules for permanent spoofs start at ID 1000
+ * Only applies rules when globalUserAgent is set to 'auto'
  */
 async function updatePermanentSpoofRules() {
   try {
-    const result = await chrome.storage.local.get(['permanentSpoofs', 'permanentOverride']);
+    const result = await chrome.storage.local.get([
+      'permanentSpoofs', 
+      'globalUserAgent'
+    ]);
     const permanentSpoofs = result.permanentSpoofs || [];
-    const permanentOverride = result.permanentOverride || false;
+    const globalUserAgent = result.globalUserAgent || 'default';
     
     // Get existing dynamic rules (permanent spoofs use dynamic rules, not session)
     const existingRules = await chrome.declarativeNetRequest.getDynamicRules();
@@ -65,7 +69,18 @@ async function updatePermanentSpoofRules() {
       .filter(rule => rule.id >= 1000)
       .map(rule => rule.id);
     
-    // Create new rules for active permanent spoofs
+    // Si NO estamos en modo AUTO, eliminar todas las reglas de spoofs permanentes
+    if (globalUserAgent !== 'auto') {
+      if (permanentRuleIds.length > 0) {
+        await chrome.declarativeNetRequest.updateDynamicRules({
+          removeRuleIds: permanentRuleIds
+        });
+        console.log('Removed all permanent spoof rules (not in AUTO mode)');
+      }
+      return; // Salir sin crear nuevas reglas
+    }
+    
+    // SOLO si estamos en modo AUTO, crear reglas para spoofs activos
     const newRules = [];
     let ruleId = 1000; // Start IDs at 1000 for permanent spoofs
     

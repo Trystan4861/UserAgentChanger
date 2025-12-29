@@ -460,5 +460,29 @@
   "themeChanged": {
     "message": "Tema cambiado correctamente",
     "description": "Mensaje cuando se cambia el tema"
+  },
+  "validationAliasInvalidChars": {
+    "message": "El alias solo puede contener letras, números y espacios simples",
+    "description": "Error cuando el alias tiene caracteres inválidos"
+  },
+  "validationAliasReserved": {
+    "message": "es un alias reservado",
+    "description": "Error cuando el alias es una palabra reservada"
+  },
+  "validationAliasExists": {
+    "message": "Este alias ya existe",
+    "description": "Error cuando el alias ya está en uso"
+  },
+  "validationNameInvalidChars": {
+    "message": "El nombre solo puede contener letras, números y espacios simples",
+    "description": "Error cuando el nombre tiene caracteres inválidos"
+  },
+  "validationNameReserved": {
+    "message": "es un nombre reservado",
+    "description": "Error cuando el nombre es una palabra reservada"
+  },
+  "validationNameExists": {
+    "message": "Este nombre ya existe",
+    "description": "Error cuando el nombre ya está en uso"
   }
 }

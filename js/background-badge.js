@@ -108,7 +108,7 @@ async function updateBadgeForTab(tabId) {
       if (ua) {
         await chrome.action.setBadgeText({ text: ua.alias, tabId });
         await chrome.action.setBadgeBackgroundColor({ 
-          color: '#000000', // Black background for manual selections
+          color: '#000', // Black background for manual selections
           tabId 
         });
         await chrome.action.setTitle({ 

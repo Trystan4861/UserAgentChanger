@@ -383,14 +383,22 @@ async function addUserAgent() {
     return;
   }
   
-  // Validate that 'AUTO' is not used as alias (reserved word)
-  if (alias === 'AUTO') {
-    showNotification(i18n.getMessage('aliasReservedError'), 'error');
-    return;
-  }
-  
   const result = await chrome.storage.local.get('userAgents');
   const userAgents = result.userAgents || [];
+  
+    // Validate name (first, as it appears first in the form)
+    const nameValidation = validateName(name, userAgents);
+    if (!nameValidation.isValid) {
+      showNotification(nameValidation.error, 'error');
+      return;
+    }
+
+    // Validate alias (second, as it appears second in the form)
+    const aliasValidation = validateAlias(alias, userAgents);
+    if (!aliasValidation.isValid) {
+      showNotification(aliasValidation.error, 'error');
+      return;
+    }
   
   const newUserAgent = {
     id: Date.now().toString(),
@@ -447,85 +455,6 @@ async function deleteUserAgent(id) {
   showNotification(i18n.getMessage('userAgentDeleted'), 'success');
 }
 
-// Show notification
-function showNotification(message, type = 'info') {
-  // Remove any existing notifications first
-  const existing = document.querySelectorAll('.custom-notification');
-  existing.forEach(n => n.remove());
-  
-  // Define colors and icons for each type
-  const styles = {
-    success: { bg: '#34a853', icon: '✅' },
-    error: { bg: '#d93025', icon: '⚠️' },
-    info: { bg: '#1a73e8', icon: 'ℹ️' },
-    warning: { bg: '#fbbc04', icon: '⚠️' }
-  };
-  
-  const style = styles[type] || styles.info;
-  
-  // Create notification element
-  const notification = document.createElement('div');
-  notification.className = 'custom-notification';
-  notification.style.cssText = `
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    padding: 16px 24px;
-    background: ${style.bg};
-    color: white;
-    border-radius: 8px;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
-    z-index: 10000;
-    animation: slideIn 0.3s ease;
-    font-weight: 500;
-    font-size: 14px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    max-width: 400px;
-    word-wrap: break-word;
-  `;
-  
-  notification.innerHTML = `
-    <span style="font-size: 20px;">${style.icon}</span>
-    <span>${message}</span>
-  `;
-  
-  document.body.appendChild(notification);
-  
-  // Remove after 4 seconds
-  setTimeout(() => {
-    notification.style.animation = 'slideOut 0.3s ease';
-    setTimeout(() => notification.remove(), 300);
-  }, 4000);
-}
-
-// Add animations
-const style = document.createElement('style');
-style.textContent = `
-  @keyframes slideIn {
-    from {
-      transform: translateX(400px);
-      opacity: 0;
-    }
-    to {
-      transform: translateX(0);
-      opacity: 1;
-    }
-  }
-  
-  @keyframes slideOut {
-    from {
-      transform: translateX(0);
-      opacity: 1;
-    }
-    to {
-      transform: translateX(400px);
-      opacity: 0;
-    }
-  }
-`;
-document.head.appendChild(style);
 
 // Permanent Spoof List Functions
 async function loadPermanentSpoofs() {

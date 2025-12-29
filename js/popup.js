@@ -239,14 +239,22 @@ async function activateUserAgent(id) {
   // Get current tab
   const [currentTab] = await chrome.tabs.query({ active: true, currentWindow: true });
   
+  // DEFAULT y AUTO son configuraciones GLOBALES (radio button behavior)
+  // Solo uno puede estar activo a la vez
   if (id === 'default' || id === 'auto') {
-    // Store globally
+    // Establecer configuración global
     await chrome.storage.local.set({ globalUserAgent: id });
-    // Remove per-tab setting if exists (global takes precedence)
+    
+    // Eliminar cualquier configuración manual de esta pestaña
+    // para que adopte la configuración global
     await chrome.storage.local.remove([`tab_${currentTab.id}`]);
   } else {
-    // Store per-tab for specific user agents (manual selection)
+    // User Agents personalizados son configuraciones POR PESTAÑA (manual)
+    // NO modifican el estado global (DEFAULT/AUTO sigue activo para otras pestañas)
     await chrome.storage.local.set({ [`tab_${currentTab.id}`]: id });
+    
+    // Nota: NO modificamos globalUserAgent aquí
+    // La configuración global permanece intacta
   }
   
   // Get the selected user-agent

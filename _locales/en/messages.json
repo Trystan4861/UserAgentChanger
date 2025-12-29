@@ -460,5 +460,33 @@
   "themeChanged": {
     "message": "Theme changed successfully",
     "description": "Message when theme is changed"
+  },
+  "validationAliasInvalidChars": {
+    "message": "Alias can only contain letters, numbers and single spaces",
+    "description": "Error when alias has invalid characters"
+  },
+  "validationAliasReserved": {
+    "message": "is a reserved alias",
+    "description": "Error when alias is a reserved word"
+  },
+  "validationAliasExists": {
+    "message": "This alias already exists",
+    "description": "Error when alias already exists"
+  },
+  "validationNameEmpty": {
+    "message": "Name cannot be empty",
+    "description": "Error when name is empty"
+  },
+  "validationNameInvalidChars": {
+    "message": "Name can only contain letters, numbers and single spaces",
+    "description": "Error when name has invalid characters"
+  },
+  "validationNameReserved": {
+    "message": "is a reserved name",
+    "description": "Error when name is a reserved word"
+  },
+  "validationNameExists": {
+    "message": "This name already exists",
+    "description": "Error when name already exists"
   }
 }

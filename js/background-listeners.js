@@ -35,11 +35,17 @@ chrome.storage.onChanged.addListener((changes, namespace) => {
     if (changes.permanentOverride) {
       applyPermanentSpoofs();
     }
-    // Update badge when global setting changes
+    // Update ALL tabs when global setting changes
     if (changes.globalUserAgent) {
-      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-        if (tabs[0]) {
-          updateBadgeForTab(tabs[0].id);
+      // Actualizar reglas de spoofs (activarlas o desactivarlas según el modo)
+      applyPermanentSpoofs();
+      
+      // Actualizar badges de TODAS las pestañas, no solo la activa
+      chrome.tabs.query({}, (tabs) => {
+        for (const tab of tabs) {
+          if (tab.id) {
+            updateBadgeForTab(tab.id);
+          }
         }
       });
     }

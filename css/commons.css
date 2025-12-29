@@ -334,6 +334,63 @@ body {
 }
 
 /* ============================================================================
+   NOTIFICATIONS
+   ============================================================================ */
+
+.notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: var(--spacing-md) var(--spacing-lg);
+  border-radius: var(--radius-lg);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  box-shadow: var(--shadow-lg);
+  z-index: 10000;
+  max-width: 400px;
+  animation: slideInRight 0.3s ease-out;
+}
+
+.notification-success {
+  background: var(--color-success);
+  color: #ffffff;
+}
+
+.notification-error {
+  background: var(--color-danger);
+  color: #ffffff;
+}
+
+.notification-info {
+  background: var(--color-primary);
+  color: #ffffff;
+}
+
+.notification-fade-out {
+  animation: fadeOut 0.3s ease-out forwards;
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(100px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+/* ============================================================================
    ANIMATIONS
    ============================================================================ */
 

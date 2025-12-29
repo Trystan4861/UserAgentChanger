@@ -105,6 +105,109 @@ function isValidHexColor(color) {
 }
 
 // ============================================================================
+// STRING NORMALIZATION
+// ============================================================================
+
+/**
+ * Normalizes a string by converting it to lowercase and removing accents
+ * @param {string} str - The string to normalize
+ * @returns {string} The normalized string
+ */
+function normalizeString(str) {
+  return str
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '');
+}
+
+/**
+ * Checks if a string contains only alphanumeric characters and single spaces
+ * @param {string} str - The string to validate
+ * @returns {boolean} True if valid, false otherwise
+ */
+function isValidAlphanumericWithSpaces(str) {
+  // Check for invalid characters (only a-zA-Z0-9 and space allowed)
+  if (!/^[a-zA-Z0-9 ]+$/.test(str)) {
+    return false;
+  }
+  
+  // Check for multiple consecutive spaces
+  if (/  /.test(str)) {
+    return false;
+  }
+  
+  return true;
+}
+
+/**
+ * Checks if an alias is reserved or already exists
+ * @param {string} alias - The alias to check
+ * @param {Array} userAgents - Array of existing user agents
+ * @returns {Object} Object with isValid and error message
+ */
+function validateAlias(alias, userAgents) {
+  const trimmedAlias = alias.trim();
+  
+  // Check for invalid characters
+  if (!isValidAlphanumericWithSpaces(trimmedAlias)) {
+    return { isValid: false, error: i18n.getMessage('validationAliasInvalidChars') };
+  }
+  
+  const normalizedAlias = normalizeString(trimmedAlias);
+  
+  // Check for reserved words
+  const reservedAliases = ['auto', 'def'];
+  if (reservedAliases.includes(normalizedAlias)) {
+    return { isValid: false, error: `"${trimmedAlias}" ${i18n.getMessage('validationAliasReserved')}` };
+  }
+  
+  // Check if alias already exists
+  const aliasExists = userAgents.some(ua => 
+    normalizeString(ua.alias) === normalizedAlias
+  );
+  
+  if (aliasExists) {
+    return { isValid: false, error: i18n.getMessage('validationAliasExists') };
+  }
+  
+  return { isValid: true };
+}
+
+/**
+ * Checks if a name is reserved or already exists
+ * @param {string} name - The name to check
+ * @param {Array} userAgents - Array of existing user agents
+ * @returns {Object} Object with isValid and error message
+ */
+function validateName(name, userAgents) {
+  const trimmedName = name.trim();
+  
+  // Check for invalid characters
+  if (!isValidAlphanumericWithSpaces(trimmedName)) {
+    return { isValid: false, error: i18n.getMessage('validationNameInvalidChars') };
+  }
+  
+  const normalizedName = normalizeString(trimmedName);
+  
+  // Check for reserved words
+  const reservedNames = ['auto', 'default'];
+  if (reservedNames.includes(normalizedName)) {
+    return { isValid: false, error: `"${trimmedName}" ${i18n.getMessage('validationNameReserved')}` };
+  }
+  
+  // Check if name already exists
+  const nameExists = userAgents.some(ua => 
+    normalizeString(ua.name) === normalizedName
+  );
+  
+  if (nameExists) {
+    return { isValid: false, error: i18n.getMessage('validationNameExists') };
+  }
+  
+  return { isValid: true };
+}
+
+// ============================================================================
 // INITIALIZE
 // ============================================================================
 
