@@ -2,6 +2,8 @@
 
 Una extensión profesional para Chrome que permite cambiar rápida y fácilmente la cadena User-Agent del navegador. Perfecta para desarrolladores web, testers y usuarios que necesitan emular diferentes navegadores y dispositivos.
 
+**[English README](README.md)**
+
 ## 🌟 Características Principales
 
 ### 🎯 Cambio Rápido de User-Agent

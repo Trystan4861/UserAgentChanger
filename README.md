@@ -2,6 +2,8 @@
 
 A professional Chrome extension that allows you to quickly and easily change your browser's User-Agent string. Perfect for web developers, testers, and users who need to emulate different browsers and devices.
 
+**[README en español](README_ES.md)**
+
 ## 🌟 Key Features
 
 ### 🎯 Quick User-Agent Switching
