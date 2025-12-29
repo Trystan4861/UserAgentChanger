@@ -2,7 +2,7 @@
 
 A professional Chrome extension that allows you to quickly and easily change your browser's User-Agent string. Perfect for web developers, testers, and users who need to emulate different browsers and devices.
 
-**[README en español](README_ES.md)**
+**[README en español](README_ES.md)** | **[Changelog](CHANGELOG.md)** | **[License](LICENSE)**
 
 ## 🌟 Key Features
 
@@ -139,8 +139,9 @@ UserAgentChanger/
 ├── generate_icons.html              # Icon generator utility
 ├── README.md                        # This file (English)
 ├── README_ES.md                     # Spanish README
+├── CHANGELOG.md                     # Version history
 ├── LICENSE                          # MIT License
-├── todo.yml                         # Project tasks
+├── LICENSE_ES.md                    # Spanish license
 ├── _locales/                        # Internationalization
 │   ├── en/
 │   │   └── messages.json           # English translations

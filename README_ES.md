@@ -2,7 +2,7 @@
 
 Una extensión profesional para Chrome que permite cambiar rápida y fácilmente la cadena User-Agent del navegador. Perfecta para desarrolladores web, testers y usuarios que necesitan emular diferentes navegadores y dispositivos.
 
-**[English README](README.md)**
+**[English README](README.md)** | **[Historial de Cambios](CHANGELOG.md)** | **[Licencia](LICENSE_ES.md)**
 
 ## 🌟 Características Principales
 
@@ -139,8 +139,9 @@ UserAgentChanger/
 ├── generate_icons.html              # Utilidad generadora de iconos
 ├── README.md                        # README en inglés
 ├── README_ES.md                     # Este archivo (Español)
-├── LICENSE                          # Licencia MIT
-├── todo.yml                         # Tareas del proyecto
+├── CHANGELOG.md                     # Historial de versiones
+├── LICENSE                          # Licencia MIT (Inglés)
+├── LICENSE_ES.md                    # Licencia MIT (Español)
 ├── _locales/                        # Internacionalización
 │   ├── en/
 │   │   └── messages.json           # Traducciones al inglés
@@ -306,7 +307,7 @@ Esta extensión requiere los siguientes permisos para funcionar correctamente:
 
 ## 📄 Licencia
 
-Este proyecto está bajo la licencia MIT. Consulta el archivo [LICENSE](LICENSE) para más detalles.
+Este proyecto está bajo la licencia MIT. Consulta el archivo [LICENSE_ES.md](LICENSE_ES.md) para más detalles.
 
 ## 🆘 Soporte
 
