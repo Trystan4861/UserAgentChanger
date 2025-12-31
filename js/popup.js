@@ -16,17 +16,12 @@ async function showDisabledMessage() {
   listContainer.innerHTML = `
     <div class="disabled-message">
       <div class="disabled-icon">🚫</div>
-      <h3>Extensión deshabilitada</h3>
-      <p>Esta extensión no puede modificar páginas especiales del navegador (chrome://, edge://, etc.) por motivos de seguridad.</p>
+      <h3>Extension Disabled</h3>
+      <p>This extension cannot modify special browser pages (chrome://, edge://, etc.) for security reasons.</p>
     </div>
   `;
   
-  // Disable manage button
-  const manageBtn = document.getElementById('manageBtn');
-  if (manageBtn) {
-    manageBtn.style.opacity = '0.5';
-    manageBtn.style.pointerEvents = 'none';
-  }
+  // Keep manage button enabled - users should always be able to access settings
 }
 
 // Default user-agents with badge colors - function to get them after i18n is loaded
@@ -67,6 +62,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   await applyTheme();
   loadExtensionVersion();
   
+  // Always setup event listeners (including manage button)
+  setupEventListeners();
+  
   // Check if we're on a special page first
   if (await isCurrentTabSpecialPage()) {
     showDisabledMessage();
@@ -76,7 +74,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   await initializeUserAgents();
   await updateDefaultUserAgentTranslation();
   await loadUserAgents();
-  setupEventListeners();
 });
 
 // Apply theme from storage

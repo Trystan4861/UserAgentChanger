@@ -322,16 +322,16 @@
     "message": "What will be exported?"
   },
   "exportItemUserAgents": {
-    "message": "• Custom User-Agents"
+    "message": "Custom User-Agents"
   },
   "exportItemSpoofs": {
-    "message": "• Permanent Spoof List"
+    "message": "Permanent Spoof List"
   },
   "exportItemSettings": {
-    "message": "• Extension Settings"
+    "message": "Extension Settings"
   },
   "exportItemMetadata": {
-    "message": "• Export metadata"
+    "message": "Export metadata"
   },
   "exportHint": {
     "message": "The file will be saved with a timestamp."
@@ -488,5 +488,53 @@
   "validationNameExists": {
     "message": "This name already exists",
     "description": "Error when name already exists"
+  },
+  "permanentSpoofAdded": {
+    "message": "Permanent spoof added successfully",
+    "description": "Success message when adding permanent spoof"
+  },
+  "confirmDeleteSpoof": {
+    "message": "Are you sure you want to delete this permanent spoof?",
+    "description": "Confirmation message for deleting permanent spoof"
+  },
+  "permanentSpoofDeleted": {
+    "message": "Permanent spoof deleted successfully",
+    "description": "Success message when deleting permanent spoof"
+  },
+  "domainAlreadyHasSpoof": {
+    "message": "This domain already has a configured spoof",
+    "description": "Error when domain already has a spoof"
+  },
+  "noPermanentSpoofs": {
+    "message": "No permanent spoofs configured",
+    "description": "Message when no permanent spoofs exist"
+  },
+  "useFormToAddSpoof": {
+    "message": "Use the form above to add one",
+    "description": "Hint to use form to add spoof"
+  },
+  "confirmResetExtension": {
+    "message": "Are you sure you want to reset the extension? All custom User-Agents and Permanent Spoofs will be deleted. This action cannot be undone.",
+    "description": "Confirmation message for resetting extension"
+  },
+  "extensionReset": {
+    "message": "Extension reset successfully",
+    "description": "Success message when extension is reset"
+  },
+  "resetError": {
+    "message": "Error resetting extension",
+    "description": "Error message when reset fails"
+  },
+  "itemsImported": {
+    "message": "{count} items imported successfully",
+    "description": "Success message showing count of imported items"
+  },
+  "importError": {
+    "message": "Error importing configuration",
+    "description": "Error message when import fails"
+  },
+  "openInNewTab": {
+    "message": "Open in new tab",
+    "description": "Tooltip for opening domain link"
   }
 }

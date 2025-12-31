@@ -21,8 +21,8 @@
 <body>
   <div class="container">
     <header>
-      <h1>⚙️ <span data-i18n="optionsTitle">UAC - Configuración</span></h1>
-      <p class="subtitle" data-i18n="optionsSubtitle">Gestiona tus User-Agents personalizados</p>
+      <h1>⚙️ <span data-i18n="optionsTitle">UAC - Settings</span></h1>
+      <p class="subtitle" data-i18n="optionsSubtitle">Manage your custom User-Agents</p>
       <div class="options-credit">
         <span class="version-badge">User-Agent Changer <span id="extensionVersion">v0.0.0</span>
         by <a href="https://github.com/Trystan4861" target="_blank">@trystan4861</a></span>
@@ -31,7 +31,7 @@
       <div class="header-selectors">
         <!-- Language Selector -->
         <div class="language-selector">
-          <label for="languageSelect" data-i18n="languageLabel">Idioma:</label>
+          <label for="languageSelect" data-i18n="languageLabel">Language:</label>
           <select id="languageSelect">
             <option value="es">Español</option>
             <option value="en">English</option>
@@ -39,11 +39,11 @@
         </div>
         <!-- Theme Selector -->
         <div class="theme-selector">
-          <label for="themeSelect" data-i18n="themeLabel">Tema:</label>
+          <label for="themeSelect" data-i18n="themeLabel">Theme:</label>
           <select id="themeSelect">
             <option value="auto" data-i18n="themeAuto">Auto</option>
-            <option value="light" data-i18n="themeLight">Claro</option>
-            <option value="dark" data-i18n="themeDark">Oscuro</option>
+            <option value="light" data-i18n="themeLight">Light</option>
+            <option value="dark" data-i18n="themeDark">Dark</option>
           </select>
         </div>
       </div>
@@ -78,34 +78,34 @@
         <div id="custom-user-agents" class="content-section active">
           <div class="content">
       <section class="form-section">
-        <h2 data-i18n="addNewUserAgent">Agregar nuevo User-Agent</h2>
+        <h2 data-i18n="addNewUserAgent">Add New User-Agent</h2>
         <form id="addUserAgentForm">
           <div class="form-row">
             <div class="form-group">
-              <label for="name" data-i18n="labelName">Nombre:</label>
+              <label for="name" data-i18n="labelName">Name:</label>
               <input type="text" id="name" data-i18n-placeholder="placeholderName" placeholder="e.g., iPhone 14 Pro" required>
             </div>
             
             <div class="form-group">
-              <label for="alias" data-i18n="labelAlias">Alias (para badge):</label>
+              <label for="alias" data-i18n="labelAlias">Alias (for badge):</label>
               <input type="text" id="alias" maxlength="4" data-i18n-placeholder="placeholderAlias" placeholder="e.g., iOS" required>
-              <small data-i18n="maxCharacters">Máximo 4 caracteres</small>
+              <small data-i18n="maxCharacters">Maximum 4 characters</small>
             </div>
           </div>
 
           <div class="form-row form-row--with-badge">
             <div class="form-group">
-              <label for="mode" data-i18n="labelMode">Modo:</label>
+              <label for="mode" data-i18n="labelMode">Mode:</label>
               <select id="mode">
-                <option value="replace" data-i18n="modeReplaceDescription">Reemplazar User-Agent</option>
-                <option value="append" data-i18n="modeAppendDescription">Agregar al User-Agent</option>
+                <option value="replace" data-i18n="modeReplaceDescription">Replace User-Agent</option>
+                <option value="append" data-i18n="modeAppendDescription">Append to User-Agent</option>
               </select>
             </div>
             
             <div class="form-group form-group--badge-preview">
-              <label data-i18n="badgePreview" style="display: none;">Vista previa del badge:</label>
+              <label data-i18n="badgePreview" style="display: none;">Badge preview:</label>
               <div class="badge-preview-wrapper">
-                <span data-i18n="badgePreviewLabel">Vista previa:</span>
+                <span data-i18n="badgePreviewLabel">Preview:</span>
                 <div id="badgePreview" class="preview-badge" style="background-color: #000000; color: #ffffff;">TEST</div>
               </div>
             </div>
@@ -117,13 +117,13 @@
           </div>
           
           <button type="submit" class="btn btn-primary">
-            <span data-i18n="addButton">Agregar User-Agent</span>
+            <span data-i18n="addButton">Add User-Agent</span>
           </button>
         </form>
       </section>
 
       <section class="list-section">
-        <h2 data-i18n="configuredUserAgents">User-Agents configurados</h2>
+        <h2 data-i18n="configuredUserAgents">Configured User-Agents</h2>
         <div id="userAgentsList" class="user-agents-list"></div>
       </section>
           </div>
@@ -183,11 +183,11 @@
                   <input type="file" id="importFile" accept=".json" class="file-input" style="display: none;">
                   <label for="importFile" class="file-input-label">
                     <span class="file-icon">📁</span>
-                    <span data-i18n="selectFileButton">Seleccionar archivo o arrastra y suelta aquí</span>
+                    <span data-i18n="selectFileButton">Select file or drag and drop here</span>
                   </label>
                   <span id="selectedFileName" class="selected-file-name"></span>
                 </div>
-                <div id="drop-feedback" class="drop-feedback" style="display: none;">Arrastrar y soltar archivo aquí</div>
+                <div id="drop-feedback" class="drop-feedback" style="display: none;">Drop file here</div>
               </div>
             </section>
 
@@ -203,10 +203,10 @@
                     <div class="info-content">
                       <h4 data-i18n="exportInfoTitle">What will be exported?</h4>
                       <ul class="export-list">
-                        <li data-i18n="exportItemUserAgents">• Custom User-Agents</li>
-                        <li data-i18n="exportItemSpoofs">• Permanent Spoof List</li>
-                        <li data-i18n="exportItemSettings">• Extension Settings</li>
-                        <li data-i18n="exportItemMetadata">• Export metadata</li>
+                        <li data-i18n="exportItemUserAgents"> Custom User-Agents</li>
+                        <li data-i18n="exportItemSpoofs"> Permanent Spoof List</li>
+                        <li data-i18n="exportItemSettings"> Extension Settings</li>
+                        <li data-i18n="exportItemMetadata"> Export metadata</li>
                       </ul>
                     </div>
                   </div>
@@ -243,8 +243,8 @@
               </div>
               <div class="about-description">
                 <p data-i18n="aboutExtensionDescription">
-                  Una extensión potente y fácil de usar para Chrome que te permite cambiar tu User-Agent con un solo clic. 
-                  Perfecto para desarrolladores web, testers y usuarios que necesitan emular diferentes navegadores y dispositivos.
+                  A powerful and easy-to-use Chrome extension that allows you to change your User-Agent with a single click. 
+                  Perfect for web developers, testers and users who need to emulate different browsers and devices.
                 </p>
               </div>
             </section>
@@ -253,22 +253,22 @@
             <div class="about-cards-row">
               <!-- Author Card -->
               <section class="about-card author-card">
-              <h3 data-i18n="aboutAuthorTitle">👤 Autor</h3>
+              <h3 data-i18n="aboutAuthorTitle">👤 Author</h3>
               <div class="author-info">
                 <div class="author-avatar">
                   <img src="https://www.gravatar.com/avatar/f2c30198061cf9bd200fb94b79fc0ba4860e0a02e2ea34acafa432ed1bcd89e7?d=identicon&s=80" alt="Trystan4861" class="avatar-img" id="authorAvatar">
                 </div>
                 <div class="author-details">
                   <h4 class="author-name">Trystan4861</h4>
-                  <p class="author-role" data-i18n="aboutAuthorRole">Desarrollador Full-Stack</p>
+                  <p class="author-role" data-i18n="aboutAuthorRole">Full-Stack Developer</p>
                   <div class="author-links">
                     <a href="https://github.com/Trystan4861" target="_blank" class="author-link">
                       <span class="link-icon">🔗</span>
-                      <span data-i18n="aboutGithubProfile">Perfil de GitHub</span>
+                      <span data-i18n="aboutGithubProfile">GitHub Profile</span>
                     </a>
                     <a href="https://github.com/Trystan4861/UserAgentChanger" target="_blank" class="author-link">
                       <span class="link-icon">📦</span>
-                      <span data-i18n="aboutRepository">Repositorio de la Extensión</span>
+                      <span data-i18n="aboutRepository">Extension Repository</span>
                     </a>
                   </div>
                 </div>
@@ -277,14 +277,14 @@
 
             <!-- Support Card -->
             <section class="about-card support-card">
-              <h3 data-i18n="aboutSupportTitle">💬 Soporte</h3>
+              <h3 data-i18n="aboutSupportTitle">💬 Support</h3>
               <p data-i18n="aboutSupportDescription">
-                Si encuentras algún problema o tienes sugerencias para mejorar la extensión, 
-                no dudes en abrir un issue en el repositorio de GitHub.
+                If you encounter any issues or have suggestions to improve the extension, 
+                feel free to open an issue on the GitHub repository.
               </p>
               <a href="https://github.com/Trystan4861/UserAgentChanger/issues" target="_blank" class="btn btn-primary support-btn">
                 <span class="btn-icon">🐛</span>
-                <span data-i18n="aboutReportIssue">Reportar un Problema</span>
+                <span data-i18n="aboutReportIssue">Report an Issue</span>
               </a>
             </section>
             </div>
@@ -293,19 +293,19 @@
             <section class="about-card danger-zone">
               <div class="danger-title">
                 <span class="danger-icon">⚠️</span>
-                <h3 data-i18n="aboutDangerZone">Zona de Peligro</h3>
+                <h3 data-i18n="aboutDangerZone">Danger Zone</h3>
               </div>
               <div class="reset-section">
                 <div class="reset-info">
-                  <h4 data-i18n="aboutResetTitle">Resetear Extensión</h4>
+                  <h4 data-i18n="aboutResetTitle">Reset Extension</h4>
                   <p data-i18n="aboutResetDescription">
-                    Esto eliminará todas tus configuraciones, User-Agents personalizados y Spoofs permanentes. 
-                    Esta acción no se puede deshacer.
+                    This will delete all your settings, custom User-Agents and permanent Spoofs. 
+                    This action cannot be undone.
                   </p>
                 </div>
                 <button id="resetExtensionBtn" class="btn btn-danger">
                   <span class="btn-icon">🔄</span>
-                  <span data-i18n="aboutResetButton">Resetear Todo</span>
+                  <span data-i18n="aboutResetButton">Reset Everything</span>
                 </button>
               </div>
             </section>
@@ -313,10 +313,10 @@
             <!-- License Card -->
             <section class="about-card license-card">
               <p class="license-text">
-                <span data-i18n="aboutLicense">Licencia:</span> 
+                <span data-i18n="aboutLicense">License:</span> 
                 <a href="https://github.com/Trystan4861/UserAgentChanger/blob/main/LICENSE" target="_blank">MIT License</a>
               </p>
-              <p class="copyright-text">© 2024 Trystan4861. <span data-i18n="aboutRights">Todos los derechos reservados.</span></p>
+              <p class="copyright-text">© 2024 Trystan4861. <span data-i18n="aboutRights">All rights reserved.</span></p>
             </section>
           </div>
         </div>

@@ -39,6 +39,11 @@ body {
   display: inline-flex;
   align-items: center;
   gap: var(--spacing-xs);
+  outline: none;
+}
+
+.btn:focus {
+  outline: none;
 }
 
 .btn-primary {

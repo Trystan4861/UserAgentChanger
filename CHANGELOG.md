@@ -5,6 +5,29 @@ All notable changes to the User-Agent Changer extension will be documented in th
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.1] - 2025-12-31
+
+### Added
+- New i18n messages for permanent spoof management:
+  - Success message when adding permanent spoof
+  - Confirmation dialog for deleting permanent spoof
+  - Success message when deleting permanent spoof
+  - Error message when domain already has a spoof configured
+  - Message when no permanent spoofs are configured
+
+### Changed
+- Updated export section UI text formatting (removed bullet points)
+- Improved button focus styles with visible outline for better accessibility
+- Refactored options.html structure for better maintainability
+- Enhanced notification messaging system
+
+### Fixed
+- Button focus outline visibility for improved accessibility
+- Export section list formatting for cleaner UI presentation
+
+### Removed
+- Unused CSS rules in import-export.css
+
 ## [1.0.0] - 2025-12-29
 
 ### Added

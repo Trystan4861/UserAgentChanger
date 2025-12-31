@@ -322,16 +322,16 @@
     "message": "¿Qué se exportará?"
   },
   "exportItemUserAgents": {
-    "message": "• User-Agents personalizados"
+    "message": "User-Agents personalizados"
   },
   "exportItemSpoofs": {
-    "message": "• Lista de Spoofs Permanentes"
+    "message": "Lista de Spoofs Permanentes"
   },
   "exportItemSettings": {
-    "message": "• Configuración de la extensión"
+    "message": "Configuración de la extensión"
   },
   "exportItemMetadata": {
-    "message": "• Metadatos de exportación"
+    "message": "Metadatos de exportación"
   },
   "exportHint": {
     "message": "El archivo se guardará con una marca de tiempo."
@@ -484,5 +484,53 @@
   "validationNameExists": {
     "message": "Este nombre ya existe",
     "description": "Error cuando el nombre ya está en uso"
+  },
+  "permanentSpoofAdded": {
+    "message": "Spoof permanente agregado correctamente",
+    "description": "Mensaje de éxito al agregar spoof permanente"
+  },
+  "confirmDeleteSpoof": {
+    "message": "¿Estás seguro de que quieres eliminar este spoof permanente?",
+    "description": "Mensaje de confirmación para eliminar spoof permanente"
+  },
+  "permanentSpoofDeleted": {
+    "message": "Spoof permanente eliminado correctamente",
+    "description": "Mensaje de éxito al eliminar spoof permanente"
+  },
+  "domainAlreadyHasSpoof": {
+    "message": "Este dominio ya tiene un spoof configurado",
+    "description": "Error cuando el dominio ya tiene un spoof"
+  },
+  "noPermanentSpoofs": {
+    "message": "No hay spoofs permanentes configurados",
+    "description": "Mensaje cuando no hay spoofs permanentes"
+  },
+  "useFormToAddSpoof": {
+    "message": "Usa el formulario de arriba para agregar uno",
+    "description": "Pista para usar el formulario para agregar spoof"
+  },
+  "confirmResetExtension": {
+    "message": "¿Estás seguro de que quieres resetear la extensión? Se eliminarán todos los User-Agents personalizados y Spoofs Permanentes. Esta acción no se puede deshacer.",
+    "description": "Mensaje de confirmación para resetear extensión"
+  },
+  "extensionReset": {
+    "message": "Extensión reseteada correctamente",
+    "description": "Mensaje de éxito al resetear extensión"
+  },
+  "resetError": {
+    "message": "Error al resetear la extensión",
+    "description": "Mensaje de error al resetear"
+  },
+  "itemsImported": {
+    "message": "{count} elementos importados correctamente",
+    "description": "Mensaje de éxito mostrando cantidad de elementos importados"
+  },
+  "importError": {
+    "message": "Error al importar la configuración",
+    "description": "Mensaje de error al importar"
+  },
+  "openInNewTab": {
+    "message": "Abrir en nueva pestaña",
+    "description": "Tooltip para abrir enlace de dominio"
   }
 }

@@ -433,32 +433,8 @@
 .import-actions-bar .btn {
   width: 100%;
   justify-content: center;
-}
-
-.import-actions-bar .btn-secondary {
-  background: var(--color-danger);
-  color: var(--color-bg-primary);
   padding: var(--spacing-sm) 20px;
   font-size: var(--font-size-base);
-}
-
-.import-actions-bar .btn-secondary:hover {
-  background: var(--color-danger-dark);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(217, 48, 37, 0.3);
-}
-
-.import-actions-bar .btn-primary {
-  background: var(--color-primary);
-  color: var(--color-bg-primary);
-  padding: var(--spacing-sm) 20px;
-  font-size: var(--font-size-base);
-}
-
-.import-actions-bar .btn-primary:hover {
-  background: var(--color-primary-dark);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(26, 115, 232, 0.3);
 }
 
 #importSection {

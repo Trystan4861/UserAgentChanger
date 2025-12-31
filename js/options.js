@@ -470,8 +470,8 @@ async function loadPermanentSpoofs() {
   if (spoofs.length === 0) {
     listContainer.innerHTML = `
       <div class="empty-spoofs">
-        <p>No hay spoofs permanentes configurados</p>
-        <small>Usa el formulario de arriba para agregar uno</small>
+        <p>${i18n.getMessage('noPermanentSpoofs') || 'No permanent spoofs configured'}</p>
+        <small>${i18n.getMessage('useFormToAddSpoof') || 'Use the form above to add one'}</small>
       </div>
     `;
     return;
@@ -605,7 +605,7 @@ async function addPermanentSpoof(e) {
   const spoofs = result.permanentSpoofs || [];
   
   if (spoofs.some(s => s.domain === domain)) {
-    alert('Este dominio ya tiene un spoof configurado');
+    alert(i18n.getMessage('domainAlreadyHasSpoof') || 'This domain already has a configured spoof');
     return;
   }
   
@@ -623,11 +623,11 @@ async function addPermanentSpoof(e) {
   document.getElementById('spoofPreview').style.display = 'none';
   
   await loadPermanentSpoofs();
-  showNotification('Spoof permanente agregado correctamente', 'success');
+  showNotification(i18n.getMessage('permanentSpoofAdded') || 'Permanent spoof added successfully', 'success');
 }
 
 async function deletePermanentSpoof(id) {
-  if (!confirm('¿Estás seguro de que quieres eliminar este spoof permanente?')) {
+  if (!confirm(i18n.getMessage('confirmDeleteSpoof') || 'Are you sure you want to delete this permanent spoof?')) {
     return;
   }
   
@@ -638,7 +638,7 @@ async function deletePermanentSpoof(id) {
   await chrome.storage.local.set({ permanentSpoofs: spoofs });
   
   await loadPermanentSpoofs();
-  showNotification('Spoof permanente eliminado correctamente', 'success');
+  showNotification(i18n.getMessage('permanentSpoofDeleted') || 'Permanent spoof deleted successfully', 'success');
 }
 
 // Import/Export Functions
@@ -887,7 +887,7 @@ function showImportPreview(data) {
     </div>
     
     <div class="import-actions-bar">
-      <button class="btn btn-secondary cancel-import-btn">
+      <button class="btn btn-danger cancel-import-btn">
         ${i18n.getMessage('cancelButton') || 'Cancelar'}
       </button>
       <button class="btn btn-primary confirm-import-btn">
@@ -1021,11 +1021,11 @@ window.confirmImportSelected = async function() {
     
     // Show success message
     const count = newUserAgents.length + newSpoofs.length;
-    showNotification(`${count} elementos importados correctamente`, 'success');
+    showNotification(i18n.getMessage('itemsImported').replace('{count}', count) || `${count} items imported successfully`, 'success');
     
   } catch (error) {
     console.error('Import error:', error);
-    showNotification('Error al importar la configuración', 'error');
+    showNotification(i18n.getMessage('importError') || 'Error importing configuration', 'error');
   }
 };
 
@@ -1243,7 +1243,7 @@ async function editSpoofUserAgent(spoofId, card) {
 }
 
 async function resetExtension() {
-  if (!confirm('¿Estás seguro de que quieres resetear la extensión? Se eliminarán todos los User-Agents personalizados y Spoofs Permanentes. Esta acción no se puede deshacer.')) {
+  if (!confirm(i18n.getMessage('confirmResetExtension') || 'Are you sure you want to reset the extension? All custom User-Agents and Permanent Spoofs will be deleted. This action cannot be undone.')) {
     return;
   }
   
@@ -1258,7 +1258,7 @@ async function resetExtension() {
     });
     
     // Reload the page to refresh all data
-    showNotification('Extensión reseteada correctamente', 'success');
+    showNotification(i18n.getMessage('extensionReset') || 'Extension reset successfully', 'success');
     
     setTimeout(() => {
       window.location.reload();
@@ -1266,7 +1266,7 @@ async function resetExtension() {
     
   } catch (error) {
     console.error('Reset error:', error);
-    showNotification('Error al resetear la extensión', 'error');
+    showNotification(i18n.getMessage('resetError') || 'Error resetting extension', 'error');
   }
 }
 
