@@ -5,6 +5,31 @@ All notable changes to the User-Agent Changer extension will be documented in th
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.2] - 2025-12-31
+
+### Changed
+- **Migrated to `activeTab` permission** for better Chrome Web Store compliance
+  - Removed `host_permissions: ["<all_urls>"]` 
+  - Removed `declarativeNetRequestWithHostAccess` permission
+  - Added `activeTab` permission (safer and more privacy-friendly)
+- **Improved User-Agent detection**
+  - Now uses Service Worker's `navigator.userAgent` directly
+  - No hardcoded User-Agent strings that could become outdated
+  - Automatically updates with browser version changes
+  - Cached in session storage for performance
+
+### Technical
+- User-Agent is now obtained from the Service Worker context (always available, no permissions needed)
+- Switched from `chrome.storage.local` to `chrome.storage.session` for UA caching
+- Extension initializes User-Agent automatically on startup
+- All functionality remains intact: manual UA per tab, permanent spoofs, AUTO mode, etc.
+
+### Security & Privacy
+- Reduced permissions for better user privacy
+- Extension now only accesses active tabs when user interacts with it
+- Faster Chrome Web Store approval process with minimal permissions
+- Improved user trust with more transparent permission model
+
 ## [1.0.1] - 2025-12-31
 
 ### Added

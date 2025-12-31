@@ -5,59 +5,47 @@
 
 /**
  * Function to get the real user agent from the browser
+ * Uses Service Worker's own navigator.userAgent which is always available
  * @returns {Promise<string>} The real user agent string
  */
 async function getRealUserAgent() {
   try {
-    // Try to get from storage first
-    const result = await chrome.storage.local.get(['defaultUserAgent']);
+    // Try to get from session storage first (cached for this browser session)
+    const result = await chrome.storage.session.get(['defaultUserAgent']);
     if (result.defaultUserAgent) {
       return result.defaultUserAgent;
     }
     
-    // If not in storage, get it by executing a script in a tab
-    const tabs = await chrome.tabs.query({});
-    if (tabs.length > 0) {
-      // Find a tab with a valid URL (not chrome:// or extension pages)
-      const validTab = tabs.find(tab => 
-        tab.url && 
-        (tab.url.startsWith('http://') || tab.url.startsWith('https://'))
-      );
-      
-      if (validTab) {
-        const results = await chrome.scripting.executeScript({
-          target: { tabId: validTab.id },
-          func: () => navigator.userAgent
-        });
-        
-        if (results && results[0] && results[0].result) {
-          const realUA = results[0].result;
-          // Store it for future use
-          await chrome.storage.local.set({ defaultUserAgent: realUA });
-          return realUA;
-        }
-      }
-    }
+    // Get the real UA from the service worker's own navigator object
+    // This is the browser's actual UA and doesn't require any permissions
+    const realUA = navigator.userAgent;
     
-    // Fallback: create a new tab to get the UA
-    const newTab = await chrome.tabs.create({ url: 'about:blank', active: false });
-    const results = await chrome.scripting.executeScript({
-      target: { tabId: newTab.id },
-      func: () => navigator.userAgent
-    });
+    // Store it in session storage for this browser session
+    await chrome.storage.session.set({ defaultUserAgent: realUA });
     
-    if (results && results[0] && results[0].result) {
-      const realUA = results[0].result;
-      await chrome.storage.local.set({ defaultUserAgent: realUA });
-      await chrome.tabs.remove(newTab.id);
-      return realUA;
-    }
-    
-    // Ultimate fallback
-    return 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';
+    console.log('Real user agent obtained:', realUA);
+    return realUA;
   } catch (error) {
     console.error('Error getting real user agent:', error);
-    return 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';
+    // Ultimate fallback - but this should never happen
+    return navigator.userAgent || 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';
+  }
+}
+
+/**
+ * Update the real user agent cache
+ * This refreshes the stored UA to ensure it's current
+ * Called automatically on extension startup and can be called manually
+ */
+async function updateRealUserAgent() {
+  try {
+    const realUA = navigator.userAgent;
+    await chrome.storage.session.set({ defaultUserAgent: realUA });
+    console.log('Updated real user agent:', realUA);
+    return realUA;
+  } catch (error) {
+    console.error('Error updating real user agent:', error);
+    return null;
   }
 }
 
