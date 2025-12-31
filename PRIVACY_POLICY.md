@@ -78,10 +78,13 @@ This extension does NOT use any third-party services, including:
 
 The extension requests certain browser permissions to function:
 
-- **webRequest/webRequestBlocking**: To intercept and modify the user agent header before requests are sent
+- **declarativeNetRequest**: To intercept and modify the user agent header before requests are sent
+- **activeTab**: To apply user agent changes to the currently active tab when you interact with the extension (privacy-friendly permission that only works when you click the extension)
 - **Storage**: To save your preferences locally on your device
 - **Tabs**: To detect which URL is active and apply the appropriate user agent
-- **All URLs (<all_urls>)**: To be able to modify user agent on any website you visit
+- **Scripting**: For advanced functionality and improved compatibility
+
+**Important Privacy Enhancement (v1.0.2+)**: The extension now uses `activeTab` permission instead of broad host permissions (`<all_urls>`), significantly enhancing your privacy. Access is only granted when you actively use the extension.
 
 These permissions are used solely for the extension's core functionality and NOT for data collection.
 

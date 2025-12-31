@@ -204,9 +204,10 @@ Esta extensión requiere los siguientes permisos para funcionar correctamente:
   - **Propósito**: Permite a la extensión modificar las cabeceras de peticiones HTTP
   - **Por qué es necesario**: Esencial para cambiar la cabecera User-Agent en las peticiones web. Esta API permite a la extensión interceptar y modificar la cadena User-Agent antes de que las peticiones se envíen a los servidores.
 
-- **`declarativeNetRequestWithHostAccess`**
-  - **Propósito**: Extiende las capacidades de declarativeNetRequest para trabajar con permisos de host
-  - **Por qué es necesario**: Requerido para aplicar modificaciones de User-Agent en todos los sitios web. Funciona en conjunto con `<all_urls>` para asegurar que la extensión pueda modificar cabeceras en cualquier dominio.
+- **`activeTab`**
+  - **Propósito**: Otorga acceso temporal a la pestaña activa cuando interactúas con la extensión
+  - **Por qué es necesario**: Permite a la extensión aplicar cambios de User-Agent a la pestaña que estás viendo cuando usas el popup. Este es un permiso que respeta la privacidad y solo funciona cuando haces clic explícitamente en el icono de la extensión.
+  - **Beneficio de seguridad**: A diferencia de permisos amplios, `activeTab` solo otorga acceso cuando usas activamente la extensión, asegurando máxima privacidad y seguridad.
 
 - **`storage`**
   - **Propósito**: Proporciona acceso a la API de almacenamiento de Chrome
@@ -233,18 +234,14 @@ Esta extensión requiere los siguientes permisos para funcionar correctamente:
     - Mejoras de características futuras
     - Mejor compatibilidad con páginas web
 
-### Permisos de Host:
-
-- **`<all_urls>`**
-  - **Propósito**: Otorga permiso para acceder y modificar peticiones en todos los sitios web
-  - **Por qué es necesario**: Permite a la extensión aplicar cambios de User-Agent en todos los dominios. Sin este permiso, la extensión necesitaría solicitar permiso para cada sitio web individual, haciéndola impráctica de usar.
-  - **Nota**: Este permiso es necesario para la funcionalidad principal pero la extensión nunca lee el contenido de las páginas ni recopila datos de navegación.
-
-### Notas de Seguridad:
-- Todos los datos se almacenan localmente usando la API de almacenamiento de Chrome
-- No se transmiten datos a servidores externos
-- La extensión solo modifica las cabeceras User-Agent, no el contenido de las páginas
-- La protección automática previene modificaciones en páginas especiales de Chrome (`chrome://`, `edge://`, etc.)
+### Notas de Seguridad y Privacidad:
+- **Permisos mínimos**: Usa `activeTab` en lugar de permisos de host amplios para mayor privacidad
+- **Cumplimiento con Chrome Web Store**: Sigue las mejores prácticas para permisos de extensiones
+- **User-Agent siempre actualizado**: Usa automáticamente el User-Agent actual del navegador (obtenido del Service Worker) como base, asegurando compatibilidad sin valores hardcodeados
+- **Solo almacenamiento local**: Todos los datos se almacenan localmente usando la API de almacenamiento de Chrome
+- **Sin comunicación externa**: No se transmiten datos a servidores externos
+- **Modificación solo de cabeceras**: La extensión solo modifica las cabeceras User-Agent, no el contenido de las páginas
+- **Protección automática**: Previene modificaciones en páginas especiales de Chrome (`chrome://`, `edge://`, etc.)
 
 ## 💡 Casos de Uso
 

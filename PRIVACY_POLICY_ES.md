@@ -78,10 +78,13 @@ Esta extensión NO utiliza ningún servicio de terceros, incluyendo:
 
 La extensión solicita ciertos permisos del navegador para funcionar:
 
-- **webRequest/webRequestBlocking**: Para interceptar y modificar el encabezado del user agent antes de que se envíen las peticiones
+- **declarativeNetRequest**: Para interceptar y modificar el encabezado del user agent antes de que se envíen las peticiones
+- **activeTab**: Para aplicar cambios de user agent a la pestaña activa cuando interactúas con la extensión (permiso que respeta la privacidad y solo funciona cuando haces clic en la extensión)
 - **Storage**: Para guardar tus preferencias localmente en tu dispositivo
 - **Tabs**: Para detectar qué URL está activa y aplicar el user agent apropiado
-- **Todas las URLs (<all_urls>)**: Para poder modificar el user agent en cualquier sitio web que visites
+- **Scripting**: Para funcionalidad avanzada y mejor compatibilidad
+
+**Mejora Importante de Privacidad (v1.0.2+)**: La extensión ahora usa el permiso `activeTab` en lugar de permisos de host amplios (`<all_urls>`), mejorando significativamente tu privacidad. El acceso solo se otorga cuando usas activamente la extensión.
 
 Estos permisos se utilizan únicamente para la funcionalidad principal de la extensión y NO para la recopilación de datos.
 

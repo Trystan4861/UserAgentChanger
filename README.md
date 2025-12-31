@@ -204,9 +204,10 @@ This extension requires the following permissions to function properly:
   - **Purpose**: Allows the extension to modify HTTP request headers
   - **Why needed**: Essential for changing the User-Agent header in web requests. This API enables the extension to intercept and modify the User-Agent string before requests are sent to servers.
 
-- **`declarativeNetRequestWithHostAccess`**
-  - **Purpose**: Extends declarativeNetRequest capabilities to work with host permissions
-  - **Why needed**: Required to apply User-Agent modifications across all websites. Works in conjunction with `<all_urls>` to ensure the extension can modify headers on any domain.
+- **`activeTab`**
+  - **Purpose**: Grants temporary access to the currently active tab when you interact with the extension
+  - **Why needed**: Allows the extension to apply User-Agent changes to the tab you're currently viewing when you use the popup. This is a privacy-friendly permission that only works when you explicitly click the extension icon.
+  - **Security benefit**: Unlike broad permissions, `activeTab` only grants access when you actively use the extension, ensuring maximum privacy and security.
 
 - **`storage`**
   - **Purpose**: Provides access to Chrome's storage API
@@ -233,18 +234,14 @@ This extension requires the following permissions to function properly:
     - Future feature enhancements
     - Improved compatibility with web pages
 
-### Host Permissions:
-
-- **`<all_urls>`**
-  - **Purpose**: Grants permission to access and modify requests on all websites
-  - **Why needed**: Allows the extension to apply User-Agent changes across all domains. Without this permission, the extension would need to request permission for each individual website, making it impractical to use.
-  - **Note**: This permission is necessary for the core functionality but the extension never reads page content or collects browsing data.
-
-### Security Notes:
-- All data is stored locally using Chrome's storage API
-- No data is transmitted to external servers
-- The extension only modifies User-Agent headers, not page content
-- Automatic protection prevents modifications on Chrome special pages (`chrome://`, `edge://`, etc.)
+### Security & Privacy Notes:
+- **Minimal permissions**: Uses `activeTab` instead of broad host permissions for enhanced privacy
+- **Chrome Web Store compliant**: Follows best practices for extension permissions
+- **Always up-to-date User-Agent**: Automatically uses the browser's current User-Agent (obtained from Service Worker) as the base, ensuring compatibility without hardcoded values
+- **Local storage only**: All data is stored locally using Chrome's storage API
+- **No external communication**: No data is transmitted to external servers
+- **Header-only modification**: The extension only modifies User-Agent headers, not page content
+- **Automatic protection**: Prevents modifications on Chrome special pages (`chrome://`, `edge://`, etc.)
 
 ## 💡 Use Cases
 
