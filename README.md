@@ -60,9 +60,8 @@ Full-featured options page with multiple sections:
   - `chrome-extension://` (Extension pages)
   - `edge://` (Edge internal pages)
   - `about:` (About pages)
-  - `view-source:` (Source view pages)
 - Clear visual feedback with:
-  - Gray badge with ✕ symbol
+  - Red badge with ✕ symbol
   - Disabled message in popup
   - Security explanation
 
@@ -142,6 +141,8 @@ UserAgentChanger/
 ├── CHANGELOG.md                     # Version history
 ├── LICENSE                          # MIT License
 ├── LICENSE_ES.md                    # Spanish license
+├── PRIVACY_POLICY.md                # Privacy Policy (English)
+├── PRIVACY_POLICY_ES.md             # Privacy Policy (Spanish)
 ├── _locales/                        # Internationalization
 │   ├── en/
 │   │   └── messages.json           # English translations
@@ -173,14 +174,15 @@ UserAgentChanger/
     ├── background-userAgent.js     # User-Agent application
     ├── popup.js                    # Popup logic
     ├── options.js                  # Options page logic
-    ├── i18n.js                     # Internationalization
-    ├── messaging.js                # Inter-component communication
-    ├── notify.js                   # Notification system
-    ├── storage.js                  # Storage utilities
-    ├── ua.js                       # User-Agent utilities
-    ├── utils.js                    # General utilities
-    ├── validations.js              # Input validations
-    └── version.js                  # Version management
+    ├── common-constants.js         # Shared constants
+    ├── common-i18n.js              # Internationalization
+    ├── common-messaging.js         # Inter-component communication
+    ├── common-notify.js            # Notification system
+    ├── common-storage.js           # Storage utilities
+    ├── common-ua.js                # User-Agent utilities
+    ├── common-utils.js             # General utilities
+    ├── common-validations.js       # Input validations
+    └── common-version.js           # Version management
 ```
 
 ## 🔧 Technologies Used

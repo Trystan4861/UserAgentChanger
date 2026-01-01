@@ -60,9 +60,8 @@ Página de opciones con múltiples secciones:
   - `chrome-extension://` (páginas de extensiones)
   - `edge://` (páginas internas de Edge)
   - `about:` (páginas about)
-  - `view-source:` (vista de código fuente)
 - Retroalimentación visual clara con:
-  - Badge gris con símbolo ✕
+  - Badge rojo con símbolo ✕
   - Mensaje de deshabilitado en el popup
   - Explicación de seguridad
 
@@ -142,6 +141,8 @@ UserAgentChanger/
 ├── CHANGELOG.md                     # Historial de versiones
 ├── LICENSE                          # Licencia MIT (Inglés)
 ├── LICENSE_ES.md                    # Licencia MIT (Español)
+├── PRIVACY_POLICY.md                # Política de Privacidad (Inglés)
+├── PRIVACY_POLICY_ES.md             # Política de Privacidad (Español)
 ├── _locales/                        # Internacionalización
 │   ├── en/
 │   │   └── messages.json           # Traducciones al inglés
@@ -173,14 +174,15 @@ UserAgentChanger/
     ├── background-userAgent.js     # Aplicación del User-Agent
     ├── popup.js                    # Lógica del popup
     ├── options.js                  # Lógica de la página de opciones
-    ├── i18n.js                     # Internacionalización
-    ├── messaging.js                # Comunicación entre componentes
-    ├── notify.js                   # Sistema de notificaciones
-    ├── storage.js                  # Utilidades de almacenamiento
-    ├── ua.js                       # Utilidades de User-Agent
-    ├── utils.js                    # Utilidades generales
-    ├── validations.js              # Validaciones de entrada
-    └── version.js                  # Gestión de versiones
+    ├── common-constants.js         # Constantes compartidas
+    ├── common-i18n.js              # Internacionalización
+    ├── common-messaging.js         # Comunicación entre componentes
+    ├── common-notify.js            # Sistema de notificaciones
+    ├── common-storage.js           # Utilidades de almacenamiento
+    ├── common-ua.js                # Utilidades de User-Agent
+    ├── common-utils.js             # Utilidades generales
+    ├── common-validations.js       # Validaciones de entrada
+    └── common-version.js           # Gestión de versiones
 ```
 
 ## 🔧 Tecnologías Utilizadas
