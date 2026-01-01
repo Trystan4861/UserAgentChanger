@@ -27,3 +27,4 @@ node_modules/
 *.crx
 *.pem
 *.zip
+*.code-workspace
