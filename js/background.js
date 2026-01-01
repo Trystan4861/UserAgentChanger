@@ -5,6 +5,7 @@
 
 // Import all background modules
 importScripts(
+  'common-constants.js',
   'background-userAgent.js',
   'background-badge.js',
   'background-permanentSpoofs.js',

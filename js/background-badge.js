@@ -10,11 +10,7 @@
  */
 function isChromeSpecialPage(url) {
   if (!url) return false;
-  return url.startsWith('chrome://') || 
-         url.startsWith('chrome-extension://') ||
-         url.startsWith('edge://') ||
-         url.startsWith('about:') ||
-         url.startsWith('view-source:');
+  return BLOCKED_SCHEMES.some(scheme => url.startsWith(scheme));
 }
 
 /**
@@ -117,7 +113,7 @@ async function updateBadgeForTab(tabId) {
       // Show disabled state for Chrome special pages
       await chrome.action.setBadgeText({ text: '✕', tabId });
       await chrome.action.setBadgeBackgroundColor({ 
-        color: '#808080', // Gray background for disabled state
+        color: '#FF0000', // red background for disabled state
         tabId 
       });
       await chrome.action.setTitle({ 

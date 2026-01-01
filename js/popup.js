@@ -3,11 +3,9 @@ async function isCurrentTabSpecialPage() {
   const [currentTab] = await chrome.tabs.query({ active: true, currentWindow: true });
   if (!currentTab || !currentTab.url) return false;
   
-  return currentTab.url.startsWith('chrome://') || 
-         currentTab.url.startsWith('chrome-extension://') ||
-         currentTab.url.startsWith('edge://') ||
-         currentTab.url.startsWith('about:') ||
-         currentTab.url.startsWith('view-source:');
+  return blockedSchemes.some(scheme =>
+    currentTab.url.startsWith(scheme)
+  );
 }
 
 // Show disabled message for Chrome special pages
