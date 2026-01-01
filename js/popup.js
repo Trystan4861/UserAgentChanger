@@ -3,7 +3,7 @@ async function isCurrentTabSpecialPage() {
   const [currentTab] = await chrome.tabs.query({ active: true, currentWindow: true });
   if (!currentTab || !currentTab.url) return false;
   
-  return blockedSchemes.some(scheme =>
+  return BLOCKED_SCHEMES.some(scheme =>
     currentTab.url.startsWith(scheme)
   );
 }

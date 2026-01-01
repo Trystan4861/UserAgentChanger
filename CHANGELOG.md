@@ -5,6 +5,11 @@ All notable changes to the User-Agent Changer extension will be documented in th
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.3] - 2026-01-01
+
+### Changed
+- **Remove the `view-source` protocol** from special pages where the extension must be disabled
+
 ## [1.0.2] - 2025-12-31
 
 ### Changed
@@ -82,7 +87,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Dark theme
 - Protection for Chrome special pages:
   - Extension automatically disables on `chrome://`, `edge://`, `about:`, `view-source:`, and `chrome-extension://` pages
-  - Gray badge with ✕ symbol on special pages
+  - Red badge with ✕ symbol on special pages
   - Clear security messaging in popup
 - Import/Export functionality:
   - Export all settings to timestamped JSON file
