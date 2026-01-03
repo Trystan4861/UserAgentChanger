@@ -14,8 +14,8 @@ async function showDisabledMessage() {
   listContainer.innerHTML = `
     <div class="disabled-message">
       <div class="disabled-icon">🚫</div>
-      <h3>Extension Disabled</h3>
-      <p>This extension cannot modify special browser pages (chrome://, edge://, etc.) for security reasons.</p>
+      <h3>${i18n.getMessage('disabledTitle')}</h3>
+      <p>${i18n.getMessage('disabledMessage')}</p>
     </div>
   `;
   

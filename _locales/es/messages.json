@@ -532,5 +532,13 @@
   "openInNewTab": {
     "message": "Abrir en nueva pestaña",
     "description": "Tooltip para abrir enlace de dominio"
+  },
+  "disabledTitle": {
+    "message": "Extensión Deshabilitada",
+    "description": "Título para mensaje deshabilitado en páginas restringidas"
+  },
+  "disabledMessage": {
+    "message": "Esta extensión no puede modificar páginas especiales del navegador (chrome://, edge://, etc.) por razones de seguridad.",
+    "description": "Mensaje explicando por qué la extensión está deshabilitada en páginas restringidas"
   }
 }

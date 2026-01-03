@@ -5,6 +5,14 @@ All notable changes to the User-Agent Changer extension will be documented in th
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.4] - 2026-01-03
+
+### Fixed
+- **Internationalization of disabled message on restricted pages**
+  - The "Extension Disabled" message on special browser pages (chrome://, edge://, etc.) now correctly displays in the user's selected language
+  - Added translation keys `disabledTitle` and `disabledMessage` to both English and Spanish locales
+  - Updated popup.js to use i18n system instead of hardcoded English text
+
 ## [1.0.3] - 2026-01-01
 
 ### Changed
